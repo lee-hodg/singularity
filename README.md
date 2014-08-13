@@ -39,4 +39,10 @@ then faking seven:
 followed by the rest:
 
     python manage.py migrate theme
+# Easiest way to get content from the server to local
 
+Just copy the `/srv/databases/` logicon db to the local folder on laptop as `dev.db`, also
+grab the media uploads from `/srv/www/logicon/media/uploads` as a tar ball, and put them in the local media dir.
+
+Remember `DEBUG=True` needed for the local runserver to serve static content too.
+The static content itself should be in the git repo, and we just need a `collectstatic` to be ran.
