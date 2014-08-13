@@ -1,0 +1,65 @@
+{% load blog_tags keyword_tags i18n future %}
+{# see http://mezzanine.jupo.org/docs/packages.html?highlight=blog#mezzanine.blog.templatetags.blog_tags #}
+
+    <!-- Search area -->
+    <h3>Search Posts</h3>
+    <div class="search clearfix">
+        <form action="{% url 'search' %}" method="get">
+            <input name="q" type="text" class="search-input" placeholder="Seach Posts">    
+        </form>
+        <a href="#"><i class="fa fa-search"></i></a>
+    </div>
+
+    <!-- Recent posts -->
+    {% block blog_recent_posts %}
+    {# see the docs I linked at top. This grabs 5 most recent #}
+    {# but can also filter on tag, username etc #}
+    {% blog_recent_posts 5 as recent_posts %}
+    {% if recent_posts %}
+    <h3>{% trans "Recent Posts" %}</h2>
+    <ul class="recent-posts">
+    {% for recent_post in recent_posts %}
+          <li>
+              <a href="{{ recent_post.get_absolute_url }}">{{ recent_post.title }} </a>
+              {# { recent_post.publish_date } #} 
+              <div class="clear"></div>
+          </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endblock %}
+
+{% block blog_months %}
+{% blog_months as months %}
+{% if months %}
+    <h3>{% trans "Archive" %}</h3>
+
+    {% for month in months %}
+        {% ifchanged month.date.year %}
+            {% if not forloop.first %}</ul>{% endif %}
+            <h6>{{ month.date.year }}</h6><ul class="archive">
+        {% endifchanged %}
+        <li><a href="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}"
+            >{{ month.date|date:"F" }}</a> ({{ month.post_count }})</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
+
+{% block blog_keywords %}
+{% keywords_for blog.blogpost as tags %}
+{% if tags %}
+    <h3>{% trans "Tag Cloud" %}</h3>
+    {% for tag in tags %}
+    <a href="{% url "blog_post_list_tag" tag.slug %}"
+        class="tag-weight-{{ tag.weight }}">
+        <div class="tag">
+            <div class="tag-body">
+                {{ tag }} ({{ tag.item_count }})
+            </div>
+            <i class="tag-tip"><i></i></i>
+        </div>
+    </a>
+    {% endfor %}
+{% endif %}
+{% endblock %}

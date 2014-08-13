@@ -1,0 +1,99 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags static %}
+
+{% block main_wrapper %}
+
+{% editable page.resumepage.heading %}        
+<h2> {{ page.resumepage.heading }}</h2>
+{% endeditable %}
+
+
+<div class="column-one-third-left">
+    <div class="polaroid">
+        <img src="{{ MEDIA_URL }}{% thumbnail page.resumepage.resume_image 300 300 %}" alt="Photo of me" />
+        <h2>{{settings.PERSONAL_NAME|default:"Joe Bloggs"}}</h2>
+    </div>
+
+    <p>
+    {% editable page.resumepage.nationality %}
+    <strong>Nationality:</strong> {{page.resumepage.nationality }}<br/>
+    {% endeditable %}
+    {% editable page.resumepage.dob %}
+    <strong>Date of Birth:</strong> {{page.resumepage.dob }}<br/>
+    {% endeditable %}
+    {% editable page.resumepage.location %}
+    <strong>Location:</strong> {{page.resumepage.location}} <br/>
+    {% endeditable %}
+    {% editable page.resumepage.telephone %}
+    <strong>Phone:</strong> {{ page.resumepage.telephone }} <br/>
+    {% endeditable %}
+    {% editable page.resumepage.email %}
+    <strong>E-mail:</strong>{{ page.resumepage.email }} 
+    {% endeditable %}
+    </p>
+
+    <h3>Personal Statement</h3>
+    {% editable page.resumepage.statement %}
+        <p> {{ page.resumepage.statement }} </p>
+    {% endeditable %}
+</div> <!--END column-one-third-left -->
+
+
+<div class="column-two-thirds-right">
+    <div class="cv-container">
+
+        <h3><i class="fa fa-university"></i> Postdoctoral Experience</h3>
+        <div class="sub-title clearfix">
+            <h4>EPSRC Doctoral Prize</h4>
+            <span>Researcher, Jun-Dec 2013</span>
+        </div>
+        <ul>
+            <li>Funding for postdoctoral study at Nottingham and &pound;9,835 support grant.</li>
+            <li>Awarded to top 15% of EPSRC funded researchers to increase impact of PhD in terms of knowledge transfer, publications and outreach.</li>
+        </ul>
+
+
+        <h3><i class="fa fa-graduation-cap"></i> Education</h3>
+        <div class="sub-title clearfix">
+            <h4> University of Manchester - Manchester, UK</h4>
+            <span>Student, 2003-2007</span>
+        </div>
+        <ul>
+            <li>M.Phys.: Theoretical Physics</li>
+            <li>Advisor: Jeff Forshaw</li>
+            <li>Thesis: Reinstating the `no-lose' theorem for NMSSM Higgs discovery at the LHC.</li>
+        </ul>
+
+        <h3><i class="fa fa-wrench"></i>Skills</h3>
+        <h4>Things I can do</h4>
+        <ul>
+            <li>
+            Programming languages and frameworks - C++, Python, Django, Scrapy.
+            </li>
+            <li>
+            Markup and scripting - LaTeX, HTML, bash, CSS, Javascript, jQuery, ajax.
+            </li>
+            <li>
+            Specialised software - Maple, Mathematica.
+            </li>
+            <li>
+            Other - Experiencend Linux (Ubuntu) user, and experience using PBS grid engine for distributed computing on a High performance super cluster.
+            </li>
+        </ul>
+
+
+        <h3><i class="fa fa-pencil"></i>Publications</h3>
+        <h4>My work</h4>
+        <ul>   
+            {% for pub in page.resumepage.publications.all %}
+            {% editable pub.authors pub.title pub.journal pub.volume pub.pages pub.arxivident pub.primaryClass %}
+            <li> {{ pub.authors }}“{{ pub.title }}” {{ pub.journal }} {{pub.volume}} {{pub.pages}} ({{pub.pages}})
+            <a target="_blank" href="http://arxiv.org/abs/{{pub.arxivident}}"> [arXiv: {{pub.arxivident}} [{{pub.primaryClass}}]]</a>.</li>
+            {% endeditable %}
+            {% endfor %}
+        </ul>
+    </div> <!--END CV-container-->
+</div> <!-- END two-thirds-->
+
+{% endblock %}

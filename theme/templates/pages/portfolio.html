@@ -1,0 +1,58 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags staticfiles %}
+
+{% block main_wrapper %}
+
+<h2>{{ page.portfolio.columns }}-Column Portfolio</h2>
+
+<div class="row">
+    <div class="span12">
+        {% editable page.portfolio.content %}
+        {{ page.portfolio.content|richtext_filters|safe }}
+        {% endeditable %}
+    </div>
+</div>
+
+<div class="controls">
+    <button class="filter" data-filter="all">All</button>
+    {% for category in categories %}
+    <button class="filter" data-filter=".{{ category.title|slugify }}">{{ category.title }}</button>
+    {% endfor %}
+</div>
+
+
+<div id="Container" class="container">
+
+    {% for item in items %}
+
+    <div class="mix col-{{page.portfolio.columns}} {% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify}} {% endfor %}{% endspaceless %}" data-category="{% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify }} {% endfor %}{% endspaceless %}" data-myorder="{{ forloop.counter }}">
+
+        <div class="portfolio-image-container">
+            <img src="{{ MEDIA_URL }}{% if page.portfolio.columns == '2' %}{% thumbnail item.featured_image 456 289 %}
+                {% elif page.portfolio.columns == '3' %}{% thumbnail item.featured_image 288 182 %}
+                {% elif page.portfolio.columns == '4' %}{% thumbnail item.featured_image 216 137 %}{% endif %}" alt="" />
+
+            <span class="text-content">
+                <span>
+                    <span>
+                        <h3>Snowboarder</h3>
+                        <a href="{% url "page" item.slug %}"><i class="fa fa-file-text-o"></i></a>
+                        <a href="{{ item.featured_image.url }}" rel="prettyPhoto[portfolio]"><i class="fa fa-search"></i></a>
+                    </span>
+                </span>
+            </span>
+        </div> <!-- END portfolio-image-container-->
+
+        <div class="portfolio-description">
+            <h3><a href="{% url "page" "portfolioitem" %}">{{ item.title }}</a></h3>
+            <p>{{ item.short_description|richtext_filters|safe }}</p>
+        </div> <!-- END portfolio-description-->
+ 
+    </div><!-- END mix-col-->
+    
+    {% endfor %}
+
+</div> <!-- END container -->
+{% endblock %}
+

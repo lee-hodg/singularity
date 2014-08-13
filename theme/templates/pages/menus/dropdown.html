@@ -1,0 +1,83 @@
+{% comment %}
+'Page Menus' docs http://mezzanine.jupo.org/docs/content-architecture.html
+ See the 'Page Menus' docs http://mezzanine.jupo.org/docs/content-architecture.html 
+ Notice if e.g. in zeroth branch we recursively make a call to page_menu 
+ which is the function we called from base.html, the second time round we will
+ be in a subbranch, so the branch_level not 0, and jump to else. Here again 
+ a recursive call to page_menu is made if any children present, and so on 
+
+
+ The problem of having a menu with mixed absolute URL links, and links to sections
+ of index page. The best solution I ultimately found was to add 'Link' type objects
+ to the page heirarchy in the admin. You can choose the link URL to be # to make it a dud,
+ or to something like #link-features to link to a section on the index page itself.
+ Now you can simply drag and drop your other pages under these links 
+ (yes you can drag-and-drop under existing pages too, just pull to right).
+
+ Other options where explored, but each had problems. Slugifying the page.title|slugify
+ and using this like #link-{{page.title|slugify}} in the href for all parent pages, fails
+ since not all parent links should be section links, secondly if the user changes the page title
+ so that it no longer matches the section anchor on index the whole idea breaks down.
+ Using field injection on the Mezzanine Page model (remember we can't subclass so this is
+ how we must add new custom fields) to add a BooleanField 'sectionLink' checkbox was another idea.
+ This would give the user a checkbox in the admin for every Page, and if checked we'd use a sectionLink
+ rather than absolute URL. For example if page.portfolio and page.sectionLink: href="#link-portoilio".
+ This still relies on identifiying page as portfolio, which may not be reliable if user changes names
+ or has multiple portfolios. The remnants of field injection can be seen in settings.py anyway,
+ and may be useful for something else in future. 
+
+ I use page.html_id to identify the blog page and specify section link for it. This seems to be robust
+ and user changing things like blog title.
+
+
+ For filtering based on page.in_menu, make sure you change PAGE_MENU_TEMPLATES of settings.py
+ so that the menus offered in admin for page includes correctly match your menu templates.
+ {% endcomment %}
+
+
+
+{% load i18n future pages_tags %}
+{% spaceless %}
+{% if page_branch_in_menu %}
+
+{% if branch_level == 0 %}
+<ul id="jsddm">
+    {% for page in page_branch %}
+    {% if not has_home and page.is_primary and forloop.first %}
+    <li{% if on_home %} class="current"{% endif %} id="dropdown-menu-home">
+        <a href="{% url "home" %}">{% trans "Home" %}</a>
+    </li>
+    {% endif %}
+    {% if page.in_menu %}
+    <li class="{% if page.has_children_in_menu %}sub-menu{% endif %}
+               {% if page.is_current_or_ascendant %}current{% endif %}"
+        id="{{ page.html_id }}">
+        <a href="{% if page.html_id == 'blog'  %}#link-blog
+                 {% else %} {{ page.get_absolute_url }}{% endif %}"
+        {% if page.has_children_in_menu %}
+        {% endif %}>
+            {{ page.title }} 
+        </a>
+        {% if page.has_children_in_menu %}{% page_menu page %}{% endif %}
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+
+{% else %}
+<ul>
+    {% for page in page_branch %}
+    {% if page.in_menu %}
+    <li class="{% if page.has_children_in_menu %}dropdown-submenu{% endif %}
+               {% if page.is_current_or_ascendant %}current{% endif %}"
+        id="{{ page.html_id }}">
+        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+        {% if page.has_children_in_menu %}{% page_menu page %}{% endif %}
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endif %}
+{% endspaceless %}

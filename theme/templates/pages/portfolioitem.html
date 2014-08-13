@@ -1,0 +1,48 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags staticfiles %}
+
+{% block section_id %}page-portfolio-detail{% endblock %}
+
+{% block main %}
+
+<div class="full-post">
+    {% editable page.title %}
+    <h2> {{ page.title }}</h2>
+    {% endeditable %}
+
+    {% for image in portfolioitem.images.all %}    
+    {% if forloop.first %}
+        <img src="{{ MEDIA_URL }}{% thumbnail image.file 1500 430 %}" alt="" />
+    {% endif %}    
+    {% endfor %}
+
+    {% editable page.portfolioitem.content %}
+    {{ page.portfolioitem.content|richtext_filters|safe }}
+    {% endeditable %}
+
+</div>  
+
+{% endblock main %}
+
+{% block right_panel %}
+
+<h3> Summary </h3>
+
+<p>
+{% editable page.portfolioitem.short_description %}
+{{ page.portfolioitem.short_description|richtext_filters|safe|truncatewords:20 }}
+{% endeditable %}
+</p>
+
+<ul class="categories">
+    {% for c in portfolioitem.categories.all %}
+    <li> {{c.title }} </li>
+    {% endfor %}
+</ul>
+<hr>
+
+<a class="btn dark_btn marg20" href="{{ page.portfolioitem.href }}" target="_blank">Launch project</a>
+<a class="btn dark_btn marg20" href="{% url "page" page.parent.title|slugify %}">Back to Portfolio</a>
+
+{% endblock right_panel %}

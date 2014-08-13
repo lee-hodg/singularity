@@ -1,0 +1,425 @@
+{# NB page extends base, and index extends page #}
+{% extends "pages/page.html" %}
+
+{# Could there be a better way to put a form on the homepage. #}
+{# Surely starting out with a Form type page model, or an extension of one #}
+{# is the way to go? This way you can do all the nice things in the admin you can #}
+{# usually do for Form page. For example managing the Fields in the form and managing #}
+{# the email settings (cf the leehodgkinson Contact page). #}
+{# Whilst we can of course extend the form.html template as much as we like #}
+{# , the standard Form model is not enough, we want to add things like custom #}
+{# headings, slides, icons, blurbs and so on. So model itself needs to be extended #}
+{# to give a new custom form type of page as an option when adding a page in admin #}
+{# Simply subclass of Form instead of Page doesn't seem to play well #}
+{# We'd also be able to specify the response on submission, button text, and so on #}
+{# with a subclass of form #}
+{# It seems you can't overwrite the Form, you can only inherit from Page. Field injection #}
+{# on the Form model is an option. Simply copy and pasting the Form model, customising, and #}
+{# then using that, would be another #}
+
+{# NB for the thumbnail templatetag to work with jpegs, you will need #}
+{# to install the necessary lib for pillow to do conv: sudo apt-get install libjpeg-dev #}
+{# and reinstall pillow: pip install -I pillow, otherwise you will just get the original #}
+{# image url returned. You can use the shell to work this out with #}
+{# from mezzanine.core.templatetags.mezzanine_tags import thumbnail #}
+
+{% load i18n static pages_tags mezzanine_tags staticfiles templateutils %}
+
+{% block topmenu %}
+{# Menu for index with the sec links instead of absolute urls at top level #}
+{# Needs pages_tags loaded #}
+{% page_menu "pages/menus/dropdown.html" %}
+{% endblock %}
+
+{% block all_content %}
+
+
+<!--page_container-->
+
+<div class="page_container">
+
+    <!-- Responsive slider - START -->
+    <section id="section-slideshow">
+        {# N.B. The slider cap images and their animations can only be set the same #}
+        {# at the moment. Changing this would prob involve complicating the slide model #}
+        {# to include 'animation' field (e.g. toptobottom) and a styling field. Not sure #}
+        {# if this might be too complex for a user. #}
+
+        {% if page.homepage.slides.all %}
+        <div class="responsive-slider" data-spy="responsive-slider" data-autoplay="true">
+            <div class="slides" data-group="slides">
+                <ul>
+                    {% for slide in page.homepage.slides.all %}
+                    <li>
+
+                    <div class="slide-body" data-group="slide">
+
+                        <img src="{{ MEDIA_URL }}{% thumbnail slide.image 1920 690 %}">
+
+
+                        <div class="caption header" data-animate="slideAppearRightToLeft" data-delay="500" data-length="300">
+
+                            {% editable slide.cap_header %}
+                            <h2>{{ slide.cap_header|default:"SLIDE HEADER" }} </h2>
+                            {% endeditable %}
+
+                            {% editable slide.cap_sub %}
+                            <div class="caption sub" data-animate="slideAppearLeftToRight" data-delay="800" data-length="300">
+                                {{ slide.cap_sub|default:"Slide sub" }}
+                            </div>
+                            {% endeditable %}
+
+                        </div>
+
+                        {% if slide.cap_image1 %}
+                        <div class="caption img-html5" data-animate="slideAppearLeftToRight" data-delay="200">
+
+                            <img src="{{ MEDIA_URL }}{% thumbnail slide.cap_image1 307 307 %}">
+
+                        </div>
+                        {% endif %}
+
+                        {% if slide.cap_image2 %}
+                        <div class="caption img-css3" data-animate="slideAppearLeftToRight">
+
+                            <img src="{{ MEDIA_URL }}{% thumbnail slide.cap_image2 307 307 %}">
+
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    </li>
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            <a class="slider-control left" href="#" data-jump="prev">Prev</a>
+
+            <a class="slider-control right" href="#" data-jump="next">Next</a>
+
+            <div class="pages">
+                {% for slide in page.homepage.slides.all %}
+                <a class="page" href="#" data-jump-to="{{ forloop.counter }}">{{ forloop.counter}}</a>
+                {% endfor %}
+            </div>
+
+        </div>
+        {% endif %}
+
+    </section>  
+    <!-- Responsive slider - END -->
+
+    <!-- Latest blog posts - BEGIN -->
+    <section id="section-blog"><a class="anchor" id="link-blog"></a>
+
+        <div class="site-container clearfix">
+
+            <div class="column-two-thirds">
+                {# should filter only most recent n posts really #}
+                {% for blog_post in blog_posts.all %}
+                <div class="post">
+
+                    <h2><a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a></h2>
+
+                    <div class="post_meta">
+                        {% with blog_post.user as author %}
+                        Posted by <a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }} /</a>
+                        {% endwith %}
+                        {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }} ago{% endblocktrans %}
+                    </div>
+
+                    {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
+                    {% block blog_post_list_post_featured_image %}
+                    <a href="{{ blog_post.get_absolute_url }}">
+                        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 270 229 %}">
+                    </a>
+                    {% endblock %}
+                    {% endif %}
+
+
+                    {% editable blog_post.content %}
+                    {{ blog_post.description_from_content|safe|truncatewords:30 }}
+                    {% endeditable %}
+                    <div class="readmore"><a href="{{ blog_post.get_absolute_url }}" class="arrow_link">Read more</a></div>
+
+                </div>
+                {% endfor %}
+
+                <a href="{% url "blog_post_list" %}"><div class="more-posts">More Posts</div></a>
+
+            </div>
+
+            {# blog filter panel on rhs #}
+            <div class="column-one-third">
+                {% include "blog/includes/filter_panel.html" %}
+            </div>
+
+        </section>
+        <!-- Latest blog posts - END -->
+
+
+        <!-- Features -BEGIN-->
+
+        {# Note we chose related name as 'blurbs' in theme.models when spec ForeignKey #}
+        {% if page.homepage.blurbs.all %} 
+
+        <section id="section-features"><a class="anchor" id="link-features"></a>
+            <div class="site-container clearfix">
+                <h2>Features</h2>
+                {# make editable #}
+                <p>If you are looking for a sleek, responsive and easy to use Mezzanine Template, look no further! With Logicon, 
+                you'll be creating beautiful websites in no time.<p>
+
+                <div class="feature-container clearfix">
+                    {# It doesn't make sense to set classes really? #} 
+                    {% for blurb in page.homepage.blurbs.all %}
+                    <div class="column-one-third">
+                        <a href="{{ blurb.link }}">
+                            {# make this none default in model #}
+                            {% if blurb.fa_icon != 'none'%}
+                            {# get Joe to style some of these up too #}
+                            <div id="advert-{{blurb.fa_icon}}" class="advert"></div>
+                            {% elif blurb.icon %}
+                            <div class="advert" style="background: url('{{ blurb.icon.url }}') repeat scroll -7px -7px;"></div>
+                            {% endif %}
+                        </a>
+                        <h3>{{ blurb.title }}</h3>
+                        <p>{{ blurb.content }}</p>
+                    </div>
+                    {% endfor %}
+
+                </div> 
+
+            </div>
+        </section>
+
+        {% endif %}
+        <!--Features -END-->
+
+        <!-- Parallex section -BEGIN -->
+        {# How shall we make this content managed? #}
+        {# Editable header and caption, and the photo too? #}
+        <section id="section-parallax" style="background: url('{{page.homepage.parallax_image.url}}') no-repeat fixed 0 0 / cover;">
+
+            <div class="parallax-container">
+                <div class="parallax-text">
+                    {% editable page.homepage.parallax_heading page.homepage.parallax_subheading %}
+                    <h1>{{page.homepage.parallax_heading}}</h1>
+                    <p>{{page.homepage.parallax_subheading}}</p>
+                    {% endeditable %}
+                </div>
+            </div>
+        </section>
+        <!-- Parallax section -END-->
+
+        <!--Portfolio section -BEGIN-->
+
+        <section id="section-portfolio"><a class="anchor" id="link-portfolio"></a>
+            <div class="site-container clearfix">
+
+                <h2>Portfolio</h2>
+
+                <div class="controls">
+                    <button class="filter" data-filter="all">All</button>
+                    {% for category in categories %}
+                    <button class="filter" data-filter=".{{ category.title|slugify }}">{{ category.title }}</button>
+                    {% endfor %}
+                </div>
+
+                <div id="Container" class="container">
+                    {# are we going to always say col-4 on the index page, and just let mediaquery take care of resizing? #}
+                    {% for item in items %}
+
+                    <div class="mix col-4 {% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify}} {% endfor %}{% endspaceless %}" data-category="{% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify }} {% endfor %}{% endspaceless %}" data-myorder="{{ forloop.counter }}">
+                        <div class="portfolio-image-container">
+                            <img src="{{MEDIA_URL}}{% thumbnail item.featured_image 216 137 %}" alt="" />
+                            <span class="text-content">
+                                <span>
+                                    <span>
+                                        <h3>{{ item.title }}</h3>
+                                        <a href="{% url "page" item.slug %}"><i class="fa fa-file-text-o"></i></a>
+                                        <a href="{{ item.featured_image.url}}" rel="prettyPhoto[portfolio]"><i class="fa fa-search"></i></a>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="portfolio-description">
+                            <h3><a href="{% url "page" item.slug %}">{{ item.title }}</a></h3>
+                            <p>{{ item.short_description|richtext_filters|safe }}</p>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    {# these are added just to keep orientation right when few items present? #}
+                    <div class="col-4"></div>
+                    <div class="col-4"></div> 
+                </div><!-- END container --> 
+
+            </div> <!-- END site-container -->
+        </section>
+        <!--//featured works-->
+
+        <!-- BEGIN Testimonials -->
+        <section id="section-parallax-2" class="clearfix" style="background:url('{{STATIC_URL}}img/parallax-2.jpg') no-repeat fixed 0 0 / cover;">
+            <a id="link-testimonials" class="anchor"></a>
+            <div class="site-container clearfix">
+
+                <h2>Testimonials</h2>
+
+                <h4>What other people say about us...</h4>
+
+                {% for testimonial in  page.homepage.testimonials.all %}
+                <div class="column-one-third">
+                    <div class="testimonial-container">
+                        <img src="{{ MEDIA_URL }}{% thumbnail testimonial.icon 100 100 %}">
+                        <h3>{{ testimonial.name }}<div class="quote">&ldquo;</div></h3>
+                        <p> {{ testimonial.content }} </p>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </section>
+        <!--END Testimonials -->
+
+        <!--BEGIN Contact -->
+
+        <section id="section-contact"><a class="anchor" id="link-contact"></a>
+
+            <div class="site-container clearfix">
+
+                <div class="column-two-thirds">
+
+                    <h2>Contact</h2>
+
+                    <h3>Send a Message</h3>
+
+                    {% errors_for contact_form %}
+                    {% for message in messages %}
+                        {% if 'success' in message.tags %}
+                        <p class="text-success">{{ message }}</p>
+                        {% endif %}
+                        {% if 'error' in message.tags %}
+                        <p class="text-error">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+
+
+                    <form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} class="contact-form">
+                        {# % fields_for contact_form % #}
+                        {# Joe needs to design errors too #}
+                        {# access field errors in usual way contact_form.name.errors #} 
+                        {% csrf_token %}
+
+                        <div class="name-container">
+                            {{ contact_form.name.label }}
+                            {{ contact_form.name }}
+                        </div>
+
+                        <div class="email-container">
+                            {{ contact_form.sender.label }}
+                            {{ contact_form.sender }}
+                        </div>
+
+                        {{ contact_form.subject.label }}
+                        {{ contact_form.subject }}
+
+                        {{ contact_form.message.label }}
+                        {{ contact_form.message }}
+    
+                        <input type="submit" name="send" value="Send" class="send-button" />
+                    </form>     
+
+                </div>
+
+
+
+                <div class="column-one-third">
+
+                    <div class="social-fonts-container clearfix">
+
+                        <h3>Social Font Icons</h3>
+                           {% if settings.SOCIAL_LINK_FACEBOOK %}
+                           <a style="color: #000;" target="_blank" href="{{ settings.SOCIAL_LINK_FACEBOOK }}" class="facebook">
+                               <i class="fa fa-facebook"></i> Facebook
+                           </a>
+                           <br/>
+                           {% endif %}
+        
+                           {% if settings.SOCIAL_LINK_TWITTER %}
+                           <a target="_blank" href="{{ settings.SOCIAL_LINK_TWITTER }}" class="twitter" >
+                               <i class="fa fa-twitter"></i> Twitter
+                           </a>
+                           <br/>
+                           {% endif %}
+                           
+                           {% if settings.SOCIAL_LINK_VIMEO %}
+                           <a target="_blank" href="{{ settings.SOCIAL_LINK_VIMEO }}" class="vimeo">
+                                <i class="fa fa-vimeo-square"></i> Vimeo 
+                           </a>
+                           <br/>
+                           {% endif %}
+                           
+                           {% if settings.SOCIAL_LINK_TUMBLR %}
+                           <a target="_blank" href="{{ settings.SOCIAL_LINK_TUMBLR }}" class="tumblr">
+                                <i class="fa fa-tumblr"></i> Tumblr
+                           </a>
+                           <br/>
+                           {% endif %}
+                           
+                           {% if settings.SOCIAL_LINK_DELICIOUS %}
+                           <a target="_blank" href="{{ settings.SOCIAL_LINK_DELICIOUS }}" class="delicious">
+                                <i class="fa fa-delicious"></i> Delicious
+                           </a>
+                           <br/>
+                           {% endif %}
+
+
+                    </div>
+
+                    <div class="contact-section-info clearfix">
+                        {# This should be settings eventually #}
+                        <h3>Contact Info</h3>
+
+                        {% if settings.PERSONAL_NAME %}
+                            <i class="fa fa-user"></i> {{settings.PERSONAL_NAME }} <br/>
+                        {% endif %}
+
+                        {% if settings.PERSONAL_EMAIL %}
+                            <i class="fa fa-envelope"></i> {{settings.PERSONAL_EMAIL }} <br/>
+                        {% endif %}
+
+                        {% if settings.PERSONAL_PHONE %}
+                            <i class="fa fa-phone"></i> {{settings.PERSONAL_PHONE }} <br/>
+                        {% endif %}
+
+                        {% if settings.PERSONAL_ADDRESS %}
+                        {# turn comma sep address into newline sep #}
+                        <i class="fa fa-home"></i> {% autoescape off %}
+                        {{ settings.PERSONAL_ADDRESS|linebreaksbr }} {% endautoescape %}<br/>
+                        {% endif %}
+
+                        {% if settings.PERSONAL_SKYPE %}
+                            <i class="fa fa-skype"></i> {{settings.PERSONAL_SKYPE }} <br/>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+            <!-- END contact -->
+
+
+
+        </div>
+
+        <!--//page_container-->
+
+
+
+        {% endblock all_content %}

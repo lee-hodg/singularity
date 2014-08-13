@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+{% load templateutils pages_tags mezzanine_tags i18n future staticfiles %}
+
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+<meta name="description" content="{% block meta_description %}{% endblock %}">
+<title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+<link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+
+{% ifinstalled mezzanine.blog %}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
+<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
+{% endifinstalled %}
+
+<!--FONTS-->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+
+<!--rename bootstrap and bootstrap-responsive with
+version numbers to avoid conflicting with mezzanines 
+pre-shipped bootstrap css-->
+{% compress css %}
+<link href="{% static "css/prettyPhoto.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/normalize.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/responsive-slider.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/slicknav.css" %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" id="camera-css"  href="{% static "css/camera.css" %}" type="text/css" media="all">
+{% block extra_css %}{% endblock %}
+{% endcompress %}
+
+<!--[if lt IE 9]>
+<script src="{% static "js/html5shiv.js" %}"></script>
+<script src="{% static "js/respond.min.js" %}"></script>
+<![endif]-->
+
+{% compress js %}
+<!--jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<!--script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script-->
+
+<!-- PrettyPhoto -->
+<script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+    $("a[rel^='prettyPhoto']").prettyPhoto();
+    });
+</script>
+
+<!-- Dropdown Menu -->
+<!-- including the jsddm.min.js seems to break things with slider or menu -->
+<!--script type="text/javascript" src="{% static "js/jquery.jsddm.min.js" %}"></script-->
+<script type="text/javascript">
+    var timeout         = 500;
+    var closetimer      = 0;
+    var ddmenuitem      = 0;
+
+    function jsddm_open()
+
+    {   jsddm_canceltimer();
+
+        jsddm_close();
+
+        ddmenuitem = $(this).find('ul').eq(0).css('visibility', 'visible');}
+
+    function jsddm_close()
+
+    {   if(ddmenuitem) ddmenuitem.css('visibility', 'hidden');}
+
+    function jsddm_timer()
+
+    {   closetimer = window.setTimeout(jsddm_close, timeout);}
+
+    function jsddm_canceltimer()
+
+    {   if(closetimer)
+
+        {   window.clearTimeout(closetimer);
+
+            closetimer = null;}}
+
+    $(document).ready(function()
+
+    {   $('#jsddm > li').bind('mouseover', jsddm_open);
+
+        $('#jsddm > li').bind('mouseout',  jsddm_timer);});
+
+    document.onclick = jsddm_close;
+
+</script>
+
+<!-- Parallax & Scrolling -->
+<script type="text/javascript" src="{% static "js/jquery.localscroll-min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery.scrollTo-min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery.parallax-1.1.3.js" %}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+    $.localScroll({
+    });
+    $('#section-parallax-2').parallax("50%", 0.1);
+    $('#section-parallax').parallax("50%", 0.5);
+    });
+</script>
+
+{% block extra_js %}{% endblock %}
+{# This is needed for editable toolbar at top left #}
+{% include "includes/footer_scripts.html" %}
+{% endcompress %}
+
+{% if LANGUAGE_BIDI %}
+<link rel="stylesheet" href="{% static "css/rtl.css" %}" %}">
+{% endif %}
+{% ifinstalled cartridge.shop %}
+<link rel="stylesheet" href="{% static "css/cartridge.css" %}" %}">
+{% if LANGUAGE_BIDI %}
+<link rel="stylesheet" href="{% static "css/cartridge.rtl.css" %}">
+{% endif %}
+{% endifinstalled %}
+
+{% block extra_head %}{% endblock %}
+</head>
+
+<body id="{% block body_id %}body{% endblock %}">
+
+<body>
+
+<!--header-->
+<header>
+
+    <div class="site-header">
+
+        <div class="header-container">
+
+            {# need some tag to split this and color differently #}
+            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"red,#444" }} {% endautoescape %}</h1>
+
+            <!-- <img src="img/logo.png"> -->
+
+            <div class="menu-mobile-container">
+
+                <div class="menu-mobile"  id="menu-mob">
+
+                    <!--placeholder for slicknav to insert its menu (styling was menu) -->
+
+                </div> <!-- menu-mobile-->
+
+            </div> <!-- /menu-mobile-container-->
+
+            <div id="menu">
+                {% block topmenu %}
+                {% page_menu "pages/menus/nonindex_dropdown.html" %}
+                {% endblock %}
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+<!--//header-->    
+
+{% block all_content %}
+<!--page_container-->
+<section id="{% block section_id %}page-blog {% endblock %}" class="page-container">
+    <div class="site-container clearfix">
+        {% block main_wrapper %}
+        <div class="row">
+            <div class="column-two-thirds">
+                {% block main %}{% endblock %}
+            </div>
+            <div class="column-one-third">
+                {% block right_panel %}{% include "blog/includes/filter_panel.html" %}{% endblock %}
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+</section>     
+<!--//page_container-->
+{% endblock %}    
+
+<!--footer-->
+
+<section id="section-site-map" class="clearfix">
+
+    <div class="site-container clearfix">
+
+        <div class="logicon-info">  
+
+            {# need a tag to seperate colors #}
+            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"red, white" }}{% endautoescape %}</h1>
+
+            <p>{% autoescape off %}{{ settings.SITE_TAGLINE|truncatewords:70 }} {% endautoescape %}<p>
+
+        </div>
+
+        <div class="contact-info">
+
+            <h3>Contact Info</h3>
+            {# contact info should be added from settings probably #}
+            <table>
+
+                <tr>
+
+                    <td><i class="fa fa-user"></i></td>
+
+                    <td>Joe Bloggs</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><i class="fa fa-envelope"></i></td>
+
+                    <td><a href="mailto:#">joe@bloggs.com</a></td>
+
+                </tr>
+
+                <tr>
+
+                    <td><i class="fa fa-phone"></i></td>
+
+                    <td>555-555-5555</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><i class="fa fa-home"></i></td>
+
+                    <td>742 Evergreen Terrace, Springfield, US</td>
+
+                </tr>
+
+                <tr>
+
+                    <td><i class="fa fa-skype"></i></td>
+
+                    <td>joebloggs2014</td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+        <div class="popular-pages">
+
+            <h3>Popular Pages</h3>
+
+            <ul>
+                {% page_menu "pages/menus/footmenu.html" %}
+            </ul>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section id="footer">
+
+    <div class="site-container clearfix">
+
+        <p>&copy; {{ settings.SITE_TITLE}} {%now "Y"%} </p>
+
+        <div class="footer-social-container">
+
+            <div class="footer-social">
+
+                {% if settings.SOCIAL_LINK_FACEBOOK %}
+                <a target="_blank" href="{{ settings.SOCIAL_LINK_FACEBOOK }}"><i class="fa fa-facebook"></i></a>
+                {% endif %}
+
+                {% if settings.SOCIAL_LINK_TWITTER %}
+                <a target="_blank" href="{{ settings.SOCIAL_LINK_TWITTER }}"><i class="fa fa-twitter"></i></a>
+                {% endif %}
+
+                {% if settings.PERSONAL_EMAIL %}
+                <a href="mailto:{{settings.PERSONAL_EMAIL}}"><i class="fa fa-envelope"></i></a>
+                {% endif %}
+
+                {% if settings.PERSONAL_SKYPE %}
+                {# This will work on iOS devices to let people click to call #}
+                <a href="skype:{{settings.PERSONAL_SKYPE}}?call"><i class="fa fa-skype"></i></a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!--//footer-->    
+
+{# % include "includes/footer_scripts.html" % #}
+
+<!-- Portfolio Filter & Shuffle -->
+<script src="{% static "js/jquery.mixitup.min.js" %}"></script>
+<script>
+    $(function(){
+    $('#Container').mixItUp();
+    });
+</script>
+
+<!-- Slideshow (needs jquery abov 1.9.1) -->
+<script src="{% static "js/jquery.event.move.js" %}"></script>
+<script src="{% static  "js/responsive-slider.js" %}"></script>
+
+</body>
+
+</body>
+</html>

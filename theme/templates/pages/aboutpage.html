@@ -1,0 +1,60 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags static %}
+
+{# This is id of section that wraps around everything in the base.html #}
+{# Important to set so css styles work correctly #}
+{% block section_id %}page-about-us{% endblock %}
+
+{% block main_wrapper %}
+
+{% editable page.aboutpage.title %}
+<h2>{{page.aboutpage.title}}</h2>
+{% endeditable %}
+
+<div class="team clearfix">
+
+        {# How does this work if not 4 profiles? #}
+        {% for prof in  page.aboutpage.profiles.all %}
+        <div class="column-one-quarter">
+
+            {% editable prof.name %}
+            <h3> {{ prof.name }} </h3>
+            {% endeditable %}
+
+            <img src="{{ MEDIA_URL }}{% thumbnail prof.icon 100 100 %}">
+
+            {% editable prof.role %}
+            <h4> {{ prof.role }} </h4>
+            {% endeditable %}
+
+            {% editable prof.blurb %}
+            <p> {{prof.blurb }} </p>
+            {% endeditable %}
+
+        </div>
+        {% endfor %}
+
+
+
+</div>
+
+<div class="clearfix">
+    <div class="column-one-half">
+        <h3>Our Values</h3>
+        <p>
+        {% editable page.aboutpage.values %}
+            {% autoescape off %}{{ page.aboutpage.values|safe }}{% endautoescape %}
+        {% endeditable %}
+        </p>
+    </div>
+    <div class="column-one-half">
+        <h3>Our History </h3>
+        <p>
+        {% editable page.aboutpage.history %}
+            {% autoescape off %}{{ page.aboutpage.history|safe }}{% endautoescape %}
+        {% endeditable %}
+        </p>
+    </div>
+</div>
+{% endblock %}

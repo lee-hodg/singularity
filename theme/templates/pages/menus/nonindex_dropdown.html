@@ -1,0 +1,54 @@
+{# See the 'Page Menus' docs http://mezzanine.jupo.org/docs/content-architecture.html #}
+{# Notice if e.g. in zeroth branch we recursively make a call to page_menu #}
+{# which is the function we called from base.html, the second time round we will#}
+{# be in a subbranch, so the branch_level not 0, and jump to else. Here again #}
+{# a recursive call to page_menu is made if any children present, and so on #}
+
+{# This menu is for pages other than index.html, that want even the parent pages #}
+{# to have absolute url links and not #section links for one-page-resp design #}
+{# We use it on those pages by overwriting the menu block from base.html #}
+
+{% load i18n future pages_tags %}
+{% spaceless %}
+{% if page_branch_in_menu %}
+
+{% if branch_level == 0 %}
+<ul id="jsddm">
+    {% for page in page_branch %}
+    {% if not has_home and page.is_primary and forloop.first %}
+    <li{% if on_home %} class="current"{% endif %} id="dropdown-menu-home">
+        <a href="{% url "home" %}">{% trans "Home" %}</a>
+    </li>
+    {% endif %}
+    {% if page.in_menu %}
+    <li class="{% if page.has_children_in_menu %}sub-menu{% endif %}
+               {% if page.is_current_or_ascendant %}current{% endif %}"
+        id="{{ page.html_id }}">
+        <a href="{{ page.get_absolute_url }}"
+        {% if page.has_children_in_menu %}
+        {% endif %}>
+            {{ page.title }}
+        </a>
+        {% if page.has_children_in_menu %}{% page_menu page %}{% endif %}
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+
+{% else %}
+<ul>
+    {% for page in page_branch %}
+    {% if page.in_menu %}
+    <li class="{% if page.has_children_in_menu %}dropdown-submenu{% endif %}
+               {% if page.is_current_or_ascendant %}current{% endif %}"
+        id="{{ page.html_id }}">
+        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+        {% if page.has_children_in_menu %}{% page_menu page %}{% endif %}
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endif %}
+{% endspaceless %}

@@ -1,0 +1,117 @@
+{% extends "blog/blog_post_list.html" %}
+{% load mezzanine_tags comment_tags keyword_tags rating_tags i18n future disqus_tags %}
+
+{% block meta_title %}{{ blog_post.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+{% keywords_for blog_post as tags %}
+{% for tag in tags %}{% if not forloop.first %}, {% endif %}{{ tag }}{% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+{{ blog_post.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+{% editable blog_post.title %}{{ blog_post.title }}{% endeditable %}
+{% endblock %}
+
+
+{% block main %}
+<div class="full-post">
+
+    <h2> {{ blog_post.title }} </h2>
+
+    {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
+    {% block blog_post_list_post_featured_image %}
+    <a href="{{ blog_post.get_absolute_url }}">
+        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 1500 430 %}">
+    </a>
+    {% endblock %}
+    {% endif %}
+
+
+    <div class="post_meta">
+        {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }} ago{% endblocktrans %} /
+        {% with blog_post.user as author %}
+        By <a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
+        {% endwith %}
+
+        {% keywords_for blog_post as tags %}
+        {% if tags %}
+        /
+        {% trans "Tags" %}:
+        {% for tag in tags %}
+        <a href="{% url "blog_post_list_tag" tag.slug %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        {% with blog_post.categories.all as categories %}
+        {% if categories %}
+        /
+        {% trans "Categories" %}:
+        {% for category in categories %}
+        <a href="{% url "blog_post_list_category" category.slug %}">{{ category }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% if settings.COMMENTS_DISQUS_SHORTNAME %}
+        <a href="{{ blog_post.get_absolute_url }}#disqus_thread"
+            data-disqus-identifier="{% disqus_id_for blog_post %}">
+            {% trans "Comments" %}
+        </a>
+        {% else %}
+        <a href="{{ blog_post.get_absolute_url }}#comments">
+            {% blocktrans count comments_count=blog_post.comments_count %}{{ comments_count }} comment{% plural %}{{ comments_count }} comments{% endblocktrans %}
+        </a>
+        {% endif %}
+    </div>
+
+
+    {% if settings.COMMENTS_DISQUS_SHORTNAME %}
+    {% include "generic/includes/disqus_counts.html" %}
+    {% endif %}
+
+    {% block blog_post_detail_content %}
+    {% editable blog_post.content %}
+    {{ blog_post.content|richtext_filters|safe }}
+    {% endeditable %}
+    {% endblock %}
+
+    {% block blog_post_detail_keywords %}
+    {% keywords_for blog_post as tags %}
+    {% if tags %}
+    {% spaceless %}
+    <ul class="list-inline tags">
+        {% for tag in tags %}
+        <li><a href="{% url "blog_post_list_tag" tag.slug %}">{{ tag }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endspaceless %}
+    {% endif %}
+    {% endblock %}
+
+    {% comment %}
+    {% block blog_post_detail_rating %}
+    <div class="panel rating">
+        {% rating_for blog_post %}                                                                                                                                                                                                 
+    </div>
+    {% endblock %}
+    {% endcomment %}
+    <br style="clear:both">
+
+    {% block blog_post_detail_sharebuttons %}
+    {% set_short_url_for blog_post %}
+    <a class="btn btn-sm share-twitter" target="_blank" href="http://twitter.com/home?status={{ blog_post.short_url|urlencode }}%20{{ blog_post.title|urlencode }}">{% trans "Share on Twitter" %}</a>
+    <a class="btn btn-sm share-facebook" target="_blank" href="http://facebook.com/sharer.php?u={{ request.build_absolute_uri }}&amp;t={{ blog_post.title|urlencode }}">{% trans "Share on Facebook" %}</a>
+    {% endblock %}
+</div> <!-- END full-post-->
+
+    {# NB you can copy into proj and ovveride the generic.templates.generic.includes.comment(s) #}
+    {# template to change the form of the comment and new comment form #}
+    {% block blog_post_detail_comments %}
+    {% if blog_post.allow_comments %}{% comments_for blog_post %}{% endif %}
+    {% endblock %} 
+
+{% endblock %}
