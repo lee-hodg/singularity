@@ -898,9 +898,10 @@ border-bottom: 1px solid #ccc;
 	left: -135px;
 	width: 120px;
 	padding: 5px;
-	top:-20px;
-
+	top: 0px;
 }
+
+.form-errors {display:inline}
 
 #section-contact .tag-tip > i {
 	border-width: 14px;

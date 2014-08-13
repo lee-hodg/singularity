@@ -40,8 +40,13 @@ pre-shipped bootstrap css-->
 
 {% compress js %}
 <!--jQuery -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-<!--script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script-->
+{# compress error if this external link is in here? #}
+<!--script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script-->
+{# doing it the way immediately below means problems for admin looking in mezzanine/js for a non-existant version #}
+{# thus meaning we have to copy the version to venv each time, or override admin #}
+<!--script src="{% static "js/"|add:settings.JQUERY_FILENAME %}"></script-->
+{# simplest soln is just: #}
+<script src="{% static "js/jquery-2.1.0.min.js" %}"></script>
 
 <!-- PrettyPhoto -->
 <script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
@@ -134,7 +139,6 @@ pre-shipped bootstrap css-->
     <div class="site-header">
 
         <div class="header-container">
-
             {# need some tag to split this and color differently #}
             <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"red,#444" }} {% endautoescape %}</h1>
 
