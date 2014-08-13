@@ -56,6 +56,12 @@ h4 {
 	padding: 0 0 15px;
 }
 
+h6 {
+	padding: 0 0 15px;
+	margin:0;
+	font-size: 14px
+}
+
 p {
 	margin:0 0 15px;
 	line-height:1.6
@@ -518,6 +524,24 @@ a .tag {
 	background-position: -7px -6px;
 }
 
+#section-features a .fa {
+	font-size: 28px;
+	background:#303030;
+	color: white;
+	width:73px;
+	height:73px;
+	vertical-align: middle;
+	line-height: 70px;
+	border:3px solid #fff;
+	box-shadow: 0px 0px 5px #888;
+	border-radius: 50%;
+	transition: all 0.4s ease 0s
+}
+
+#section-features a .fa:hover {
+
+border: 3px solid #C3512F;
+}
 
 
 /**************** PORTFOLIO SECTION ******************/
@@ -584,6 +608,7 @@ button + label{
 	text-align: left;
 	margin-bottom: 3%;
 	display: none;
+	vertical-align: top;
 }
 
 .col-4{
@@ -855,7 +880,42 @@ border-bottom: 1px solid #ccc;
 	padding-bottom:30px
 }
 
-.contact-section-info {}
+.social-fonts-container a {
+	color:#444;
+}
+
+.contact-section-info a {color:#444}
+
+.errorlist {
+	list-style: none;
+	position: absolute;
+}
+
+.errorlist li {
+	position: absolute;
+	background: rgba(195, 81, 47, 0.9);
+	color:white;
+	left: -135px;
+	width: 120px;
+	padding: 5px;
+	top:-20px;
+
+}
+
+#section-contact .tag-tip > i {
+	border-width: 14px;
+	border-color: transparent transparent transparent rgba(195, 81, 47, 0.9);
+	left:115px;
+	top:-20px;
+}
+
+.errornote {
+	padding-left:15px;
+	font-size:14px;
+	text-transform: none;
+	color:#444
+
+}
 
 
 
@@ -949,6 +1009,15 @@ border-bottom: 1px solid #ccc;
 	padding-bottom: 20px
 }
 
+.list-inline {
+	list-style: none outside none;
+	padding: 0px;
+}
+
+.comments {
+	float: right
+}
+
 
 /**************** PORTFOLIO PAGE ******************/
 
@@ -963,7 +1032,13 @@ border-bottom: 1px solid #ccc;
 /**************** ABOUT US PAGE ******************/
 
 
-
+#page-about-us .column-one-quarter {
+	float:none;
+	display: inline-block;
+	vertical-align: top;
+	padding: 0;
+	width:24%;
+}
 
 
 #page-about-us .column-one-quarter img {

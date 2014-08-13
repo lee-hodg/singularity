@@ -1,0 +1,11 @@
+{% load i18n %}
+
+{% if form.non_field_errors or form.errors %}
+<div class="form-errors">
+    {% for error in form.non_field_errors %}
+    <span class="errornote">{{ error }}</span>
+    {% empty %}
+    <span class="errornote">({% trans "Please correct the errors below." %})</span>
+    {% endfor %}
+</div>
+{% endif %}
