@@ -21,3 +21,22 @@ Copy the file mezzanine.generic.templates.generic.includes.comment.html
 or comments.html (similar for rating or style disqus.html too)
 
 Proceed to edit.
+
+# South migrations for theme
+
+Weirdly theme ended up with two initial migrations  `0001_initial` and `0007_initial`, we need to fake the latter. This can be achieved by manual migrations upto and including six, e.g.
+
+    python manage.py migrate theme 0001
+    python manage.py migrate theme 0002
+    .
+    .
+    .
+
+then faking seven:
+    
+    python manage.py migrate theme 0007 --fake
+
+followed by the rest:
+
+    python manage.py migrate theme
+

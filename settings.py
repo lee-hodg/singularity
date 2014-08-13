@@ -130,7 +130,7 @@ LANGUAGES = (
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
 # are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py
-DEBUG = True
+DEBUG = False
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -368,6 +368,7 @@ NEVERCACHE_KEY = "hg^4)35=fn2p)4st!702-_czw&2!gkr+8-+d7*pd-4v35+&9h1"
 # defined per machine.
 try:
     from local_settings import *
+    INSTALLED_APPS += LOC_APPS
 except ImportError:
     pass
 
