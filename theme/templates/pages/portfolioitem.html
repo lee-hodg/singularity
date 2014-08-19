@@ -6,6 +6,23 @@
 
 {% block main %}
 
+    <div class="flexslider">
+        <ul class="slides">
+        {% for image in portfolioitem.images.all %}
+            <li>
+                <img src="{{ MEDIA_URL }}{% thumbnail image.file 600 400 top=0 %}" alt="" />
+            </li>
+         {% endfor %}
+        </ul>
+     </div>
+
+{% editable page.portfolioitem.content %}
+{{ page.portfolioitem.content|richtext_filters|safe }}
+{% endeditable %}
+
+{% endblock main %}
+
+{% comment %}
 <div class="full-post">
     {% editable page.title %}
     <h2> {{ page.title }}</h2>
@@ -24,6 +41,7 @@
 </div>  
 
 {% endblock main %}
+{% endcomment %}
 
 {% block right_panel %}
 

@@ -30,6 +30,8 @@ pre-shipped bootstrap css-->
 <link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/slicknav.css" %}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" id="camera-css"  href="{% static "css/camera.css" %}" type="text/css" media="all">
+<!-- This is for portfolio slider -->
+<link rel="stylesheet" href="{% static "css/flexslider.css" %}" type="text/css">
 {% block extra_css %}{% endblock %}
 {% endcompress %}
 
@@ -47,6 +49,13 @@ pre-shipped bootstrap css-->
 <!--script src="{% static "js/"|add:settings.JQUERY_FILENAME %}"></script-->
 {# simplest soln is just: #}
 <script src="{% static "js/jquery-2.1.0.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery.flexslider-min.js" %}"></script>
+
+<script type="text/javascript" charset="utf-8">
+$(window).load(function() {
+$('.flexslider').flexslider();
+});
+</script>
 
 <!-- PrettyPhoto -->
 <script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
@@ -139,7 +148,7 @@ pre-shipped bootstrap css-->
 
         <div class="header-container">
             {# need some tag to split this and color differently #}
-            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, #444" }} {% endautoescape %}</h1>
+            <h1><a href="/"> {% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, #444" }} {% endautoescape %}</a></h1>
 
             <!-- <img src="img/logo.png"> -->
 

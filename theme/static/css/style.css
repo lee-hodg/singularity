@@ -266,9 +266,6 @@ a.anchor{
 
 /**************** BLOG SECTION ******************/
 
-#section-blog {
-	
-}
 
 .search-input {
 	border:2px solid #ccc;
@@ -293,7 +290,7 @@ a.anchor{
 
 
 .search {
-	padding-bottom: 30px
+	padding-bottom: 30px;
 }
 
 input:focus {
@@ -1412,7 +1409,7 @@ border-bottom: 1px solid #ccc;
 		float: left;
 	}
 
-	.menu-mobile-container {display: block}
+	.menu-mobile-container {display: block;}
 
 	#menu {display: none;}
 
@@ -1421,8 +1418,9 @@ border-bottom: 1px solid #ccc;
 	.header-container h1 {
 		position: absolute;
 		top:13px;
-}
+    }
 
+}
 
 /**************** MOBILE ***************/
 
@@ -1452,9 +1450,6 @@ border-bottom: 1px solid #ccc;
 		display: none;
 	}
 
-
-
-
 }
 
-
+/*******************PORTFOLIO ITEM CAROUSEL*********************/

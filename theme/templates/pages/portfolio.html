@@ -45,7 +45,7 @@
         </div> <!-- END portfolio-image-container-->
 
         <div class="portfolio-description">
-            <h3><a href="{% url "page" "portfolioitem" %}">{{ item.title }}</a></h3>
+            <h3><a href="{% url "page" item.slug %}">{{ item.title }}</a></h3>
             <p>{{ item.short_description|richtext_filters|safe }}</p>
         </div> <!-- END portfolio-description-->
  
