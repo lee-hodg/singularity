@@ -21,16 +21,18 @@ $(function() {
 {% comment_thread object_for_comments %}
 <form method="post" id="blog-comment" action="{{ comment_url }}#comment">
     <h3>{% trans "Leave a comment" %}</h3>
-    {% if not request.POST.replied_to %}
-    {# To edit the way fields_for renders you need to copy and change the template #}
-    {# from core includes.form_fields #}
-    {% fields_for posted_comment_form %}
-    {# { posted_comment_form.name } #}
-    {% else %}
-    {% fields_for unposted_comment_form %}
-    {% endif %}
-    <div class="form-actions">
-        <input class="btn btn-primary btn-lg" type="submit" value="{% trans "Send" %}">
+    <div class="comment-background clearfix">
+        {% if not request.POST.replied_to %}
+        {# To edit the way fields_for renders you need to copy and change the template #}
+        {# from core includes.form_fields #}
+        {% fields_for posted_comment_form %}
+        {# { posted_comment_form.name } #}
+        {% else %}
+        {% fields_for unposted_comment_form %}
+        {% endif %}
+        <div class="form-actions">
+            <input class="btn btn-primary btn-lg" type="submit" value="{% trans "Send" %}">
+        </div>
     </div>
 </form>
 {% endif %}
