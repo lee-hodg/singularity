@@ -50,16 +50,13 @@
 {% keywords_for blog.blogpost as tags %}
 {% if tags %}
     <h3>{% trans "Tag Cloud" %}</h3>
+    <div id="blog_tagcloud">
     {% for tag in tags %}
-    <a href="{% url "blog_post_list_tag" tag.slug %}"
-        class="tag-weight-{{ tag.weight }}">
-        <div class="tag">
-            <div class="tag-body">
-                {{ tag }} ({{ tag.item_count }})
-            </div>
-            <i class="tag-tip"><i></i></i>
-        </div>
-    </a>
+        <a href="{% url "blog_post_list_tag" tag.slug %}"
+            rel="{{ tag.weight }}">
+                    {{ tag }} ({{ tag.item_count }})
+        </a>
     {% endfor %}
+    </div>
 {% endif %}
 {% endblock %}
