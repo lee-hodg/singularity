@@ -29,9 +29,9 @@
     <div class="mix col-{{page.portfolio.columns}} {% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify}} {% endfor %}{% endspaceless %}" data-category="{% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify }} {% endfor %}{% endspaceless %}" data-myorder="{{ forloop.counter }}">
 
         <div class="portfolio-image-container">
-            <img src="{{ MEDIA_URL }}{% if page.portfolio.columns == '2' %}{% thumbnail item.featured_image 456 289 %}
-                {% elif page.portfolio.columns == '3' %}{% thumbnail item.featured_image 288 182 %}
-                {% elif page.portfolio.columns == '4' %}{% thumbnail item.featured_image 216 137 %}{% endif %}" alt="" />
+            <img src="{{ MEDIA_URL }}{% if page.portfolio.columns == '2' %}{% thumbnail item.featured_image 600 400 quality=100 top=0 %}
+                {% elif page.portfolio.columns == '3' %}{% thumbnail item.featured_image 0 182 %}
+                {% elif page.portfolio.columns == '4' %}{% thumbnail item.featured_image 0 137 %}{% endif %}" alt="" />
 
             <span class="text-content">
                 <span>

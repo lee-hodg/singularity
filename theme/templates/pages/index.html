@@ -25,6 +25,20 @@
 
 {% load i18n static pages_tags mezzanine_tags staticfiles templateutils %}
 
+{% block extra_js %}
+{{ block.super }}
+    <script type="text/javascript">
+    {# If contact_form errors set a js var indicating so that will trigger a scrollTo #link-contact sec #}
+    {% if contact_form.errors.items|length %}
+        //var refocusOnContact = 'true';
+        //on window load.
+        //$(window).on('load', function() { //location.hash = '#link-contact'
+        //        ;})
+        $(function() { location.hash = '#link-contact';})
+        //$(window).on('load', function() {$(window).scrollTop($('#link-contact').offset().top);})
+    {% endif %}
+    </script>
+{% endblock %}
 {% block topmenu %}
 {# Menu for index with the sec links instead of absolute urls at top level #}
 {# Needs pages_tags loaded #}
@@ -54,7 +68,7 @@
 
                     <div class="slide-body" data-group="slide">
 
-                        <img src="{{ MEDIA_URL }}{% thumbnail slide.image 1920 690 %}">
+                        <img src="{{ MEDIA_URL }}{% thumbnail slide.image 1600 459 %}">
 
 
                         <div class="caption header" data-animate="slideAppearRightToLeft" data-delay="500" data-length="300">
@@ -71,21 +85,23 @@
 
                         </div>
 
-                        {% if slide.cap_image1 %}
-                        <div class="caption img-html5" data-animate="slideAppearLeftToRight" data-delay="200">
+                        <div class="caption-img-wrapper">
+                            {% if slide.cap_image1 %}
+                            <div class="caption img-html5" data-animate="slideAppearLeftToRight" data-delay="200">
+                                {# with the 0 it will scale rather than crop #}
+                                <img src="{{ MEDIA_URL }}{% thumbnail slide.cap_image1 0 280 %}">
 
-                            <img src="{{ MEDIA_URL }}{% thumbnail slide.cap_image1 307 307 %}">
+                            </div>
+                            {% endif %}
 
+                            {% if slide.cap_image2 %}
+                            <div class="caption img-css3" data-animate="slideAppearLeftToRight">
+
+                                <img src="{{ MEDIA_URL }}{% thumbnail slide.cap_image2 0 100 %}">
+
+                            </div>
+                            {% endif %}
                         </div>
-                        {% endif %}
-
-                        {% if slide.cap_image2 %}
-                        <div class="caption img-css3" data-animate="slideAppearLeftToRight">
-
-                            <img src="{{ MEDIA_URL }}{% thumbnail slide.cap_image2 307 307 %}">
-
-                        </div>
-                        {% endif %}
 
                     </div>
 
@@ -120,7 +136,7 @@
             <div class="column-two-thirds">
                 {# should filter only most recent n posts really #}
                 {% for blog_post in blog_posts.all %}
-                <div class="post">
+                <div class="post clearfix">
 
                     <h2><a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a></h2>
 
@@ -134,14 +150,15 @@
                     {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
                     {% block blog_post_list_post_featured_image %}
                     <a href="{{ blog_post.get_absolute_url }}">
-                        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 270 229 %}">
+                        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 200 200 quality=100 top=0 %}">
                     </a>
                     {% endblock %}
                     {% endif %}
 
-
+                    {# This stops at first para or br, unless user has unchecked generate in admin #}
+                    {# and entered their own #}
                     {% editable blog_post.content %}
-                    {{ blog_post.description_from_content|safe|truncatewords:30 }}
+                    {{ blog_post.description_from_content|safe }}
                     {% endeditable %}
                     <div class="readmore"><a href="{{ blog_post.get_absolute_url }}" class="arrow_link">Read more</a></div>
 
@@ -234,7 +251,7 @@
 
                     <div class="mix col-4 {% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify}} {% endfor %}{% endspaceless %}" data-category="{% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify }} {% endfor %}{% endspaceless %}" data-myorder="{{ forloop.counter }}">
                         <div class="portfolio-image-container">
-                            <img src="{{MEDIA_URL}}{% thumbnail item.featured_image 216 137 %}" alt="" />
+                            <img src="{{MEDIA_URL}}{% thumbnail item.featured_image 300 200 top=0 %}" alt="" />
                             <span class="text-content">
                                 <span>
                                     <span>
@@ -294,7 +311,7 @@
 
                 <div class="column-two-thirds">
 
-                    <h2>Contact</h2>
+                    <h2>Contact </h2>
 
                     <h3>
                         Send a Message

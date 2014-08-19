@@ -25,7 +25,7 @@
     {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
     {% block blog_post_list_post_featured_image %}
     <a href="{{ blog_post.get_absolute_url }}">
-        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 1500 430 %}">
+        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 700 0 quality=100 top=0 %}">
     </a>
     {% endblock %}
     {% endif %}
@@ -62,9 +62,11 @@
             {% trans "Comments" %}
         </a>
         {% else %}
-        <a href="{{ blog_post.get_absolute_url }}#comments">
-            {% blocktrans count comments_count=blog_post.comments_count %}{{ comments_count }} comment{% plural %}{{ comments_count }} comments{% endblocktrans %}
-        </a>
+        <div class="comments">
+            <a href="{{ blog_post.get_absolute_url }}#comments">
+                {% blocktrans count comments_count=blog_post.comments_count %}{{ comments_count }} comment{% plural %}{{ comments_count }} comments{% endblocktrans %}
+            </a>
+        </div>
         {% endif %}
     </div>
 
@@ -85,7 +87,10 @@
     {% spaceless %}
     <ul class="list-inline tags">
         {% for tag in tags %}
-        <li><a href="{% url "blog_post_list_tag" tag.slug %}">{{ tag }}</a></li>
+        <li class="tag">
+            <div class="tag-body"><a href="{% url "blog_post_list_tag" tag.slug %}">{{ tag }}</a></div>
+            <i class="tag-tip"><i></i></i>
+        </li>
         {% endfor %}
     </ul>
     {% endspaceless %}

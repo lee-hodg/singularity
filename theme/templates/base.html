@@ -104,8 +104,7 @@ pre-shipped bootstrap css-->
 <script type="text/javascript" src="{% static "js/jquery.parallax-1.1.3.js" %}"></script>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-    $.localScroll({
-    });
+    $.localScroll({});
     $('#section-parallax-2').parallax("50%", 0.1);
     $('#section-parallax').parallax("50%", 0.5);
     });
@@ -140,7 +139,7 @@ pre-shipped bootstrap css-->
 
         <div class="header-container">
             {# need some tag to split this and color differently #}
-            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"red,#444" }} {% endautoescape %}</h1>
+            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, #444" }} {% endautoescape %}</h1>
 
             <!-- <img src="img/logo.png"> -->
 
@@ -195,7 +194,7 @@ pre-shipped bootstrap css-->
         <div class="logicon-info">  
 
             {# need a tag to seperate colors #}
-            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"red, white" }}{% endautoescape %}</h1>
+            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, white" }}{% endautoescape %}</h1>
 
             <p>{% autoescape off %}{{ settings.SITE_TAGLINE|truncatewords:70 }} {% endautoescape %}<p>
 

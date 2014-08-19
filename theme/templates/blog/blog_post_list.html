@@ -62,15 +62,17 @@
 {% else %}
     {% if page %}
     {% block blog_post_list_pagecontent %}
-    {% editable page.richtextpage.content %}
-    {{ page.richtextpage.content|richtext_filters|safe }}
-    {% endeditable %}
+    <div class="blog_post_list_pagecontent">
+        {% editable page.richtextpage.content %}
+        {{ page.richtextpage.content|richtext_filters|safe }}
+        {% endeditable %}
+    </div>
     {% endblock %}
     {% endif %}
 {% endif %}
 
 {% for blog_post in blog_posts.object_list %}
-<div class="post">
+<div class="post clearfix">
     {% block blog_post_list_post_title %}
     {% editable blog_post.title %}
     <h2><a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a></h2>
@@ -122,7 +124,7 @@
     {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
     {% block blog_post_list_post_featured_image %}
     <a href="{{ blog_post.get_absolute_url }}">
-        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 144 144 %}">
+        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 270 270 top=0 %}">
     </a>
     {% endblock %}
     {% endif %}
