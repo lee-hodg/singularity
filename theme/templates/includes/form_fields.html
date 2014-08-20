@@ -12,7 +12,13 @@
 <div class="form-group input_{{ field.id_for_label }} {{ field.field.type }}
     {% if field.errors %} has-error{% endif %}">
     {% if field.label %}<label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label> 
-        {% if field.help_text %} <span class="help-inline">({{ field.help_text }})</span> {% endif %}
+        {% if 'required' in field.help_text %} 
+            <div class="help-outer">
+                <span class="help-inline"> 
+                    <i class="triangle"><i></i></i> {# { field.help_text } #}
+                </span>
+            </div>
+        {% endif %}
     {% endif %}
     {{ field }}
     {% if field.errors %}
