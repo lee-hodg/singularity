@@ -1,4 +1,4 @@
-{% load i18n mezzanine_tags comment_tags rating_tags %}
+{% load i18n mezzanine_tags comment_tags rating_tags templateutils%}
 
 {% for comment in comments_for_thread %}
 <li>
@@ -21,7 +21,16 @@
                 </span>
             </span>
             <div class="comment-info">
-                <span class="comment-username"><a href="{{ comment.url }}">{{ comment.user_name }}</a></span>
+                <span class="comment-username">
+                    <a href="{{ comment.url }}">{{ comment.user_name }}</a>
+                    {% if comment.replied_to %}@
+                        {% if comment.replied_to.url %}
+                            <a href="{{comment.replied_to.url}}">{{ comment.replied_to.user_name }}</a>
+                        {% else %}
+                            {{ comment.replied_to.user_name }}
+                        {% endif %}
+                    {% endif %}
+                </span>
         {% else %}
         {# Without URLs #}
         <div class="avatar">
@@ -35,14 +44,23 @@
             </span>
 
             <div class="comment-info"> 
-                <span class="comment-username">{{ comment.user_name }}</span>
+                <span class="comment-username">{{ comment.user_name }}
+                    {% if comment.replied_to %}@
+                        {% if comment.replied_to.url %}
+                            <a href="{{comment.replied_to.url}}">{{ comment.replied_to.user_name }}</a>
+                        {% else %}
+                            {{ comment.replied_to.user_name }}
+                        {% endif %}
+                    {% endif %}
+                </span>
         {% endif %}
                <span class="comment-date">{% blocktrans with sometime=comment.submit_date|timesince %}{{ sometime }} ago{% endblocktrans %}</span>
             </div><!--END comment-info-->
 
             <p>{{ comment.comment|comment_filter }}</p>
-
-
+            <p> My id: {{ comment.id }}, I replied to: {{comment.replied_to_id}}</p>
+            <p> Do I have children?: {% if comment.id in all_comments|defaultdict_keys %} yes {% else %} no {% endif %} </p>
+            <p> What is my level in the tree?: {{ comment|comment_level }}</p>
             <div class="comment-border">
 
                 {# rating disabled for this theme #}
@@ -55,6 +73,15 @@
                 {% endcomment %}
 
                 {% if not comment.is_removed and comment.is_public %}
+                {% if comment|comment_level == 0 %}
+                    {# level 0 parent #}
+                    {% if comment.id in all_comments|defaultdict_keys %}
+                        {# parent with child #}
+                        <a  href="#show-replies-{{ comment.id }}">
+                            <span class="show-replies"></span> {% trans "Show replies" %} 
+                        </a> 
+                     {% endif %}
+                {% endif %}
                 <a class="link" href="{{ request.path }}#comment-{{ comment.id }}">
                     <span class="glyphicon glyphicon-link"></span> {% trans "Link" %} 
                 </a> 
@@ -99,9 +126,19 @@
     (see mezz source-generic.templatetags.comment_tags) to send its context to this template comment.html. 
     Now we use the comment_thread tag on this comment itself and the dance continues
     {% endcomment %}
-    <ul>
-    {% comment_thread comment %}
-    </ul>
+
+    {% if comment.id in all_comments|defaultdict_keys %}
+        {% comment %}
+        The custom defaultdict_keys tag is needed for defaultdict unlike just .keys for reg dict.
+        The comment has children(this is how all_comments works, kids are indexed under parent id).
+        This whole if-else is not strictly necessary
+        , but it prevents empty <ul></ul> at bottom level.
+        N.B. you can jQ select on the data-level attrbs with $("ul[data-level!='0']>li").hide() etc
+        {% endcomment %}
+        <ul data-level="{{ comment|comment_level|add:1 }}">
+            {% comment_thread comment %}
+        </ul>
+    {% endif %}
     {% endeditable %}
 </div>
 </li>
