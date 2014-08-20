@@ -1,7 +1,7 @@
 {% load i18n mezzanine_tags comment_tags rating_tags %}
 
 {% for comment in comments_for_thread %}
-
+<li>
 <div id="comment-{{ comment.id }}" class="comment media{% if comment.by_author %} comment-author{% endif %}">
 
     {% editable comment.is_public comment.is_removed %}
@@ -44,12 +44,22 @@
 
 
             <div class="comment-border">
+
+                {# rating disabled for this theme #}
+                {% comment %}
+                {% if settings.COMMENTS_USE_RATINGS %}
+                <div class="rating">
+                    {% rating_for comment %}
+                </div>
+                {% endif %} 
+                {% endcomment %}
+
                 {% if not comment.is_removed and comment.is_public %}
                 <a class="link" href="{{ request.path }}#comment-{{ comment.id }}">
-                    <span class="glyphicon glyphicon-link"></span> {% trans "Link" %}
-                </a> |
+                    <span class="glyphicon glyphicon-link"></span> {% trans "Link" %} 
+                </a> 
                 <a href="#reply-{{ comment.id }}" class="reply">
-                    <span class="glyphicon glyphicon-share-alt"></span> {% trans "Reply" %}
+                    <span class="glyphicon glyphicon-share-alt"></span> {% trans "Reply" %} |
                 </a>
                 {% endif %}
             </div><!--END comment-border-->
@@ -57,12 +67,6 @@
 
         
    
-        {# Ratings #} 
-        {# % if settings.COMMENTS_USE_RATINGS % #}
-        {# <div class="rating"> #}
-            {# {% rating_for comment %} #}
-        {# </div>#}
-        {# {% endif %} #}
 
         {# Comment reply form #}
         <form class="comment-reply-form" method="post" id="reply-{{ comment.id }}"
@@ -89,10 +93,18 @@
         <small class="timespan">{% blocktrans with sometime=comment.submit_date|timesince %}{{ sometime }} ago{% endblocktrans %}</small>
     </p>
     {% endif %}
-
+    
+    {% comment %}
+    This is a recursive call. comments.html is the top-level template here, it contains the comment_thread tag which is set
+    (see mezz source-generic.templatetags.comment_tags) to send its context to this template comment.html. 
+    Now we use the comment_thread tag on this comment itself and the dance continues
+    {% endcomment %}
+    <ul>
     {% comment_thread comment %}
+    </ul>
     {% endeditable %}
 </div>
+</li>
 {% endfor %}
 
 {% if no_comments %}
