@@ -1007,6 +1007,12 @@ border-bottom: 1px solid #ccc;
 	padding-bottom: 20px
 }
 
+.full-post p {
+	margin:15px 0;
+}
+
+
+
 .list-inline {
 	list-style: none outside none;
 	padding: 0px;
@@ -1016,6 +1022,9 @@ border-bottom: 1px solid #ccc;
 	float: right
 }
 
+.tag-body a {color:#444}
+
+.tag-body a:hover {color:#fff}
 
 /**************** PORTFOLIO PAGE ******************/
 
@@ -1217,9 +1226,8 @@ border-bottom: 1px solid #ccc;
 }
 
 .avatar {
-    float: left;
-    margin-right: 11px;
-    width:32px;
+   position:absolute;
+    width:60px;
 }
 
 .avatar img {
@@ -1326,7 +1334,7 @@ border-bottom: 1px solid #ccc;
 }
 
 .btn {
-	border: 1px solid #ccc;
+	border: medium none;
 	cursor: pointer;
 	color: #FFF;
 	background: none repeat scroll 0% 0% #C3512F;
@@ -1347,28 +1355,27 @@ border-bottom: 1px solid #ccc;
     padding:20px 20px 10px;
 }
 
-.comment-right {
+.comment-right, .comment-deleted {
     background: #F2F2F2;
-    float: left;
     padding:20px;
-    width:84%;
-    margin-left:4%;
+    margin-left:80px;
     position: relative;
     margin-bottom: 5px;
 }
 
-.share-social {
-    float: left;
-}
+.comment-deleted p {margin:0}
 
-.share-social p {
-    float: left;
+
+
+.share-social {
     padding-right:10px;
 }
 
 .share-twitter, .share-facebook {
     width:30px!important;
-    margin:0 10px 0 0px;
+    margin:-3px 0px 0 6px;
+    display: inline-block;
+    border-radius: 50%;
 }
 
 .comment-date {
@@ -1379,6 +1386,7 @@ border-bottom: 1px solid #ccc;
 
 .comment-border {
     border-top: 1px solid #ccc;
+    padding: 10px 0 0;
 }
 
 .reply, .link {
@@ -1386,7 +1394,7 @@ border-bottom: 1px solid #ccc;
     padding: 5px 5px 0;
 }
 
-.comment-info p {
+.comment-info + p {
     margin:0;
     padding:15px 0;
 }
@@ -1417,6 +1425,17 @@ border-bottom: 1px solid #ccc;
     left:0px;
     top:0px
 }
+
+.tags {margin-top: 30px}
+
+.timespan {
+	font-size:100%;
+	float:right;
+	color:#999;
+}
+
+
+
 
 
 /*************** CLEAR FIX *************/

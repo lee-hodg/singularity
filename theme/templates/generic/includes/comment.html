@@ -61,7 +61,7 @@
             <p> My id: {{ comment.id }}, I replied to: {{comment.replied_to_id}}</p>
             <p> Do I have children?: {% if comment.id in all_comments|defaultdict_keys %} yes {% else %} no {% endif %} </p>
             <p> What is my level in the tree?: {{ comment|comment_level }}</p>
-            <div class="comment-border">
+            <div class="comment-border clearfix">
 
                 {# rating disabled for this theme #}
                 {% comment %}
@@ -111,14 +111,16 @@
 
     {# Case where comment has been moved or deleted #}
     {% else %}
-    <p>
+    <div class="comment-deleted">
+        <p>
         {% if comment.is_removed %}
         <span class="glyphicon glyphicon-remove-circle"></span> {% trans "Comment deleted" %}
         {% else %}
         <span class="glyphicon glyphicon-warning-sign"></span> {% trans "Comment awaiting approval" %}
         {% endif %}
         <small class="timespan">{% blocktrans with sometime=comment.submit_date|timesince %}{{ sometime }} ago{% endblocktrans %}</small>
-    </p>
+        </p>
+    </div<!-- END OF comment-deleted -->>
     {% endif %}
     
     {% comment %}
