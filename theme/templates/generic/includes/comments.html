@@ -6,15 +6,17 @@
 {% else %}
 <script>
 $(function() {
-    $('.reply').click(function() {
-        $('.comment-reply-form').hide(); //make sure all other reply forms hidden.
+    $('.reply').click(function(event) {
+        //$('.comment-reply-form').hide(); //make sure all other reply forms hidden.
         //$(this).siblings('.comment-reply-form').toggle();
         // need to have this toggle the correct element if reply
         // link is moved!
         // immediate reply forms only
-        $(this).closest("div[id^='comment-']").find('>.comment-reply-form').toggle();
+        $(this).closest("div[id^='comment-']").find('>.comment-reply-form').slideToggle('slow');
         //also hide the regular blog comment box
-        $('#blog-comment').hide();
+        //$('#blog-comment').hide();
+
+        event.preventDefault();
     });
 
     //show-hide toggle child comments buttons

@@ -1,5 +1,47 @@
 {% load i18n mezzanine_tags comment_tags rating_tags templateutils%}
 
+{% comment %}
+::PAGINATION IDEAS::
+If I'm at the parent level of comments, I'd like take the comments_for_thread, 
+and pass them through some tag that paginates them, then proceed as normal, building 
+the child comments for this subset. At the foot, I'd run a {% pagination_for paged_comments_for_thread %}
+to generate the arrows and numbers.
+
+Problems: 
+
+I'd need to override the blog_post_detail view so that 
+
+Think about custom comment_thread tag instead that rips page from req
+
+Currently it returns:
+
+"comments_for_thread": context["all_comments"].get(parent_id, [])
+
+but first we could make it do
+
+from mezzanine.utils.views import paginate
+comments_for_thread = context["all_comments"].get(parent_id, [])
+if not parent.id:
+    # zeorth level
+    comments_for_thread = paginate(comments_for_thread, request.GET.get("page", 1),
+                            settings.COMMENTS_PER_PAGE,
+                            settings.MAX_PAGING_LINKS)
+    # add to context that we are at parent level too
+
+Now in the template
+if parent_level:
+    {% for comment in comments_for_thread.object_list %}
+else:
+    ...
+
+if at parent_level:
+    {% pagination_for comments_for_thread %}
+
+
+
+{% endcomment %}
+
+
 {% for comment in comments_for_thread %}
 <li>
 <div id="comment-{{ comment.id }}" class="comment media{% if comment.by_author %} comment-author{% endif %}">
@@ -11,7 +53,7 @@
         {% if comment.url %}
         <div class="avatar">
             <a href="{{ comment.url }}">
-                <img src="{% gravatar_url comment.email %}">
+                <img src="{% gravatar_url comment.email 64 %}">
             </a>
         </div>
         <div class="comment-right">
@@ -96,7 +138,7 @@
    
 
         {# Comment reply form #}
-        <form class="comment-reply-form" method="post" id="reply-{{ comment.id }}"
+        <form class="comment-reply-form clearfix" method="post" id="reply-{{ comment.id }}"
             action="{{ comment_url }}#reply-{{ comment.id }}"
             {% if replied_to != comment.id %}style="display:none;"{% endif %}>
             {% if replied_to == comment.id %}

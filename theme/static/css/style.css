@@ -1026,14 +1026,36 @@ border-bottom: 1px solid #ccc;
 
 .tag-body a:hover {color:#fff}
 
-/**************** PORTFOLIO PAGE ******************/
-
-
-
 #page-portfolio h2 {
 	border-bottom: 1px solid #ccc;
 	margin-bottom:25px;
 }
+
+.pagination {
+    list-style:none; 
+    padding:0;
+} 
+
+.page-info {
+    float:left;
+}
+
+ .pagination-nav{
+
+    float:right;
+}  
+
+.pagination-nav li {
+    float:left;
+    background:none!important;
+    padding: 0 5px;
+}
+
+.pagination-nav li.active a {
+    color: #444;
+}
+
+/**************** PORTFOLIO PAGE ******************/
 
 
 /**************** ABOUT US PAGE ******************/
@@ -1299,6 +1321,11 @@ border-bottom: 1px solid #ccc;
 	float:right;
 }
 
+.comment-reply-form {
+    margin:30px 0px 10px 80px; 
+    background: #f2f2f2; 
+    padding: 20px 20px 10px;
+ }
 
 .comment-reply-form input {
 	display: block;
