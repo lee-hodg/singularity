@@ -137,7 +137,7 @@
         , but it prevents empty <ul></ul> at bottom level.
         N.B. you can jQ select on the data-level attrbs with $("ul[data-level!='0']>li").hide() etc
         {% endcomment %}
-        <ul data-level="{{ comment|comment_level|add:1 }}">
+        <ul class="comment_ul" data-level="{{ comment|comment_level|add:1 }}">
             {% comment_thread comment %}
         </ul>
     {% endif %}

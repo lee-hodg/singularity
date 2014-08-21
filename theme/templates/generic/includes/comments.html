@@ -7,15 +7,152 @@
 <script>
 $(function() {
     $('.reply').click(function() {
-        $('.comment-reply-form').hide();
+        $('.comment-reply-form').hide(); //make sure all other reply forms hidden.
         //$(this).siblings('.comment-reply-form').toggle();
         // need to have this toggle the correct element if reply
         // link is moved!
-        $(this).closest('div.comment').find('.comment-reply-form').toggle();
+        // immediate reply forms only
+        $(this).closest("div[id^='comment-']").find('>.comment-reply-form').toggle();
         //also hide the regular blog comment box
         $('#blog-comment').hide();
     });
+
+    //show-hide toggle child comments buttons
+    $('a[href^="#show-replies-"]').click(function() {
+        $(this).closest("div[id^='comment-']").find('ul.comment_ul').toggle();
+    });
 });
+
+//ajax new comment posting
+$(function() {
+    $('form#blog-comment, .comment-reply-form').submit(function(event) {
+
+        //var form = $('form#blog-comment');
+        var form = $(this);
+        //initialize to all errors gone (this stops
+        // errors stacking up if user invalidates again)
+        $(form).find('ul.errorlist').remove();
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'json',
+         })
+
+        .done(function (data) {
+            //console.log('ajax success');})
+            //ajax success
+            if (data.location) {
+                // I think this is for the case when login needed to comment
+                // to redirect to designated login url
+                console.log('AJAX is performing a redirect.')
+                location = data.location;
+            }else if(data.errors){
+                console.log('Form did not validate.');
+                if(data.errors.hasOwnProperty('name')){
+                    //build up ul error list
+                    var items = [];
+                    var name_field = $(form).find('.input_id_name');
+                    items.push('<ul class="errorlist">');
+                    $.each(data.errors.name, function(i, item) {
+                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+                    });
+                    items.push('</ul>');
+                    $(name_field).prepend(items.join(''));
+                }
+                if(data.errors.hasOwnProperty('email')){
+                    //build up ul error list
+                    var items = [];
+                    var email_field = $(form).find('.input_id_email');
+                    items.push('<ul class="errorlist">');
+                    $.each(data.errors.email, function(i, item) {
+                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+                    });
+                    items.push('</ul>');
+                    $(email_field).prepend(items.join(''));
+                }
+                if(data.errors.hasOwnProperty('comment')){
+                    //build up ul error list
+                    var items = [];
+                    var comment_field = $(form).find('.input_id_comment');
+                    items.push('<ul class="errorlist">');
+                    $.each(data.errors.comment, function(i, item) {
+                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+                    });
+                    items.push('</ul>');
+                    $(comment_field).prepend(items.join(''));
+                }
+            }
+        })
+
+       .error(function (request, error) {
+            //this will happen ironically on form valid
+            //since view will return redirect resp not JSON
+            //console.log('ajax error:');
+            //console.log(request.responseText);
+            console.log('Form probably submitted successfully, ajax reload page');
+            location.reload();
+         })
+
+
+        return false;
+    });
+});
+        //NB post is just an ajax conveinience method
+        //jQuery.post( url [, data ] [, success ] [, dataType ] )
+        //it doesn't offer error handler. But this is ajax req errors
+        //not django form errors, don't confuse the two!
+//        $.post(form.attr('action'), form.serialize(), function(data) {
+//            //ajax success
+//            if (data.location) {
+//                // I think this is for the case when login needed to comment
+//                // to redirect to designated login url
+//                console.log('AJAX performing a redirect')
+//                location = data.location;
+//            }else if(data.errors){
+//                console.log('There were some form errors');
+//                if(data.errors.hasOwnProperty('name')){
+//                    //build up ul error list
+//                    var items = [];
+//                    var name_field = $(form).find('.input_id_name');
+//                    items.push('<ul class="errorlist">');
+//                    $.each(data.errors.name, function(i, item) {
+//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+//                    });
+//                    items.push('</ul>');
+//                    $(name_field).prepend(items.join(''));
+//                }
+//                if(data.errors.hasOwnProperty('email')){
+//                    //build up ul error list
+//                    var items = [];
+//                    var email_field = $(form).find('.input_id_email');
+//                    items.push('<ul class="errorlist">');
+//                    $.each(data.errors.email, function(i, item) {
+//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+//                    });
+//                    items.push('</ul>');
+//                    $(email_field).prepend(items.join(''));
+//                }
+//                if(data.errors.hasOwnProperty('comment')){
+//                    //build up ul error list
+//                    var items = [];
+//                    var comment_field = $(form).find('.input_id_comment');
+//                    items.push('<ul class="errorlist">');
+//                    $.each(data.errors.comment, function(i, item) {
+//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+//                    });
+//                    items.push('</ul>');
+//                    $(comment_field).prepend(items.join(''));
+//                }
+//            }else{console.log('What happened?');}
+//        }, 'json');
+//
+//        //event.preventDefault();
+//        return false;
+//    });
+//});
+
 </script>
 <style>.input_id_honeypot {display:none !important;}</style>
 <ul data-level='0'>
@@ -24,11 +161,13 @@ $(function() {
 <form method="post" id="blog-comment" action="{{ comment_url }}#comment">
     <h3>{% trans "Leave a comment" %}</h3>
     <div class="comment-background clearfix">
+        {% comment %}
+            To edit the way fields_for renders you need to copy and change the template 
+            from core includes.form_fields.
+        {% endcomment %}
+
         {% if not request.POST.replied_to %}
-        {# To edit the way fields_for renders you need to copy and change the template #}
-        {# from core includes.form_fields #}
         {% fields_for posted_comment_form %}
-        {# { posted_comment_form.name } #}
         {% else %}
         {% fields_for unposted_comment_form %}
         {% endif %}

@@ -894,13 +894,13 @@ border-bottom: 1px solid #ccc;
 	color:white;
 	left: -135px;
 	width: 120px;
-	padding: 5px;
+	padding: 5px !important;
 	top: 0px;
 }
 
 .form-errors {display:inline}
 
-#section-contact .tag-tip > i {
+.errorlist .tag-tip > i {
 	border-width: 14px;
 	border-color: transparent transparent transparent rgba(195, 81, 47, 0.9);
 	left:115px;
@@ -1248,6 +1248,10 @@ border-bottom: 1px solid #ccc;
     list-style: none outside none;
 }
 
+#comments ul li ul li ul li {
+    padding:23px 0 0;
+}
+
 .comment_right {
     display: table;
 }
@@ -1363,6 +1367,10 @@ border-bottom: 1px solid #ccc;
     margin-bottom: 5px;
 }
 
+.comment-deleted {
+    opacity: 0.2;
+}
+
 .comment-deleted p {margin:0}
 
 
@@ -1438,19 +1446,19 @@ border-bottom: 1px solid #ccc;
     position: relative;
 }
 .triangle > i {
-    position: absolute;
-    display: inline-block;
-	width: 0px;
-	height: 0px;
-	line-height: 0;
-	border-width: 6px;
-	border-style: solid solid dotted;
-	border-color: #C3512F #C3512F transparent transparent;
-	-moz-border-top-colors: none;
-	-moz-border-right-colors: none;
-	-moz-border-bottom-colors: none;
-	-moz-border-left-colors: none;
-	border-image: none;
+    position: absolute !important;
+    display: inline-block !important;
+	width: 0px !important;
+	height: 0px !important;
+	line-height: 0 !important;
+	border-width: 6px !important;
+	border-style: solid solid dotted !important;
+	border-color: #C3512F #C3512F transparent transparent !important;
+	-moz-border-top-colors: none !important;
+	-moz-border-right-colors: none !important;
+	-moz-border-bottom-colors: none !important;
+	-moz-border-left-colors: none !important;
+	border-image: none !important;
 }
 
 .help-outer {
@@ -1458,11 +1466,16 @@ border-bottom: 1px solid #ccc;
 }
 
 .help-inline {
-	position: absolute;
-	right:12px;
-	top:0px;
+	position: absolute !important;
+	right:12px !important;
+	top:0px !important;
 }
 
+/* Initially hide all non-parent comments*/
+
+[id^='comment-'] ul.comment_ul{
+    display:none;
+}
 
 
 /*************** CLEAR FIX *************/

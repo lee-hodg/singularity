@@ -2,6 +2,17 @@
 
 {% load mezzanine_tags staticfiles %}
 
+{% block extra_js %}
+    {{ block.super }}
+    <!-- PORTFOLIO ITEM SLIDER -->
+    <script type="text/javascript" src="{% static "js/jquery.flexslider-min.js" %}"></script>
+    <script type="text/javascript" charset="utf-8">
+    $(window).load(function() {
+            $('.flexslider').flexslider();
+            });
+    </script>
+{% endblock %}
+
 {% block section_id %}page-portfolio-detail{% endblock %}
 
 {% block main %}
@@ -58,7 +69,6 @@
     <li> {{c.title }} </li>
     {% endfor %}
 </ul>
-<hr>
 
 <a class="btn dark_btn marg20" href="{{ page.portfolioitem.href }}" target="_blank">Launch project</a>
 <a class="btn dark_btn marg20" href="{% url "page" page.parent.title|slugify %}">Back to Portfolio</a>

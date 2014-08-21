@@ -2,6 +2,27 @@
 
 {% load mezzanine_tags staticfiles %}
 
+{% block extra_js %}
+<!-- PrettyPhoto -->
+<script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+         $("a[rel^='prettyPhoto']").prettyPhoto();
+    });
+</script>
+{% endblock %}
+
+{% block extra_foot_js %}
+    {{ block.super }}
+    <!-- Portfolio Filter & Shuffle -->
+    <script src="{% static "js/jquery.mixitup.min.js" %}"></script>
+    <script> 
+    $(function(){ 
+         $('#Container').mixItUp(); 
+    }); 
+    </script>
+{% endblock %}
+
 {% block main_wrapper %}
 
 <h2>{{ page.portfolio.columns }}-Column Portfolio</h2>
