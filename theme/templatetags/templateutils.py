@@ -1,6 +1,11 @@
 from __future__ import division
 from django.template import Library
-from math import ceil
+# from math import ceil
+from collections import defaultdict
+from mezzanine.utils.views import paginate
+from mezzanine.conf import settings
+from mezzanine.generic.models import ThreadedComment
+
 
 def ceildiv(a, b):
     return -(-a // b)
@@ -24,6 +29,7 @@ def linebreaksbr(line):
 
     return line
 
+
 @register.filter(name='splitcolor')
 def splitcolor(word, args):
     '''
@@ -36,7 +42,7 @@ def splitcolor(word, args):
         colors = [arg.strip() for arg in args.split(',')]
         if len(colors) != 2:
             return word
-        mid = ceildiv(len(word),2)  # Rem python div takes floor
+        mid = ceildiv(len(word), 2)  # Rem python div takes floor
         newword = '<span style="color:'+colors[0]+'">'+word[:mid]+'</span>'
         newword += '<span style="color:'+colors[1]+'">'+word[mid:]+'</span>'
         word = newword
@@ -65,6 +71,7 @@ def defaultdict_keys(ddict):
     '''
     return ddict.keys()
 
+
 @register.filter(name='comment_level')
 def comment_level(comment):
     '''
@@ -83,3 +90,54 @@ def comment_level(comment):
             comment = comment.replied_to
         # at end of recursion rtn level
     return level
+
+
+@register.inclusion_tag("generic/includes/comment.html", takes_context=True)
+def paginated_comment_thread(context, parent):
+    """
+    Ovverride Mezzanine's comment_thread inclusion_tag.
+    The aim is to paginate all parent comments, but otherwise
+    the behaviour is the same.
+
+    Return a list of child comments for the given parent, storing all
+    comments in a dict in the context when first called, using parents
+    as keys for retrieval on subsequent recursive calls from the
+    comments template.
+    """
+    if "all_comments" not in context:
+        comments = defaultdict(list)
+        if "request" in context and context["request"].user.is_staff:
+            comments_queryset = parent.comments.all()
+        else:
+            comments_queryset = parent.comments.visible()
+        for comment in comments_queryset.select_related("user"):
+            comments[comment.replied_to_id].append(comment)
+        context["all_comments"] = comments
+    parent_id = parent.id if isinstance(parent, ThreadedComment) else None
+    try:
+        replied_to = int(context["request"].POST["replied_to"])
+    except KeyError:
+        replied_to = 0
+
+    # Pagination for zeroth level comments
+    comments_for_thread = context["all_comments"].get(parent_id, [])
+    context.update({"comments_for_thread_list": comments_for_thread})
+    context.update({"non_zeroth_level": True})
+    if parent_id is None:
+        # Zeroth level comment
+        comments_for_thread_paginator = paginate(comments_for_thread,
+                                                 context["request"].GET.get("page", 1),
+                                                 settings.COMMENTS_PER_PAGE,
+                                                 settings.MAX_PAGING_LINKS)
+        # For ease tell the context we are at zeroth level in tree too
+        context.update({"non_zeroth_level": False})
+        context.update({"comments_for_thread_list":
+                        comments_for_thread_paginator.object_list})
+        context.update({"comments_for_thread_paginator":
+                        comments_for_thread_paginator})
+    context.update({
+        "no_comments": parent_id is None and not context["all_comments"],
+        "replied_to": replied_to,
+    })
+
+    return context

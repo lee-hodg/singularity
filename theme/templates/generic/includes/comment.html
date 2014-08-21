@@ -37,12 +37,9 @@ else:
 if at parent_level:
     {% pagination_for comments_for_thread %}
 
-
-
 {% endcomment %}
 
-
-{% for comment in comments_for_thread %}
+{% for comment in comments_for_thread_list %}
 <li>
 <div id="comment-{{ comment.id }}" class="comment media{% if comment.by_author %} comment-author{% endif %}">
 
@@ -180,13 +177,18 @@ if at parent_level:
         N.B. you can jQ select on the data-level attrbs with $("ul[data-level!='0']>li").hide() etc
         {% endcomment %}
         <ul class="comment_ul" data-level="{{ comment|comment_level|add:1 }}">
-            {% comment_thread comment %}
+            {% paginated_comment_thread comment %}
         </ul>
     {% endif %}
     {% endeditable %}
 </div>
 </li>
 {% endfor %}
+
+{# Pagination numbers arrows at foot of zeroth level comments #}
+{% if not non_zeroth_level %}
+    {% pagination_for comments_for_thread_paginator %}
+{% endif %}
 
 {% if no_comments %}
 <p>{% trans "There are currently no comments" %}</p>
