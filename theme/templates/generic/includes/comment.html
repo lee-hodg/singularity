@@ -1,45 +1,34 @@
 {% load i18n mezzanine_tags comment_tags rating_tags templateutils%}
 
 {% comment %}
-::PAGINATION IDEAS::
-If I'm at the parent level of comments, I'd like take the comments_for_thread, 
-and pass them through some tag that paginates them, then proceed as normal, building 
-the child comments for this subset. At the foot, I'd run a {% pagination_for paged_comments_for_thread %}
-to generate the arrows and numbers.
+::PAGINATION NOTES::
 
-Problems: 
+Use a custom `paginated_comment_thread` inclusion tag to build the parent
+(zeroth level in tree) comments. The template it calls `comment_with_pagination.html`,
+is an extension of `comment.html`, only it overrides the pagination_foot block, with
+some code that actually calls pagination_for on the comment paginator that the paginated_comment_thread
+tag provides it with (comment_for_thread_paginator). 
 
-I'd need to override the blog_post_detail view so that 
+In the tag the paginate function works by simply taking the comment_for_thread list (which
+in our case in the list of zeroth level comments for a BlogPost) and then ripping the page
+number parameter from the GETstr. It takes COMMENTS_PER_PAGE custom setting, and behaves how you'd
+expect. When .object_list is called on it, it yields up the list of comments for that page, which
+can then just be displayed as normal.
 
-Think about custom comment_thread tag instead that rips page from req
+By passing the actual paginator itself back, we can easily render the pagination footer
+(arrows and "Page 1 of 2" etc) by calling the pagination_for mezzanine tag (c.f. blog_post_list).
 
-Currently it returns:
+You may think about doing this with only one tag and one template, which might have been possible, but
+the problem is the recursive calls modify the context as they are called one by one, and by the time you
+git the bottom of the html in the "outer comment.html" template the context is different to at the top, and
+what you might have been expecting, thus it's very difficult to render pagination footers for just the parents.
 
-"comments_for_thread": context["all_comments"].get(parent_id, [])
-
-but first we could make it do
-
-from mezzanine.utils.views import paginate
-comments_for_thread = context["all_comments"].get(parent_id, [])
-if not parent.id:
-    # zeorth level
-    comments_for_thread = paginate(comments_for_thread, request.GET.get("page", 1),
-                            settings.COMMENTS_PER_PAGE,
-                            settings.MAX_PAGING_LINKS)
-    # add to context that we are at parent level too
-
-Now in the template
-if parent_level:
-    {% for comment in comments_for_thread.object_list %}
-else:
-    ...
-
-if at parent_level:
-    {% pagination_for comments_for_thread %}
+The approach used with the extension of comment.html by comment_with_pagination.html is fairly DRY anyway, so we
+should be good.
 
 {% endcomment %}
 
-{% for comment in comments_for_thread_list %}
+{% for comment in comments_for_thread %}
 <li>
 <div id="comment-{{ comment.id }}" class="comment media{% if comment.by_author %} comment-author{% endif %}">
 
@@ -177,7 +166,7 @@ if at parent_level:
         N.B. you can jQ select on the data-level attrbs with $("ul[data-level!='0']>li").hide() etc
         {% endcomment %}
         <ul class="comment_ul" data-level="{{ comment|comment_level|add:1 }}">
-            {% paginated_comment_thread comment %}
+                {% comment_thread comment %}
         </ul>
     {% endif %}
     {% endeditable %}
@@ -186,11 +175,8 @@ if at parent_level:
 {% endfor %}
 
 {# Pagination numbers arrows at foot of zeroth level comments #}
-{% if not non_zeroth_level %}
-    {% pagination_for comments_for_thread_paginator %}
-{% endif %}
+{% block pagination_foot %}{% endblock %}
 
 {% if no_comments %}
 <p>{% trans "There are currently no comments" %}</p>
 {% endif %}
-

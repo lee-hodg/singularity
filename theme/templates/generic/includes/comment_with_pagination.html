@@ -1,0 +1,7 @@
+{% extends "generic/includes/comment.html" %}
+
+{% load i18n mezzanine_tags %}
+
+{% block pagination_foot %}
+    {% pagination_for comments_for_thread_paginator %}
+{% endblock %}

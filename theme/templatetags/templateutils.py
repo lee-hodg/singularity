@@ -92,12 +92,14 @@ def comment_level(comment):
     return level
 
 
-@register.inclusion_tag("generic/includes/comment.html", takes_context=True)
+@register.inclusion_tag("generic/includes/comment_with_pagination.html", takes_context=True)
 def paginated_comment_thread(context, parent):
     """
     Ovverride Mezzanine's comment_thread inclusion_tag.
     The aim is to paginate all parent comments, but otherwise
-    the behaviour is the same.
+    the behaviour is the same. N.B. context persists between the
+    recursive calls to this tag. Remember this gets call with BlogPost
+    as parent first.
 
     Return a list of child comments for the given parent, storing all
     comments in a dict in the context when first called, using parents
@@ -121,8 +123,7 @@ def paginated_comment_thread(context, parent):
 
     # Pagination for zeroth level comments
     comments_for_thread = context["all_comments"].get(parent_id, [])
-    context.update({"comments_for_thread_list": comments_for_thread})
-    context.update({"non_zeroth_level": True})
+    context.update({"comments_for_thread": comments_for_thread})
     if parent_id is None:
         # Zeroth level comment
         comments_for_thread_paginator = paginate(comments_for_thread,
@@ -130,14 +131,19 @@ def paginated_comment_thread(context, parent):
                                                  settings.COMMENTS_PER_PAGE,
                                                  settings.MAX_PAGING_LINKS)
         # For ease tell the context we are at zeroth level in tree too
-        context.update({"non_zeroth_level": False})
-        context.update({"comments_for_thread_list":
+        # context.update({"zeroth_level": True})
+        context.update({"comments_for_thread":
                         comments_for_thread_paginator.object_list})
         context.update({"comments_for_thread_paginator":
                         comments_for_thread_paginator})
+
+    # If any comment id in all_comments keys, it means that it has children
+    # comment_ids = [comment.id for comment in comments_for_thread]
+    # more_children = any(map(lambda x: x in context["all_comments"].keys(),
+    #                        comment_ids))
+
     context.update({
         "no_comments": parent_id is None and not context["all_comments"],
         "replied_to": replied_to,
     })
-
     return context
