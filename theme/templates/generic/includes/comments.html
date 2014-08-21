@@ -32,6 +32,8 @@ $(function() {
         //initialize to all errors gone (this stops
         // errors stacking up if user invalidates again)
         $(form).find('ul.errorlist').remove();
+        //$(form).find('ul.errorlist').hide();
+        //$(form).find('ul.errorlist li:nth-child(n+1)').remove();
 
         $.ajax({
             url: form.attr('action'),
@@ -54,12 +56,14 @@ $(function() {
                     //build up ul error list
                     var items = [];
                     var name_field = $(form).find('.input_id_name');
+                    //var name_field_ul = $(form).find('.input_id_name ul');
                     items.push('<ul class="errorlist">');
                     $.each(data.errors.name, function(i, item) {
-                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+                            items.push('<li>' + item + '<i class="tag-tip"><i></i></i></li>');
                     });
                     items.push('</ul>');
                     $(name_field).prepend(items.join(''));
+                    //$(name_field_ul).append(items.join(''));
                 }
                 if(data.errors.hasOwnProperty('email')){
                     //build up ul error list
@@ -67,7 +71,7 @@ $(function() {
                     var email_field = $(form).find('.input_id_email');
                     items.push('<ul class="errorlist">');
                     $.each(data.errors.email, function(i, item) {
-                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+                            items.push('<li>' + item + '<i class="tag-tip"><i></i></i></li>');
                     });
                     items.push('</ul>');
                     $(email_field).prepend(items.join(''));
@@ -78,7 +82,7 @@ $(function() {
                     var comment_field = $(form).find('.input_id_comment');
                     items.push('<ul class="errorlist">');
                     $.each(data.errors.comment, function(i, item) {
-                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+                            items.push('<li>' + item + '<i class="tag-tip"><i></i></i></li>');
                     });
                     items.push('</ul>');
                     $(comment_field).prepend(items.join(''));
