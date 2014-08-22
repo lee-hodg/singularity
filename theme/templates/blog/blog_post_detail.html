@@ -119,7 +119,6 @@
     {# template to change the form of the comment and new comment form #}
     {% block blog_post_detail_comments %}
     {% if blog_post.allow_comments %}
-        MYSETTING: {{ settings.COMMENTS_ORDER_BY_SCORE }}
         {% if settings.COMMENTS_ORDER_BY_SCORE %}
             {# Loads the context by all_comments var #}
             {# where comments ordered by score func which #}

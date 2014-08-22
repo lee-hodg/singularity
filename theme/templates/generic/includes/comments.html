@@ -1,6 +1,6 @@
 {% load i18n mezzanine_tags comment_tags templateutils %}
 <div id="comments">
-    <h3>{% trans "Comments" %} ({{ object_for_comments.comments_count }})</h3>
+    <h3><i class="fa fa-2x fa-wechat"></i> {% trans "Comments" %} ({{ object_for_comments.comments_count }})</h3>
 {% if settings.COMMENTS_DISQUS_SHORTNAME %}
 {% include "generic/includes/disqus_comments.html" %}
 {% else %}
@@ -36,6 +36,9 @@ $(function() {
         $(form).find('ul.errorlist').remove();
         //$(form).find('ul.errorlist').hide();
         //$(form).find('ul.errorlist li:nth-child(n+1)').remove();
+
+        //show a little fa spinner to indicate waiting
+        $(form).find('.reply-posted-spinner').css('display', 'inline-block');
 
         $.ajax({
             url: form.attr('action'),
@@ -107,9 +110,10 @@ $(function() {
             //$(tree).find('ul.comment_ul').toggle();
          })
 
-        //.complete: function(){
-        //     $('#loading-image').hide();
-        // }
+        .complete(function(){
+          $(form).find('.reply-posted-spinner').hide();
+        })
+
 
 
         return false;
@@ -264,6 +268,7 @@ $(function() {
         {% fields_for unposted_comment_form %}
         {% endif %}
         <div class="form-actions">
+            <i class="fa fa-spin fa-refresh reply-posted-spinner"></i>
             <input class="btn btn-primary btn-lg" type="submit" value="{% trans "Send" %}">
         </div>
     </div>

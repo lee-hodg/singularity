@@ -130,6 +130,7 @@ should be good.
             {% fields_for unposted_comment_form %}
             {% endif %}
             <input type="hidden" name="replied_to" value="{{ comment.id }}">
+            <i class="fa fa-spin fa-refresh reply-posted-spinner"></i>
             <input class="btn btn-primary btn-lg" type="submit" value="{% trans "Reply" %}">
         </form>
 
