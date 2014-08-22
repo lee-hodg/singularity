@@ -7,6 +7,8 @@ from django.http import HttpResponse
 import json
 from mezzanine.generic.forms import ThreadedCommentForm
 from django.core.urlresolvers import reverse
+from theme.templatetags.templateutils import order_comments_by_score_for
+from mezzanine.conf import settings
 
 
 def ajax_comments(request, pk):
@@ -20,10 +22,21 @@ def ajax_comments(request, pk):
     if not obj:
         response_data['success'] = 'false'
     else:
-        # replicate context building of comments_for
-        # I should try and understand the posted/unposted distinction better
         context = {}
         context["request"] = request
+        # first if ORDER_COMMENTS_BY_SCORE setting we
+        # need to call order_comments_by_score_for first
+        # this simulates how in a template we'd call
+        # the order_comments_by_score_for tag before
+        # comments_for tag, setting the all_comments var
+        # in ctxt in advance, so comments_thread doesnt
+        # need to touch it.
+        if settings.COMMENTS_ORDER_BY_SCORE:
+            # context passed by ref
+            order_comments_by_score_for(context, obj)
+
+        # replicate context building of comments_for
+        # I should try and understand the posted/unposted distinction better
         context["object_for_comments"] = obj
         context["comment_url"] = reverse("comment")
         form = ThreadedCommentForm(context["request"], obj)
