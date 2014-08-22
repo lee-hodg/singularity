@@ -1048,7 +1048,7 @@ border-bottom: 1px solid #ccc;
 .pagination-nav li {
     float:left;
     background:none!important;
-    padding: 0 5px;
+    padding: 0 5px !important;;
 }
 
 .pagination-nav li.active a {

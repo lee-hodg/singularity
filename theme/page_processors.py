@@ -50,7 +50,7 @@ def home_processor(request, page):
     if featured_portfolio:
         # prob that these are pages not models
         items = featured_portfolio.children.published(  # PortfolioItem.objects.published(
-            for_user=request.user) #.prefetch_related('categories')
+            for_user=request.user)  # .prefetch_related('categories')
         # get models themselves
         items = [item.get_content_model() for item in items]
         items = [item for item in items if item.featured]
@@ -59,7 +59,7 @@ def home_processor(request, page):
         categories = PortfolioItemCategory.objects.filter(
             portfolioitems__in=items).distinct()
 
-    blog_posts = BlogPost.objects.all()[:10]  # get ten most recent
+    blog_posts = BlogPost.objects.order_by('-publish_date')[:3]  # get 3 most recent
 
     # process contact form
     form = ContactForm()
