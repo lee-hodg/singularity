@@ -169,8 +169,60 @@ $(function() {
 //    });
 //});
 
+
+//ajax comment paging arrows
+$(function() {
+    $('li.next, li.prev').click(function(event) {
+
+        var link = $(this).find('a');
+        //alert('href is:'+$(link).attr('href'));
+        // get page no. from href
+        // e.g. href="?page=2"
+        if ($(link).attr('href')){
+            page_no = link.attr('href').match(/\?page=(\d+)/)[1]; 
+        } else {
+            // must be disabled
+            event.preventDefault();
+            return false;
+        }
+
+        console.log('Making ajax req for pageno:'+page_no);
+
+        $.ajax({
+            url: '/test/'+{{ object_for_comments.pk}},
+            type: 'GET',
+            data: {'page': page_no},
+            dataType: 'json',
+         })
+
+        .done(function (data) {
+            //console.log('ajax success');})
+            //ajax success
+            console.log('AJAX success.');
+            //console.log(data);
+            if(data.success){
+                //this means no server side errors
+                //push data.comments into appropriate place
+                //$('#comments').empty(); //flush div first
+                $('#comments').html(data.comments);
+                //location.href="#pagination_ul";
+                $('html,body').animate({    scrollTop: $("#pagination_ul").offset().top-300 }); 
+            }else{
+                console.log("Oops, j'ai fait une connerie!");
+            }
+        })
+
+       .error(function (request, error) {
+            console.log('AJAX Error.');
+         })
+
+        event.preventDefault();
+        return false;
+    });
+});
 </script>
 <style>.input_id_honeypot {display:none !important;}</style>
+
 <ul data-level='0'>
     {% paginated_comment_thread object_for_comments %}
 </ul>

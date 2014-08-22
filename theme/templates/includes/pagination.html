@@ -1,7 +1,7 @@
 {% load i18n %}
 
 {% if current_page.has_previous or current_page.has_next %}
-<ul class="pagination clearfix">
+<ul id="pagination_ul" class="pagination clearfix">
 
 <li class="page-info">
     <span>{% trans "Page" %} {{ current_page.number }} {% trans "of" %} {{ current_page.paginator.num_pages }}</span>
