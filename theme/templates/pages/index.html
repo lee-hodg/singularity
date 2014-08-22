@@ -194,7 +194,7 @@
                     {# This stops at first para or br, unless user has unchecked generate in admin #}
                     {# and entered their own #}
                     {% editable blog_post.content %}
-                    {{ blog_post.description_from_content|safe }}
+                    {{ blog_post.description_from_content|safe|truncatewords_html:100 }}
                     {% endeditable %}
                     <div class="readmore"><a href="{{ blog_post.get_absolute_url }}" class="arrow_link">Read more</a></div>
 
