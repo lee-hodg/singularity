@@ -56,13 +56,12 @@ def order_by_score(queryset, date_field):
         return queryset.extra(select={"score": score_sql}).order_by("-score")
     else:
         # we're using sqlite and have to do it in memory
-        now = now() # same reference snapshot point for all
         # but what about neg comments? For 2 comments with same neg rank
         # the older comment will get less neg score and will be pushed up.
         # N.B. Since up+down=count and up-down=sum....so up=(count+sum)/2
         # down=(count-sum)/2
         for obj in queryset:
-            age = (now - getattr(obj, date_field)).total_seconds()
+            age = (now() - getattr(obj, date_field)).total_seconds()
             setattr(obj, "score", obj.rating_sum / pow(age, scale))
         return sorted(queryset, key=lambda obj: obj.score, reverse=True)
 
