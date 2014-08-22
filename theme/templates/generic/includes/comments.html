@@ -1,6 +1,6 @@
 {% load i18n mezzanine_tags comment_tags templateutils %}
 <div id="comments">
-<h3>{% trans "Comments" %}</h3>
+    <h3>{% trans "Comments" %} ({{ object_for_comments.comments_count }})</h3>
 {% if settings.COMMENTS_DISQUS_SHORTNAME %}
 {% include "generic/includes/disqus_comments.html" %}
 {% else %}
@@ -98,7 +98,13 @@ $(function() {
             //console.log('ajax error:');
             //console.log(request.responseText);
             console.log('Form probably submitted successfully, ajax reload page');
+            alert('THANKS FOR THE COMMENT');
             location.reload();
+            //alert('AJAX MSG AFTER RELOAD');
+            //get nearest level-1 comment_ul
+            //tree = $(form).closest('ul[class^="comment_ul"][data-level=1]');
+            //tree.toggle();
+            //$(tree).find('ul.comment_ul').toggle();
          })
 
         //.complete: function(){
