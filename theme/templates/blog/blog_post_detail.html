@@ -1,5 +1,5 @@
 {% extends "blog/blog_post_list.html" %}
-{% load mezzanine_tags comment_tags keyword_tags rating_tags i18n future disqus_tags %}
+{% load mezzanine_tags comment_tags keyword_tags rating_tags templateutils i18n future disqus_tags %}
 
 {% block meta_title %}{{ blog_post.meta_title }}{% endblock %}
 
@@ -100,7 +100,7 @@
     {% comment %}
     {% block blog_post_detail_rating %}
     <div class="panel rating">
-        {% rating_for blog_post %}                                                                                                                                                                                                 
+        {% rating_for blog_post %}
     </div>
     {% endblock %}
     {% endcomment %}
@@ -118,7 +118,16 @@
     {# NB you can copy into proj and ovveride the generic.templates.generic.includes.comment(s) #}
     {# template to change the form of the comment and new comment form #}
     {% block blog_post_detail_comments %}
-    {% if blog_post.allow_comments %}{% comments_for blog_post %}{% endif %}
+    {% if blog_post.allow_comments %}
+        MYSETTING: {{ settings.COMMENTS_ORDER_BY_SCORE }}
+        {% if settings.COMMENTS_ORDER_BY_SCORE %}
+            {# Loads the context by all_comments var #}
+            {# where comments ordered by score func which #}
+            {# causes higher rank to float to top, but decay with time #}
+            {% order_comments_by_score_for blog_post %}
+        {% endif %}
+        {% comments_for blog_post %}
+    {% endif %}
     {% endblock %} 
 
 {% endblock %}

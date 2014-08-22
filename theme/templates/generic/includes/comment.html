@@ -91,14 +91,11 @@ should be good.
             <p> What is my level in the tree?: {{ comment|comment_level }}</p>
             <div class="comment-border clearfix">
 
-                {# rating disabled for this theme #}
-                {% comment %}
                 {% if settings.COMMENTS_USE_RATINGS %}
                 <div class="rating">
                     {% rating_for comment %}
                 </div>
                 {% endif %} 
-                {% endcomment %}
 
                 {% if not comment.is_removed and comment.is_public %}
                 {% if comment|comment_level == 0 %}

@@ -1048,7 +1048,7 @@ border-bottom: 1px solid #ccc;
 .pagination-nav li {
     float:left;
     background:none!important;
-    padding: 0 5px;
+    padding: 0 5px !important;
 }
 
 .pagination-nav li.active a {
@@ -1224,6 +1224,7 @@ border-bottom: 1px solid #ccc;
 
 /************** COMMENTS **************/
 
+/*
 .rating p {
     margin-right: 20px;
 }
@@ -1246,6 +1247,7 @@ border-bottom: 1px solid #ccc;
 .rating label {
     margin-right: 15px;
 }
+*/
 
 .avatar {
    position:absolute;
@@ -1374,12 +1376,14 @@ border-bottom: 1px solid #ccc;
 	padding:5px;
 }
 
+/*
 #comments .rating {
     padding: 0px !important;
     margin: 10px 0px 0px !important;
     border: medium none !important;
     background: none repeat scroll 0% 0% transparent !important;
 }
+*/
 
 .comment-background {
     background: #F2F2F2;
@@ -1388,7 +1392,7 @@ border-bottom: 1px solid #ccc;
 
 .comment-right, .comment-deleted {
     background: #F2F2F2;
-    padding:20px;
+    padding:20px 20px 10px 20px;
     margin-left:80px;
     position: relative;
     margin-bottom: 5px;
@@ -1435,6 +1439,7 @@ border-bottom: 1px solid #ccc;
 .comment-info + p {
     margin:0;
     padding:15px 0;
+    word-wrap: break-word;
 }
 
 .left-arrow-container-outer {
@@ -1507,6 +1512,62 @@ border-bottom: 1px solid #ccc;
     display:none;
 }
 
+/*****************RATINGS*****************/
+
+
+.comment-border .rating {
+    float: left;
+    background-color: #efefef;
+    border-radius: 5px;
+    margin: 0 20px 0 0;
+    padding: 5px;
+    text-align: center;
+    width: 80px;
+}
+
+.rating form {
+    display: none !important;
+}
+
+.rating * {
+    list-style-type: none;
+}
+
+.rating .arrows {
+    background-color: #fff;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 0 10px 0 0;
+    padding: 7px;
+    opacity: 0.6;
+    font-size: 10px;
+}
+
+.rating .arrows a{
+    color: #1abc9c;
+    text-decoration: none;
+    transition: all 0.25s ease 0s;
+}
+
+.rating .icon-up {
+    background-position: -289px -96px;
+}
+
+.rating .icon-down {
+    background-position: -312px -96px;
+}
+
+.rating i {
+    border-radius: 3px;
+    display: block !important;
+}
+
+
+.comment-border .score {
+    font-size: 20px;
+    line-height: 40px;
+    display: inline-block;
+}
 
 /*************** CLEAR FIX *************/
 

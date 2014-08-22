@@ -12,6 +12,55 @@ def ceildiv(a, b):
 
 register = Library()
 
+from django.utils.timezone import now
+
+
+def order_by_score(queryset, date_field):
+    """
+    Take some queryset(e.g. comments) and order them by score,
+    which is basically "rating_sum/age_in_seconds^scale", where scale
+    is a const that can be used to control how fast scores reduce over time.
+    To perform this in the db it needs to support POW func, which postgres and
+    mysql do. For db that don't like sqlite, we perform scoring/sorting in memory
+    which will suffice for developement. We also have a date_field arg for controlling
+    which field on the model represents its creation time
+    Pilfered from:
+    http://blog.jupo.org/2013/04/30/building-social-apps-with-mezzanine-drum/
+    """
+
+    scale = getattr(settings, "SCORE_SCALE_FACTOR", 2)
+
+    # Timestamp SQL function snippets mapped to DB back-ends.
+    # Defining these assumes the SQL functions POW() and NOW()
+    # are available for the DB back-end.
+
+    timestamp_sqls = {
+        "mysql": "UNIX_TIMESTAMP(%s)",
+        "postgresql_psycopg2": "EXTRACT(EPOCH FROM %s)",
+    }
+    # e.g quersey.db is 'default'
+    db_engine = settings.DATABASES[queryset.db]["ENGINE"].rsplit(".", 1)[1]
+    timestamp_sql = timestamp_sqls.get(db_engine)
+
+    # This just produces the db query needed to implement the score func
+    # e.g. for mysql, and if data_field='created_at', scale=2:
+    # score_sql = "rating_sum / POW(UNIX_TIMESTAMP(NOW())
+    #                               -UNIX_TIMESTAMP(created_at), 2)"
+    if timestamp_sql:
+        score_sql = "rating_sum / POW(%s - %s, %s)" % (
+            timestamp_sql % "NOW()",
+            timestamp_sql % date_field,
+            scale,
+        )
+        # see django extra and select docs
+        return queryset.extra(select={"score": score_sql}).order_by("-score")
+    else:
+        # we're using sqlite and have to do it in memory
+        for obj in queryset:
+            age = (now() - getattr(obj, date_field)).total_seconds()
+            setattr(obj, "score", obj.rating_sum / pow(age, scale))
+        return sorted(queryset, key=lambda obj: obj.score, reverse=True)
+
 
 @register.filter(name='linebreaksbr')
 def linebreaksbr(line):
@@ -147,3 +196,29 @@ def paginated_comment_thread(context, parent):
         "replied_to": replied_to,
     })
     return context
+
+
+@register.simple_tag(takes_context=True)
+def order_comments_by_score_for(context, parent):
+    '''
+     This essentially mimics the initial part of comment_thread,
+     retrieving and building the comment tree, and storing it in the
+     template context, prior to comments_for even being called.
+     By using the correct variable name (all_comments), the first call
+     to the comments_thread tag will entirely bypass retrieving comments
+     from the database, when it sees theye already in the template context.
+     Thus this tag should be called before comments_for
+     (in for example blog_post_detail.html).The difference now is that comments
+     have been ordered by score, where score is as defined above, proportional
+     to comment rating, but also decaying with comment age.
+    '''
+    if "all_comments" not in context:
+        comments = defaultdict(list)
+        if "request" in context and context["request"].user.is_staff:
+            comments_queryset = parent.comments.all()
+        else:
+            comments_queryset = parent.comments.visible()
+        for comment in order_by_score(comments_queryset, "submit_date"):
+            comments[comment.replied_to_id].append(comment)
+        context["all_comments"] = comments
+    return ""

@@ -78,9 +78,18 @@ PAGE_MENU_TEMPLATES = (
 #
 BLOG_USE_FEATURED_IMAGE = True
 # Ratings for comments
-COMMENTS_USE_RATINGS = False
+COMMENTS_USE_RATINGS = True #False
+# Score is a function of rating/(time created)^scale, i.e. higher
+# rated float to the top, but age causes decay. This is a custom
+# setting so rem to register in theme.defaults for availability in templates
+COMMENTS_ORDER_BY_SCORE = True
+# Range for ratings (note this is per vote, not the sum!)
+RATINGS_RANGE  = ((-1, 1))
 # Custom setting
 COMMENTS_PER_PAGE = 10
+# For comments ordered by rating and decaying by date,
+# this controls how quickly they decay (lager equals faster)
+SCORE_SCALE_FACTOR = 2
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
@@ -132,7 +141,7 @@ LANGUAGES = (
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
 # are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py
-DEBUG = True #False
+DEBUG = False
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

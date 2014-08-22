@@ -116,6 +116,14 @@ register_setting(
     default="joeyblogs84",
 )
 
+register_setting(
+    name="COMMENTS_ORDER_BY_SCORE",
+    label=_("Score order comments"),
+    description=_("Ord comments by rating but decay by age"),
+    editable=True,
+    default=False,
+)
+
 # TEMPLATE_ACCESSIBLE_SETTINGS is one of the existing settings
 # specifying all setting names available within templates, thus
 # we want to append our new settings to it so we can use them in templates
@@ -134,5 +142,6 @@ register_setting(
              "PERSONAL_PHONE",
              "PERSONAL_ADDRESS",
              "PERSONAL_SKYPE",
+             "COMMENTS_ORDER_BY_SCORE",
              ),
 )
