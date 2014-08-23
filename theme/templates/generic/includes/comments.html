@@ -176,7 +176,8 @@ $(function() {
 
 //ajax comment paging arrows
 $(function() {
-    $('li.next, li.prev').click(function(event) {
+    //$('li.next, li.prev').click(function(event) {
+    $('.pagination-nav > li').click(function(event) {
 
         var link = $(this).find('a');
         //alert('href is:'+$(link).attr('href'));
@@ -193,7 +194,7 @@ $(function() {
         console.log('Making ajax req for pageno:'+page_no);
 
         $.ajax({
-            url: '/test/'+{{ object_for_comments.pk}},
+            url: '/ajax_comments/'+{{ object_for_comments.pk}},
             type: 'GET',
             data: {'page': page_no},
             dataType: 'json',
