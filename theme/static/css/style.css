@@ -626,6 +626,19 @@ button + label{
 	width: 47.5%;
 }
 
+#Container {
+    /* on initial page load the height of the portfolio selection
+    from the mix it panel sorting js starts at 4px otherwise, until it loads
+    its content(then currently 308px). 
+    This causes the offset().top of the contact section to be calculated
+    based on the init 4px on the page load, which means loading that section from another page
+    (e.g. resume) or reloading it after form errors, never show the top aligned correctly; it is
+    off by the 304px from content off portfolio loading later.
+    Try to resolve that by fixing height here. Mix it panel will change this later, but no prob*/
+    height:350px; 
+    max-height:350px; 
+    min-height:350px;
+}
 
 #Container img {
 	width:100%;
@@ -921,6 +934,9 @@ border-bottom: 1px solid #ccc;
 
 #section-site-map {
 	background:#333;
+    min-height: 310px; /*give footer area+contact enough combined height so that when window
+                         is max, and user is scrolled to very bottom, contact-us top does not fall sh                         short of top of page. This means scrollTo contact section can flushly align
+                         top of contactus with bottom of navbar*/
 }
 
 #section-site-map .logicon-info {

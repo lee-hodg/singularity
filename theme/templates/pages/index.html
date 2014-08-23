@@ -35,9 +35,18 @@
         //$(window).on('load', function() { //location.hash = '#link-contact'
         //        ;})
         $(function() { 
-                location.hash = '#link-contact';
+                //location.hash = '#link-contact';
+                // problem is the portfolio #Container grows as images are loaded
+                // so on initial page load this section is smaller, and jquery calcs
+                // offset().top of #link-contact as smaller than it ends up being
+                // Could fix min-height of #Container? Is there another way to wait for
+                // the panel to load?
+                // There is also a small gap at top of contact anyway (even after page and
+                // js fully loaded. This is when window max and is just because footer+contact
+                // combined height is not big enough to fill any higher)
                 console.log('Top offset is:', $("#link-contact").offset().top);
-                //$('html, body').animate({ scrollTop: $("#link-contact").offset().top+306 });
+                console.log('Height of mixitup portfolio #Container is:', $("#Container").height());
+                $('html, body').animate({ scrollTop: $("#link-contact").offset().top });
         });
         //$(window).on('load', function() {$(window).scrollTop($('#link-contact').offset().top);})
     {% endif %}
