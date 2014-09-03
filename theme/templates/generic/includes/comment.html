@@ -107,12 +107,14 @@ should be good.
                         </a> 
                      {% endif %}
                 {% endif %}
-                <a class="link" href="{{ request.path }}#comment-{{ comment.id }}">
-                    <span class="glyphicon glyphicon-link"></span> {% trans "Link" %} 
-                </a> 
-                <a href="#reply-{{ comment.id }}" class="reply">
-                    <span class="glyphicon glyphicon-share-alt"></span> {% trans "Reply" %} |
-                </a>
+                <div class="reply-link-container">
+                    <a class="link" href="{{ request.path }}#comment-{{ comment.id }}">
+                        <span class="glyphicon glyphicon-link"></span> {% trans "Link" %} | 
+                    </a> 
+                    <a href="#reply-{{ comment.id }}" class="reply">
+                        <span class="glyphicon glyphicon-share-alt"></span> {% trans "Reply" %}
+                    </a>
+                </div>
                 {% endif %}
             </div><!--END comment-border-->
         </div><!-- END comment-right-->
