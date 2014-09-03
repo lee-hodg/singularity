@@ -1551,7 +1551,7 @@ ul[data-level="0"]>li > div[id^="comment-"]> .comment-right .comment-border .rat
 
 /*****************RATINGS*****************/
 
-
+/*
 .comment-border .rating {
     float: left;
     background-color: #f5f5f5;
@@ -1605,6 +1605,35 @@ ul[data-level="0"]>li > div[id^="comment-"]> .comment-right .comment-border .rat
     line-height: 40px;
     display: inline-block;
 }
+*/
+
+.rating form {
+    display: none !important;
+}
+
+.reply-link-container {
+    float:right;
+}
+
+.show-replies {
+    float:left;
+}
+
+.rating {
+    float:left;
+    margin:0 10px 0 0!important;
+}
+
+.reply, .link {
+    float: none;
+    padding: 0;
+    text-align:right;
+}
+
+.score {
+    padding:0 5px;
+}
+
 
 /*************** CLEAR FIX *************/
 
