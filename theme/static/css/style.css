@@ -626,7 +626,7 @@ button + label{
 	width: 47.5%;
 }
 
-#Container {
+#section-portfolio .container {
     /* on initial page load the height of the portfolio selection
     from the mix it panel sorting js starts at 4px otherwise, until it loads
     its content(then currently 308px). 
