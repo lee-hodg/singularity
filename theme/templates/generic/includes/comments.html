@@ -5,6 +5,7 @@
 {% include "generic/includes/disqus_comments.html" %}
 {% else %}
 <script>
+{# this can break when logged in since editable forms are also present, be careful #}
 $(function() {
     $('.reply').click(function(event) {
         //$('.comment-reply-form').hide(); //make sure all other reply forms hidden.
@@ -12,7 +13,7 @@ $(function() {
         // need to have this toggle the correct element if reply
         // link is moved!
         // immediate reply forms only
-        $(this).closest("div[id^='comment-']").find('>.comment-reply-form').slideToggle('slow');
+        $(this).closest("div[id^='comment-']").find('.comment-reply-form').first().slideToggle('slow');
         //also hide the regular blog comment box
         //$('#blog-comment').hide();
 

@@ -86,9 +86,12 @@ should be good.
             </div><!--END comment-info-->
 
             <p>{{ comment.comment|comment_filter }}</p>
-            <p> My id: {{ comment.id }}, I replied to: {{comment.replied_to_id}}</p>
-            <p> Do I have children?: {% if comment.id in all_comments|defaultdict_keys %} yes {% else %} no {% endif %} </p>
-            <p> What is my level in the tree?: {{ comment|comment_level }}</p>
+            {% comment %}
+                {# useful for debugging #}
+                <p> My id: {{ comment.id }}, I replied to: {{comment.replied_to_id}}</p>
+                <p> Do I have children?: {% if comment.id in all_comments|defaultdict_keys %} yes {% else %} no {% endif %} </p>
+                <p> What is my level in the tree?: {{ comment|comment_level }}</p>
+            {% endcomment %}
             <div class="comment-border clearfix">
 
                 {% if settings.COMMENTS_USE_RATINGS %}
@@ -108,9 +111,9 @@ should be good.
                      {% endif %}
                 {% endif %}
                 <div class="reply-link-container">
-                    <a class="link" href="{{ request.path }}#comment-{{ comment.id }}">
+                    <!--a class="link" href="{{ request.path }}#comment-{{ comment.id }}">
                         <span class="glyphicon glyphicon-link"></span> {% trans "Link" %} | 
-                    </a> 
+                    </a--> 
                     <a href="#reply-{{ comment.id }}" class="reply">
                         <span class="glyphicon glyphicon-share-alt"></span> {% trans "Reply" %}
                     </a>

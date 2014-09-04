@@ -48,6 +48,8 @@
 
 {% block blog_keywords %}
 {% keywords_for blog.blogpost as tags %}
+{# see also TAG_CLOUD_SIZES settings (def 4) to cntl num of diff sizes #}
+{# this will change the range that tag.weight runs through #}
 {% if tags %}
     <h3>{% trans "Tag Cloud" %}</h3>
     <div id="blog_tagcloud">

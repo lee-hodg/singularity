@@ -82,7 +82,8 @@
 
     {% block blog_post_list_post_metainfo %}
     {% editable blog_post.publish_date %}
-    <div class="post_meta">
+    <div class="clearfix post_meta">
+        <div class="time-tags-cats">
         {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }} ago{% endblocktrans %} /
         {% with blog_post.user as author %}
         By <a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
@@ -106,6 +107,8 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
+
+        </div>
 
         {% if settings.COMMENTS_DISQUS_SHORTNAME %}
         <a href="{{ blog_post.get_absolute_url }}#disqus_thread"
@@ -143,14 +146,12 @@
     {# for end in ends: pos = description.lower().find(end), it thus finds the </p> exists #}
     {# sets it to be the end point for truncation and then breaks (even though <br/> etc came before) #}
     {# I suppose it guards against hanging <p> this way....#}
-    <p>
     {% if blog_post.description and not blog_post.gen_description %}
     {# If there is a non-auto generated description the user has set, use that #}
         {{ blog_post.description|safe }}
     {% else %}
         {{ blog_post.description_from_content|safe|truncatewords_html:"50" }}
     {% endif %}
-    </p>
     {% endeditable %}
     {% endblock %}    
     <a href="{{ blog_post.get_absolute_url }}" class="arrow_link">Read more</a>

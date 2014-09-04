@@ -51,13 +51,13 @@
 
         <div class="portfolio-image-container">
             <img src="{{ MEDIA_URL }}{% if page.portfolio.columns == '2' %}{% thumbnail item.featured_image 600 400 quality=100 top=0 %}
-                {% elif page.portfolio.columns == '3' %}{% thumbnail item.featured_image 0 182 %}
-                {% elif page.portfolio.columns == '4' %}{% thumbnail item.featured_image 0 137 %}{% endif %}" alt="" />
+                {% elif page.portfolio.columns == '3' %}{% thumbnail item.featured_image 396 267 top=0 %}
+                {% elif page.portfolio.columns == '4' %}{% thumbnail item.featured_image 300 200 top=0 %}{% endif %}" alt="" />
 
             <span class="text-content">
                 <span>
                     <span>
-                        <h3>Snowboarder</h3>
+                        <h3>{{item.title }}</h3>
                         <a href="{% url "page" item.slug %}"><i class="fa fa-file-text-o"></i></a>
                         <a href="{{ item.featured_image.url }}" rel="prettyPhoto[portfolio]"><i class="fa fa-search"></i></a>
                     </span>

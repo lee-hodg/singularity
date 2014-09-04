@@ -71,6 +71,6 @@
 </ul>
 
 <a class="btn dark_btn marg20" href="{{ page.portfolioitem.href }}" target="_blank">Launch project</a>
-<a class="btn dark_btn marg20" href="{% url "page" page.parent.title|slugify %}">Back to Portfolio</a>
+<a class="btn dark_btn marg20" href="{{ page.parent.get_absolute_url }}">Back to Portfolio</a>
 
 {% endblock right_panel %}

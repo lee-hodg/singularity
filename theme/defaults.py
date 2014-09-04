@@ -54,21 +54,21 @@ register_setting(
     default="https://tumblr.com/test",
 )
 
-register_setting(
-    name="FLICKR_ID",
-    label=_("Flickr ID"),
-    description=_("ID for flickr account bottom right. "),
-    editable=True,
-    default="55925941",
-)
+# register_setting(
+#     name="FLICKR_ID",
+#     label=_("Flickr ID"),
+#     description=_("ID for flickr account bottom right. "),
+#     editable=True,
+#     default="55925941",
+# )
 
-register_setting(
-    name="GMAP_LOC",
-    label=_("Google map location"),
-    description=_("Address for google maps. "),
-    editable=True,
-    default="Bellecour, Lyon, France",
-)
+# register_setting(
+#     name="GMAP_LOC",
+#     label=_("Google map location"),
+#     description=_("Address for google maps. "),
+#     editable=True,
+#     default="Bellecour, Lyon, France",
+# )
 
 
 # Contact and personal details
@@ -135,8 +135,8 @@ register_setting(
              "SOCIAL_LINK_VIMEO",
              "SOCIAL_LINK_TUMBLR",
              "SOCIAL_LINK_DELICIOUS",
-             "GMAP_LOC",
-             "FLICKR_ID",
+             # "GMAP_LOC",
+             # "FLICKR_ID",
              "PERSONAL_NAME",
              "PERSONAL_EMAIL",
              "PERSONAL_PHONE",

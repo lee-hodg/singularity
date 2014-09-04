@@ -31,7 +31,8 @@
     {% endif %}
 
 
-    <div class="post_meta">
+    <div class="clearfix post_meta">
+        <div class="time-tags-cats">
         {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }} ago{% endblocktrans %} /
         {% with blog_post.user as author %}
         By <a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
@@ -55,6 +56,7 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
+        </div>
 
         {% if settings.COMMENTS_DISQUS_SHORTNAME %}
         <a href="{{ blog_post.get_absolute_url }}#disqus_thread"

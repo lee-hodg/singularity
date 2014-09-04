@@ -238,25 +238,29 @@
 
         <section id="section-features"><a class="anchor" id="link-features"></a>
             <div class="site-container clearfix">
-                <h2>Features</h2>
-                {# make editable #}
-                <p>If you are looking for a sleek, responsive and easy to use Mezzanine Template, look no further! With Logicon, 
-                you'll be creating beautiful websites in no time.<p>
+                {% editable page.homepage.features_heading page.homepage.features_text %}
+                <h2>{{page.homepage.features_heading}}</h2>
+                {{page.homepage.features_text|safe}}
+                {% endeditable %}
 
                 <div class="feature-container clearfix">
                     {# It doesn't make sense to set classes really? #} 
                     {% for blurb in page.homepage.blurbs.all %}
                     <div class="column-one-third">
                         <a href="{{ blurb.link }}">
-                            {# make this none default in model #}
-                            {% if blurb.fa_icon != 'none'%}
-                            <i class="fa {{blurb.fa_icon}}"></i>
+                            {% if blurb.fa_icon != 'none' and blurb.fa_icon != '' %}
+                                <i class="fa {{blurb.fa_icon}}"></i>
                             {% elif blurb.icon %}
-                            <div class="advert" style="background: url('{{ blurb.icon.url }}') repeat scroll -7px -7px;"></div>
+                                <div class="advert" style="background: url('{{ blurb.icon.url }}') repeat scroll -7px -7px;"></div>
+                            {% else %}
+                                {# default if no image or font-awesome class #}
+                                <i class="fa fa-plus-square"></i>
                             {% endif %}
                         </a>
-                        <h3>{{ blurb.title }}</h3>
-                        <p>{{ blurb.content }}</p>
+                        {% editable blurb.title blurb.content %}
+                            <h3>{{ blurb.title }}</h3>
+                            <p>{{ blurb.content }}</p>
+                        {% endeditable %}
                     </div>
                     {% endfor %}
 
@@ -298,7 +302,7 @@
                     {% endfor %}
                 </div>
 
-                <div id="Container" class="container">
+                <div id="Container" class="container clearfix">
                     {# are we going to always say col-4 on the index page, and just let mediaquery take care of resizing? #}
                     {% for item in items %}
 
@@ -345,8 +349,10 @@
                 <div class="column-one-third">
                     <div class="testimonial-container">
                         <img src="{{ MEDIA_URL }}{% thumbnail testimonial.icon 100 100 %}">
+                        {% editable testimonial.name testimonial.content %}
                         <h3>{{ testimonial.name }}<div class="quote">&ldquo;</div></h3>
                         <p> {{ testimonial.content }} </p>
+                        {% endeditable %}
                     </div>
                 </div>
                 {% endfor %}

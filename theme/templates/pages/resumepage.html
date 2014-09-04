@@ -45,23 +45,23 @@
 
         <h3><i class="fa fa-university"></i> Postdoctoral Experience</h3>
         <div class="sub-title clearfix">
-            <h4>EPSRC Doctoral Prize</h4>
+            <h4>Super Prestigious Doctoral Prize</h4>
             <span>Researcher, Jun-Dec 2013</span>
         </div>
         <ul>
-            <li>Funding for postdoctoral study at Nottingham and &pound;9,835 support grant.</li>
-            <li>Awarded to top 15% of EPSRC funded researchers to increase impact of PhD in terms of knowledge transfer, publications and outreach.</li>
+            <li>Funding for postdoctoral study at MIT and &pound;999,835 support grant.</li>
+            <li>Awarded to top 1% of boffins to increase impact of PhD in terms of knowledge transfer, publications and outreach.</li>
         </ul>
 
 
         <h3><i class="fa fa-graduation-cap"></i> Education</h3>
         <div class="sub-title clearfix">
-            <h4> University of Manchester - Manchester, UK</h4>
+            <h4> Caltech - California, USA</h4>
             <span>Student, 2003-2007</span>
         </div>
         <ul>
             <li>M.Phys.: Theoretical Physics</li>
-            <li>Advisor: Jeff Forshaw</li>
+            <li>Advisor: Paul Dirac</li>
             <li>Thesis: Reinstating the `no-lose' theorem for NMSSM Higgs discovery at the LHC.</li>
         </ul>
 
@@ -88,7 +88,7 @@
         <ul>   
             {% for pub in page.resumepage.publications.all %}
             {% editable pub.authors pub.title pub.journal pub.volume pub.pages pub.arxivident pub.primaryClass %}
-            <li> {{ pub.authors }}“{{ pub.title }}” {{ pub.journal }} {{pub.volume}} {{pub.pages}} ({{pub.pages}})
+            <li> {{ pub.authors }} “{{ pub.title }}” {{ pub.journal }} {{pub.volume}} {{pub.pages}} ({{pub.pages}})
             <a target="_blank" href="http://arxiv.org/abs/{{pub.arxivident}}"> [arXiv: {{pub.arxivident}} [{{pub.primaryClass}}]]</a>.</li>
             {% endeditable %}
             {% endfor %}

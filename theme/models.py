@@ -49,10 +49,10 @@ class HomePage(Page, RichText):
     '''
     heading = models.CharField(max_length=200,
                                help_text='The heading under the icon'
-                                         'blurbs')
+                                         ' blurbs')
     subheading = models.CharField(max_length=200,
                                   help_text='The subheading just below'
-                                            'the heading')
+                                            ' the heading')
     featured_works_heading = models.CharField(max_length=200,
                                               default='Featured Works')
 
@@ -62,21 +62,34 @@ class HomePage(Page, RichText):
                                format='Image',
                                max_length=255, null=True, blank=True)
     parallax_heading = models.CharField(max_length=200,
-                                        help_text='The parallax sec'
-                                                  'heading.',
+                                        help_text='The parallax section'
+                                                  ' heading.',
                                         default='Parallax scrolling at'
-                                                'its finest.')
+                                                ' its finest.')
     parallax_subheading = models.CharField(max_length=200,
-                                           help_text='The parallax sec'
-                                                     'subheading',
+                                           help_text='The parallax section'
+                                                     ' subheading',
                                            default='Display your photos'
-                                                   'in a new way.')
+                                                   ' in a new way.')
+
+    features_heading = models.CharField(max_length=200,
+                                        help_text='The features'
+                                                  ' heading.',
+                                        default='Features')
+
+    features_text = RichTextField(max_length=200,
+                                  help_text='The features'
+                                            ' text.',
+                                  default='With Singularity you get'
+                                          ' a tonne of features'
+                                          ' out of the box')
+
     featured_portfolio = models.ForeignKey('Portfolio',
                                            blank=True, null=True,
                                            help_text='If selected items'
-                                                     'from this portfolio will'
-                                                     'be featured '
-                                                     'on the home page.')
+                                                     ' from this portfolio will'
+                                                     ' be featured '
+                                                     ' on the home page.')
     content_heading = models.CharField(max_length=200,
                                        default='About us!')
     latest_posts_heading = models.CharField(max_length=200,
@@ -121,12 +134,12 @@ class IconBlurb(Orderable):
     icon = FileField(verbose_name=_('Image'),
                      upload_to=upload_to('theme.IconBlurb.icon', 'icons'),
                      format='Image', max_length=255, blank=True, null=True)
-    fa_icon = models.CharField(max_length=50)  # font-awesome classes
+    fa_icon = models.CharField(max_length=50, default='none')  # font-awesome classes
     title = models.CharField(max_length=200)
     content = models.TextField()
     link = models.CharField(max_length=2000, blank=True,
                             help_text='Optional, if provided clicking the blurb'
-                            'will go here.')
+                            ' will go here.')
 
 
 class Testimonial(Orderable):

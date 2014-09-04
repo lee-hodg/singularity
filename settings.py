@@ -43,6 +43,9 @@ PAGE_MENU_TEMPLATES = (
      (3, "Footer", "pages/menus/footmenu.html"),
  )
 
+#Not in footer menu by default
+PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)
+
 # A sequence of fields that will be injected into Mezzanine's (or any
 # library's) models. Each item in the sequence is a four item sequence.
 # The first two items are the dotted path to the model and its field
