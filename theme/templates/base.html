@@ -232,43 +232,28 @@ $('.flexslider').flexslider();
             <table>
 
                 <tr>
-
                     <td><i class="fa fa-user"></i></td>
-
-                    <td>Joe Bloggs</td>
-
+                    <td>{{settings.PERSONAL_NAME|default:"Joe Bloggs"}}</td>
                 </tr>
 
                 <tr>
-
                     <td><i class="fa fa-envelope"></i></td>
-
-                    <td><a href="mailto:#">joe@bloggs.com</a></td>
-
+                    <td><a href="mailto:#">{{settings.PERSONAL_EMAIL|default:"joey@gmail.com"}}</a></td>
                 </tr>
 
                 <tr>
-
                     <td><i class="fa fa-phone"></i></td>
-
-                    <td>555-555-5555</td>
-
+                    <td>{{settings.PERSONAL_PHONE|default:"777-777-777"}}</td>
                 </tr>
 
                 <tr>
-
                     <td><i class="fa fa-home"></i></td>
-
-                    <td>742 Evergreen Terrace, Springfield, US</td>
-
+                    <td>{{settings.PERSONAL_ADDRESS|default:"742 Evergreen Terrace, Springfield, US" }}</td>
                 </tr>
 
                 <tr>
-
                     <td><i class="fa fa-skype"></i></td>
-
-                    <td>joebloggs2014</td>
-
+                    <td>{{settings.PERSONAL_SKYPE|default:"joebloggs14"}}</td>
                 </tr>
 
             </table>

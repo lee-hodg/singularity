@@ -404,6 +404,7 @@
                              {% endif %}
                             {{ contact_form.name.label }}
                             {{ contact_form.name }}
+                            <span class="asterisk_input">  </span>
                         </div>
 
                         <div class="email-container">
@@ -416,28 +417,35 @@
                              {% endif %}
                             {{ contact_form.sender.label }}
                             {{ contact_form.sender }}
+                            <span class="asterisk_input">  </span>
                         </div>
 
-                        {% if contact_form.subject.errors %}
-                        <ul class="errorlist">
-                            {% for err in contact_form.subject.errors %}
-                                <li>{{err}}<i class="tag-tip"><i></i></i></li>
-                            {% endfor %}
-                         </ul>
-                         {% endif %}
-                        {{ contact_form.subject.label }}
-                        {{ contact_form.subject }}
+                        <div class="subject-container">
+                            {% if contact_form.subject.errors %}
+                            <ul class="errorlist">
+                                {% for err in contact_form.subject.errors %}
+                                    <li>{{err}}<i class="tag-tip"><i></i></i></li>
+                                {% endfor %}
+                             </ul>
+                             {% endif %}
+                            {{ contact_form.subject.label }}
+                            {{ contact_form.subject }}
+                            <span class="asterisk_input">  </span>
+                       </div>
 
-                        {% if contact_form.message.errors %}
-                        <ul class="errorlist">
-                            {% for err in contact_form.message.errors %}
-                                <li>{{err}}<i class="tag-tip"><i></i></i></li>
-                            {% endfor %}
-                         </ul>
-                         {% endif %}
-                        {{ contact_form.message.label }}
-                        {{ contact_form.message }}
-    
+                       <div class="message-container">
+                            {% if contact_form.message.errors %}
+                            <ul class="errorlist">
+                                {% for err in contact_form.message.errors %}
+                                    <li>{{err}}<i class="tag-tip"><i></i></i></li>
+                                {% endfor %}
+                             </ul>
+                             {% endif %}
+                            {{ contact_form.message.label }}
+                            {{ contact_form.message }}
+                            <span class="asterisk_input">  </span>
+                       </div>
+
                         <input type="submit" name="send" value="Send" class="send-button" />
                     </form>     
 

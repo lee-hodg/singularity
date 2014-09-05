@@ -1393,12 +1393,20 @@ border-bottom: 1px solid #ccc;
 	width:60px;
 	float:right;
 }
-.name-container {
-	float:left; width:48%; margin-right:4%;
+
+
+.name-container, .email-container{
+    width:48%;
+    position: relative;
+    display: inline-block;
 }
 
-.email-container {
-	float:left; width:48%;
+.name-container {
+	margin-right:3.5%;
+}
+
+.subject-container, .message-container {
+    position:relative;
 }
 
 .btn {
