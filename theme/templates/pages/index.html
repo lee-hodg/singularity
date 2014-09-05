@@ -27,29 +27,48 @@
 
 {% block extra_js %}
 {{ block.super }}
+
     <script type="text/javascript">
-    {# If contact_form errors set a js var indicating so that will trigger a scrollTo #link-contact sec #}
-    {% if contact_form.errors.items|length %}
-        //var refocusOnContact = 'true';
-        //on window load.
-        //$(window).on('load', function() { //location.hash = '#link-contact'
-        //        ;})
-        $(function() { 
-                //location.hash = '#link-contact';
-                // problem is the portfolio #Container grows as images are loaded
-                // so on initial page load this section is smaller, and jquery calcs
-                // offset().top of #link-contact as smaller than it ends up being
-                // Could fix min-height of #Container? Is there another way to wait for
-                // the panel to load?
-                // There is also a small gap at top of contact anyway (even after page and
-                // js fully loaded. This is when window max and is just because footer+contact
-                // combined height is not big enough to fill any higher)
-                console.log('Top offset is:', $("#link-contact").offset().top);
+            function changeLoc(){
+            // The mixitup panel has a finite delay in filling the
+            // #Container div upon page load. This means upon page load initially
+            // the div is smaller, and #link-contact redirects (either on form error, or ext page loads)
+            // cause misalignment with top div,
+            // since the offset is actually changing as mixitup fills the #Container div.
+            //  This isn't solely to do with image loading, so jquery window.load or $('#Container img').last().load(..)
+            // does not help. It is to do with the animation. Setting a min-height in the CSS
+            // does not help since if the user adds more portfolio items/makes text bigger such
+            // that the div is taller than the min-height, the div has to obviously expand beyond
+            // the min height when the animation finishes, and we are back to square one.
+            // I used the mixItEnd callback and a counter to fire this function, whenever the
+            // count is zero (fire only on page loads, not everytime user does the sort animation).
+            // I also use a recursive check to make sure the height of the last img is non-zero to test
+            // whether images are truly loaded.
+            // 1)If the contact-form has errors this func just redirects to contact form. 2) If not, but the user 
+            // loaded the index page from an external page(e.g. nav on resume), and wanted to get to a given sec using the hash
+            // it redirects the user there, now the animation is done.
+            var last_height=$('#Container img').last().height();
+            if(last_height==0){
+                setTimeout(changeLoc, 500); // check again in 1/2 second
+                console.log('Images not loaded. Check again in x amount of time');
+            }else{
+                console.log('Images correctly loaded.');
+                //console.log('Top offset is:', $("#link-contact").offset().top);
                 console.log('Height of mixitup portfolio #Container is:', $("#Container").height());
-                $('html, body').animate({ scrollTop: $("#link-contact").offset().top });
-        });
-        //$(window).on('load', function() {$(window).scrollTop($('#link-contact').offset().top);})
-    {% endif %}
+                console.log('Number of mixitup imgs is:', $('#Container img').length);
+                console.log('Height of last mixitup img is:', $('#Container img').last().height());
+                //console.log('Src of last mixitup img is:', $('#Container img').last().attr('src'));
+                //$('html, body').animate({ scrollTop: $("#link-contact").offset().top });
+                {% if contact_form.errors.items|length %}
+                    location.hash = '#link-contact';
+                {% else %}
+                    var page = window.location.hash;
+                    if (page != "") {
+                        location.hash = page;
+                    }
+                {% endif %}
+            }
+         }
     </script>
 
     <script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
@@ -76,11 +95,22 @@
     <!-- Portfolio Filter & Shuffle -->
     <script src="{% static "js/jquery.mixitup.min.js" %}"></script>
     <script> 
+        var mc=0;
         $(function(){ 
-        $('#Container').mixItUp(); 
+                $('#Container').mixItUp({
+                    callbacks: {
+                        onMixEnd: function(state){
+                            console.log('Operation ended. Count:', mc);
+                            if(mc==0){
+                                console.log('mc is zero. Init page load animation done. Waiting for images to load....');
+                                $('#Container img').last().load(changeLoc());
+                            }
+                            mc++;
+                        }
+                   }
+                });
         }); 
     </script>
-
 
     <!-- Slideshow (needs jquery abov 1.9.1) -->
     <script src="{% static "js/jquery.event.move.js" %}"></script>
