@@ -122,6 +122,19 @@ $('.flexslider').flexslider();
 
 </script>
 
+<!--slickNav (Mob nav menu) related-->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+<!--slickNav init -->
+<script src="{{ STATIC_URL }}js/jquery.slicknav.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('#menu').slicknav({
+          prependTo:'#menu-mob',
+          closeOnClick:true
+      });
+    });
+</script>
+
 <!-- Parallax & Scrolling -->
 <!--script type="text/javascript" src="{% static "js/jquery.localscroll-min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/jquery.scrollTo-min.js" %}"></script>
