@@ -156,6 +156,8 @@ a.anchor{
 	background: white;
 	width: 100%;
 	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12);
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 
@@ -494,8 +496,13 @@ a .tag {
 	height:73px;
 	margin:0 auto;
 	border-radius:50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -khtml-border-radius: 50%;
 	border:3px solid #fff;
 	box-shadow: 0px 0px 5px #888;
+	-moz-box-shadow: 0px 0px 5px #888;
+	-webkit-box-shadow: 0px 0px 5px #888;
 	transition:0.4s;
 }
 
@@ -543,7 +550,12 @@ a .tag {
 	line-height: 70px;
 	border:3px solid #fff;
 	box-shadow: 0px 0px 5px #888;
+	-moz-box-shadow: 0px 0px 5px #888;
+	-webkit-box-shadow: 0px 0px 5px #888;
 	border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -khtml-border-radius: 50%;
 	transition: all 0.4s ease 0s
 }
 
@@ -799,6 +811,9 @@ span.text-content span span a:hover i{
 	padding:3px;
 	background: white;
 	border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -khtml-border-radius: 50%;
 	transition:0.4s;
 }
 
@@ -1104,8 +1119,16 @@ border-bottom: 1px solid #ccc;
 #page-about-us .column-one-quarter img {
 	width:70%;
 	border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -khtml-border-radius: 50%;
 	padding:4px;
-	box-shadow:0px 0px 5px #888
+	box-shadow:0px 0px 5px #888;
+	-moz-box-shadow:0px 0px 5px #888;ckground-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    -webkit-box-shadow:0px 0px 5px #888;
+
 }
 
 #page-about-us .team {
@@ -1147,6 +1170,8 @@ border-bottom: 1px solid #ccc;
 	background: white;
 	float:left;
 	box-shadow: 0 0 5px #888;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px #888;
 	-ms-transform: rotate(2deg); /* IE 9 */
     -webkit-transform: rotate(2deg); /* Chrome, Safari, Opera */
     transform: rotate(2deg); /* Standard syntax */
@@ -1226,6 +1251,9 @@ border-bottom: 1px solid #ccc;
 	background:white;
 	color:#222;
 	border-radius: 50%;
+    -moz-border-radius: 50%
+    -webkit-border-radius: 50%
+    -khtml-border-radius: 50%
 	height:30px;
 	box-sizing:border-box;
 	padding:5px 0 0 6px;
@@ -1461,6 +1489,9 @@ border-bottom: 1px solid #ccc;
     margin:-3px 0px 0 6px;
     display: inline-block;
     border-radius: 50%;
+    -moz-border-radius: 50%
+    -webkit-border-radius: 50%
+    -khtml-border-radius: 50%
 }
 
 .comment-date {
