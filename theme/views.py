@@ -31,7 +31,7 @@ def ajax_comments(request, pk):
         # comments_for tag, setting the all_comments var
         # in ctxt in advance, so comments_thread doesnt
         # need to touch it.
-        if settings.COMMENTS_ORDER_BY_SCORE:
+        if settings.COMMENTS_ORDERBYSCORE:
             # context passed by ref
             order_comments_by_score_for(context, obj)
 

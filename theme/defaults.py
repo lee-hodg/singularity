@@ -1,14 +1,10 @@
 from mezzanine.conf import register_setting
 from django.utils.translation import gettext as _  # import as '_', used for trans
 
-# These register setting to editable in the admin easily.
-# http://mezzanine.jupo.org/docs/configuration.html#registering-settings
+# Register settings so that they are available in the admin for editing.
 
-# Register our new settings, so we can change their vals in admin.
-# this also makes them available in a view say as
-# from mezzanine.conf import settings
-# settings.SOCIAL_LINK_FACEBOOK.
-# But if we want avail in template see further down.
+# Social settings
+
 register_setting(
     name="SOCIAL_LINK_FACEBOOK",
     label=_("Facebook link"),
@@ -24,7 +20,7 @@ register_setting(
     description=_("If present a Twitter icon linking here will be in the "
                   "header."),
     editable=True,
-    default="https://twitter.com/lee84bc",
+    default="https://twitter.com/MEZZaTHEME",
 )
 
 register_setting(
@@ -70,11 +66,7 @@ register_setting(
 #     default="Bellecour, Lyon, France",
 # )
 
-
-# Contact and personal details
-# NB If multiple settings prepended with the same
-# , before the underscore, they will get there own
-# section of this name in the admin.
+# Personal settings.
 
 register_setting(
     name="PERSONAL_NAME",
@@ -116,21 +108,25 @@ register_setting(
     default="joeyblogs84",
 )
 
+# Misc settings
+
 register_setting(
-    name="COMMENTS_ORDER_BY_SCORE",
+    name="COMMENTS_ORDERBYSCORE",
     label=_("Score order comments"),
-    description=_("Ord comments by rating but decay by age"),
+    description=_("Order comments by rating but decay by age"),
     editable=True,
-    default=False,
+    choices=((True, 'True'), (False, 'False')),
+    default=True,
 )
 
-# TEMPLATE_ACCESSIBLE_SETTINGS is one of the existing settings
-# specifying all setting names available within templates, thus
-# we want to append our new settings to it so we can use them in templates
+
+# Make settings available from within templates by appending
+# to existing `TEMPLATE ACCESSIBLE SETTINGS` setting.
+
 register_setting(
     name="TEMPLATE_ACCESSIBLE_SETTINGS",
-    append=True,                           # Because we append these to
-    default=("SOCIAL_LINK_FACEBOOK",       # exiisting templatate accessible settings.
+    append=True,
+    default=("SOCIAL_LINK_FACEBOOK",
              "SOCIAL_LINK_TWITTER",
              "SOCIAL_LINK_VIMEO",
              "SOCIAL_LINK_TUMBLR",
@@ -142,6 +138,6 @@ register_setting(
              "PERSONAL_PHONE",
              "PERSONAL_ADDRESS",
              "PERSONAL_SKYPE",
-             "COMMENTS_ORDER_BY_SCORE",
+             "COMMENTS_ORDERBYSCORE",
              ),
 )
