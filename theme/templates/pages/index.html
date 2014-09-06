@@ -28,97 +28,98 @@
 {% block extra_js %}
 {{ block.super }}
 
-    <script type="text/javascript">
-            function changeLoc(){
-            // The mixitup panel has a finite delay in filling the
-            // #Container div upon page load. This means upon page load initially
-            // the div is smaller, and #link-contact redirects (either on form error, or ext page loads)
-            // cause misalignment with top div,
-            // since the offset is actually changing as mixitup fills the #Container div.
-            //  This isn't solely to do with image loading, so jquery window.load or $('#Container img').last().load(..)
-            // does not help. It is to do with the animation. Setting a min-height in the CSS
-            // does not help since if the user adds more portfolio items/makes text bigger such
-            // that the div is taller than the min-height, the div has to obviously expand beyond
-            // the min height when the animation finishes, and we are back to square one.
-            // I used the mixItEnd callback and a counter to fire this function, whenever the
-            // count is zero (fire only on page loads, not everytime user does the sort animation).
-            // I also use a recursive check to make sure the height of the last img is non-zero to test
-            // whether images are truly loaded.
-            // 1)If the contact-form has errors this func just redirects to contact form. 2) If not, but the user 
-            // loaded the index page from an external page(e.g. nav on resume), and wanted to get to a given sec using the hash
-            // it redirects the user there, now the animation is done.
-            var last_height=$('#Container img').last().height();
-            if(last_height==0){
-                setTimeout(changeLoc, 500); // check again in 1/2 second
-                console.log('Images not loaded. Check again in x amount of time');
-            }else{
-                console.log('Images correctly loaded.');
-                //console.log('Top offset is:', $("#link-contact").offset().top);
-                console.log('Height of mixitup portfolio #Container is:', $("#Container").height());
-                console.log('Number of mixitup imgs is:', $('#Container img').length);
-                console.log('Height of last mixitup img is:', $('#Container img').last().height());
-                //console.log('Src of last mixitup img is:', $('#Container img').last().attr('src'));
-                //$('html, body').animate({ scrollTop: $("#link-contact").offset().top });
-                {% if contact_form.errors.items|length %}
-                    location.hash = '#link-contact';
-                {% else %}
-                    var page = window.location.hash;
-                    if (page != "") {
-                        location.hash = page;
-                    }
-                {% endif %}
-            }
-         }
-    </script>
+<script type="text/javascript">
+function changeLoc(){
+    // The mixitup panel has a finite delay in filling the
+    // #Container div upon page load. This means upon page load initially
+    // the div is smaller, and #link-contact redirects (either on form error, or ext page loads)
+    // cause misalignment with top div,
+    // since the offset is actually changing as mixitup fills the #Container div.
+    //  This isn't solely to do with image loading, so jquery window.load or $('#Container img').last().load(..)
+    // does not help. It is to do with the animation. Setting a min-height in the CSS
+    // does not help since if the user adds more portfolio items/makes text bigger such
+    // that the div is taller than the min-height, the div has to obviously expand beyond
+    // the min height when the animation finishes, and we are back to square one.
+    // I used the mixItEnd callback and a counter to fire this function, whenever the
+    // count is zero (fire only on page loads, not everytime user does the sort animation).
+    // I also use a recursive check to make sure the height of the last img is non-zero to test
+    // whether images are truly loaded.
+    // 1)If the contact-form has errors this func just redirects to contact form. 2) If not, but the user 
+    // loaded the index page from an external page(e.g. nav on resume), and wanted to get to a given sec using the hash
+    // it redirects the user there, now the animation is done.
+    var last_height=$('#Container img').last().height();
+    if(last_height==0){
+        setTimeout(changeLoc, 500); // check again in 1/2 second
+        console.log('Images not loaded. Check again in x amount of time');
+    }else{
+        console.log('Images correctly loaded.');
+        //console.log('Top offset is:', $("#link-contact").offset().top);
+        console.log('Height of mixitup portfolio #Container is:', $("#Container").height());
+        console.log('Number of mixitup imgs is:', $('#Container img').length);
+        console.log('Height of last mixitup img is:', $('#Container img').last().height());
+        //console.log('Src of last mixitup img is:', $('#Container img').last().attr('src'));
+        //$('html, body').animate({ scrollTop: $("#link-contact").offset().top });
+        {% if contact_form.errors.items|length %}
+        location.hash = '#link-contact';
+        {% else %}
+        var page = window.location.hash;
+        if (page != "") {
+            location.hash = page;
+        }
+        {% endif %}
+    }
+}
+</script>
 
-    <script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function(){
-             $("a[rel^='prettyPhoto']").prettyPhoto();
+<script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+        $("a[rel^='prettyPhoto']").prettyPhoto();
         });
-    </script>
+</script>
 
-    <!-- Parallax & Scrolling -->
-    <script type="text/javascript" src="{% static "js/jquery.localscroll-min.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/jquery.scrollTo-min.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/jquery.parallax-1.1.3.js" %}"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function(){
-        $.localScroll({});
-        $('#section-parallax-2').parallax("50%", 0.1);
-        $('#section-parallax').parallax("50%", 0.5);
-        });
-    </script> 
 {% endblock %}
 
 {% block extra_foot_js %}
-    <!-- Portfolio Filter & Shuffle -->
-    <script src="{% static "js/jquery.mixitup.min.js" %}"></script>
-    <script> 
-        var mc=0;
-        $(function(){ 
-                $('#Container').mixItUp({
-                    callbacks: {
-                        onMixEnd: function(state){
-                            console.log('Operation ended. Count:', mc);
-                            if(mc==0){
-                                console.log('mc is zero. Init page load animation done. Waiting for images to load....');
-                                $('#Container img').last().load(changeLoc());
-                            }
-                            mc++;
-                        }
-                   }
-                });
+<!-- Portfolio Filter & Shuffle -->
+<script src="{% static "js/jquery.mixitup.min.js" %}"></script>
+<script> 
+var mc=0;
+$(function(){ 
+        $('#Container').mixItUp({
+callbacks: {
+onMixEnd: function(state){
+console.log('Operation ended. Count:', mc);
+if(mc==0){
+console.log('mc is zero. Init page load animation done. Waiting for images to load....');
+$('#Container img').last().load(changeLoc());
+}
+mc++;
+}
+}
+});
         }); 
-    </script>
+</script>
 
-    <!-- Slideshow (needs jquery abov 1.9.1) -->
-    <script src="{% static "js/jquery.event.move.js" %}"></script>
-    <script src="{% static  "js/responsive-slider.js" %}"></script>
+<!-- Slideshow (needs jquery abov 1.9.1) -->
+<script src="{% static "js/jquery.event.move.js" %}"></script>
+<script src="{% static  "js/responsive-slider.js" %}"></script>
 
-    <script>
-        console.log('Offset of contact as calc foot_js:', $("#link-contact").offset().top);
-    </script>
+<!-- Parallax & Scrolling -->
+<script type="text/javascript" src="{% static "js/jquery.localscroll-min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery.scrollTo-min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery.parallax-1.1.3.js" %}"></script>
+<script type="text/javascript">
+//jQuery(document).ready(function(){
+// use load instead of ready so images fully loaded too.
+$(window).load(function(){
+        $.localScroll({});
+        // xpos of image, speed of scroll
+        $('#section-parallax-2').parallax("50%", 0.1);
+        $('#section-parallax').parallax("50%", 0.5);
+        });
+</script> 
+
 {% endblock %}
 
 
@@ -260,12 +261,9 @@
         </section>
         <!-- Latest blog posts - END -->
 
-
         <!-- Features -BEGIN-->
-
         {# Note we chose related name as 'blurbs' in theme.models when spec ForeignKey #}
         {% if page.homepage.blurbs.all %} 
-
         <section id="section-features"><a class="anchor" id="link-features"></a>
             <div class="site-container clearfix">
                 {% editable page.homepage.features_heading page.homepage.features_text %}
@@ -279,17 +277,17 @@
                     <div class="column-one-third">
                         <a href="{{ blurb.link }}">
                             {% if blurb.fa_icon != 'none' and blurb.fa_icon != '' %}
-                                <i class="fa {{blurb.fa_icon}}"></i>
+                            <i class="fa {{blurb.fa_icon}}"></i>
                             {% elif blurb.icon %}
-                                <div class="advert" style="background: url('{{ blurb.icon.url }}') repeat scroll -7px -7px;"></div>
+                            <div class="advert" style="background: url('{{ blurb.icon.url }}') repeat scroll -7px -7px;"></div>
                             {% else %}
-                                {# default if no image or font-awesome class #}
-                                <i class="fa fa-plus-square"></i>
+                            {# default if no image or font-awesome class #}
+                            <i class="fa fa-plus-square"></i>
                             {% endif %}
                         </a>
                         {% editable blurb.title blurb.content %}
-                            <h3>{{ blurb.title }}</h3>
-                            <p>{{ blurb.content }}</p>
+                        <h3>{{ blurb.title }}</h3>
+                        <p>{{ blurb.content }}</p>
                         {% endeditable %}
                     </div>
                     {% endfor %}
@@ -319,7 +317,6 @@
         <!-- Parallax section -END-->
 
         <!--Portfolio section -BEGIN-->
-
         <section id="section-portfolio"><a class="anchor" id="link-portfolio"></a>
             <div class="site-container clearfix">
 
@@ -378,7 +375,11 @@
                 {% for testimonial in  page.homepage.testimonials.all %}
                 <div class="column-one-third">
                     <div class="testimonial-container">
-                        <img src="{{ MEDIA_URL }}{% thumbnail testimonial.icon 100 100 %}">
+
+                        <div class="circ-img-wrap">
+                            <img src="{{ MEDIA_URL }}{% thumbnail testimonial.icon 100 100 %}">
+                        </div>
+
                         {% editable testimonial.name testimonial.content %}
                         <h3>{{ testimonial.name }}<div class="quote">&ldquo;</div></h3>
                         <p> {{ testimonial.content }} </p>
@@ -393,7 +394,6 @@
         <!--END Testimonials -->
 
         <!--BEGIN Contact -->
-
         <section id="section-contact"><a class="anchor" id="link-contact"></a>
 
             <div class="site-container clearfix">
@@ -408,16 +408,16 @@
                         {# you can style the way the errors_for tag presents the non-field-errors#}
                         {# by changing the templates/indlcues/form_errors.html template #}
                         {% errors_for contact_form %}
-                        
+
                         {% for message in messages %}
-                            {% if 'success' in message.tags %}
-                            <span class="text-success">({{ message }})</span>
-                            {% endif %}
-                            {% if 'error' in message.tags %}
-                            <span class="errornote">({{ message }})</span>
-                            {% endif %}
+                        {% if 'success' in message.tags %}
+                        <span class="text-success">({{ message }})</span>
+                        {% endif %}
+                        {% if 'error' in message.tags %}
+                        <span class="errornote">({{ message }})</span>
+                        {% endif %}
                         {% endfor %}
-                     </h3>
+                    </h3>
 
 
                     <form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} class="contact-form">
@@ -428,10 +428,10 @@
                             {% if contact_form.name.errors %}
                             <ul class="errorlist">
                                 {% for err in contact_form.name.errors %}
-                                    <li>{{err}}<i class="tag-tip"><i></i></i></li>
+                                <li>{{err}}<i class="tag-tip"><i></i></i></li>
                                 {% endfor %}
-                             </ul>
-                             {% endif %}
+                            </ul>
+                            {% endif %}
                             {{ contact_form.name.label }}
                             {{ contact_form.name }}
                             <span class="asterisk_input">  </span>
@@ -441,10 +441,10 @@
                             {% if contact_form.sender.errors %}
                             <ul class="errorlist">
                                 {% for err in contact_form.sender.errors %}
-                                    <li>{{err}}<i class="tag-tip"><i></i></i></li>
+                                <li>{{err}}<i class="tag-tip"><i></i></i></li>
                                 {% endfor %}
-                             </ul>
-                             {% endif %}
+                            </ul>
+                            {% endif %}
                             {{ contact_form.sender.label }}
                             {{ contact_form.sender }}
                             <span class="asterisk_input">  </span>
@@ -454,147 +454,107 @@
                             {% if contact_form.subject.errors %}
                             <ul class="errorlist">
                                 {% for err in contact_form.subject.errors %}
-                                    <li>{{err}}<i class="tag-tip"><i></i></i></li>
+                                <li>{{err}}<i class="tag-tip"><i></i></i></li>
                                 {% endfor %}
-                             </ul>
-                             {% endif %}
+                            </ul>
+                            {% endif %}
                             {{ contact_form.subject.label }}
                             {{ contact_form.subject }}
                             <span class="asterisk_input">  </span>
-                       </div>
+                        </div>
 
-                       <div class="message-container">
+                        <div class="message-container">
                             {% if contact_form.message.errors %}
                             <ul class="errorlist">
                                 {% for err in contact_form.message.errors %}
-                                    <li>{{err}}<i class="tag-tip"><i></i></i></li>
+                                <li>{{err}}<i class="tag-tip"><i></i></i></li>
                                 {% endfor %}
-                             </ul>
-                             {% endif %}
+                            </ul>
+                            {% endif %}
                             {{ contact_form.message.label }}
                             {{ contact_form.message }}
                             <span class="asterisk_input">  </span>
-                       </div>
+                        </div>
 
                         <input type="submit" name="send" value="Send" class="send-button" />
                     </form>     
 
-                </div>
-
-
+                </div><!--end column-two-thirds-->
 
                 <div class="column-one-third">
 
                     <div class="social-fonts-container clearfix">
 
                         <h3>Social Font Icons</h3>
-                           {% if settings.SOCIAL_LINK_FACEBOOK %}
-                           <a target="_blank" href="{{ settings.SOCIAL_LINK_FACEBOOK }}" class="facebook">
-                               <i class="fa fa-facebook"></i> Facebook
-                           </a>
-                           <br/>
-                           {% endif %}
-        
-                           {% if settings.SOCIAL_LINK_TWITTER %}
-                           <a target="_blank" href="{{ settings.SOCIAL_LINK_TWITTER }}" class="twitter" >
-                               <i class="fa fa-twitter"></i> Twitter
-                           </a>
-                           <br/>
-                           {% endif %}
-                           
-                           {% if settings.SOCIAL_LINK_VIMEO %}
-                           <a target="_blank" href="{{ settings.SOCIAL_LINK_VIMEO }}" class="vimeo">
-                                <i class="fa fa-vimeo-square"></i> Vimeo 
-                           </a>
-                           <br/>
-                           {% endif %}
-                           
-                           {% if settings.SOCIAL_LINK_TUMBLR %}
-                           <a target="_blank" href="{{ settings.SOCIAL_LINK_TUMBLR }}" class="tumblr">
-                                <i class="fa fa-tumblr"></i> Tumblr
-                           </a>
-                           <br/>
-                           {% endif %}
-                           
-                           {% if settings.SOCIAL_LINK_DELICIOUS %}
-                           <a target="_blank" href="{{ settings.SOCIAL_LINK_DELICIOUS }}" class="delicious">
-                                <i class="fa fa-delicious"></i> Delicious
-                           </a>
-                           <br/>
-                           {% endif %}
-
-
-                    </div>
-
-                    <!--div class="contact-section-info clearfix">
-                        {# This should be settings eventually #}
-                        <h3>Contact Info</h3>
-
-                        {% if settings.PERSONAL_NAME %}
-                            <i class="fa fa-user"></i> {{settings.PERSONAL_NAME }} <br/>
+                        {% if settings.SOCIAL_LINK_FACEBOOK %}
+                        <a target="_blank" href="{{ settings.SOCIAL_LINK_FACEBOOK }}" class="facebook">
+                            <i class="fa fa-facebook"></i> Facebook
+                        </a>
+                        <br/>
                         {% endif %}
 
-                        {% if settings.PERSONAL_EMAIL %}
-                            <i class="fa fa-envelope"></i> {{settings.PERSONAL_EMAIL }} <br/>
+                        {% if settings.SOCIAL_LINK_TWITTER %}
+                        <a target="_blank" href="{{ settings.SOCIAL_LINK_TWITTER }}" class="twitter" >
+                            <i class="fa fa-twitter"></i> Twitter
+                        </a>
+                        <br/>
                         {% endif %}
 
-                        {% if settings.PERSONAL_PHONE %}
-                            <i class="fa fa-phone"></i> {{settings.PERSONAL_PHONE }} <br/>
+                        {% if settings.SOCIAL_LINK_VIMEO %}
+                        <a target="_blank" href="{{ settings.SOCIAL_LINK_VIMEO }}" class="vimeo">
+                            <i class="fa fa-vimeo-square"></i> Vimeo 
+                        </a>
+                        <br/>
                         {% endif %}
 
-                        {% if settings.PERSONAL_ADDRESS %}
-                        {# turn comma sep address into newline sep #}
-                        <i class="fa fa-home"></i> {% autoescape off %}
-                        {{ settings.PERSONAL_ADDRESS|linebreaksbr }} {% endautoescape %}<br/>
+                        {% if settings.SOCIAL_LINK_TUMBLR %}
+                        <a target="_blank" href="{{ settings.SOCIAL_LINK_TUMBLR }}" class="tumblr">
+                            <i class="fa fa-tumblr"></i> Tumblr
+                        </a>
+                        <br/>
                         {% endif %}
 
-                        {% if settings.PERSONAL_SKYPE %}
-                            <i class="fa fa-skype"></i> {{settings.PERSONAL_SKYPE }} <br/>
+                        {% if settings.SOCIAL_LINK_DELICIOUS %}
+                        <a target="_blank" href="{{ settings.SOCIAL_LINK_DELICIOUS }}" class="delicious">
+                            <i class="fa fa-delicious"></i> Delicious
+                        </a>
+                        <br/>
                         {% endif %}
+                    </div><!--end social-fonts-container-->
 
-                    </div-->
+
                     <div class="contact-section-info"> 
                         <h3>Contact Info</h3>
                         <table>
-
                             <tr>
                                 <td><i class="fa fa-user"></i></td>
                                 <td>{{settings.PERSONAL_NAME|default:"Joe Bloggs"}}</td>
                             </tr>
-
                             <tr>
                                 <td><i class="fa fa-envelope"></i></td>
                                 <td><a href="mailto:#">{{settings.PERSONAL_EMAIL|default:"joey@gmail.com"}}</a></td>
                             </tr>
-
                             <tr>
                                 <td><i class="fa fa-phone"></i></td>
                                 <td>{{settings.PERSONAL_PHONE|default:"777-777-777"}}</td>
                             </tr>
-
                             <tr>
                                 <td><i class="fa fa-home"></i></td>
                                 <td>{{settings.PERSONAL_ADDRESS|default:"742 Evergreen Terrace, Springfield, US" }}</td>
                             </tr>
-
                             <tr>
                                 <td><i class="fa fa-skype"></i></td>
                                 <td>{{settings.PERSONAL_SKYPE|default:"joebloggs14"}}</td>
                             </tr>
-
                         </table>
                     </div><!--end contact-section-info--> 
-                </div>
 
-            </section>
-            <!-- END contact -->
+                </div><!--end-column-one-third-->
+            
+            </div><!--end site-container-->
 
+        </section>
+        <!-- END contact -->
 
-
-        </div><!--end one third-->
-
-        <!--//page_container-->
-
-
-
+        </div><!--//page_container-->
         {% endblock all_content %}

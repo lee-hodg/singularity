@@ -14,6 +14,7 @@ http://www.gnu.org/licenses/gpl.html
 (function( $ ){
 	var $window = $(window);
 	var windowHeight = $window.height();
+    //console.log('Px: windowHeight:', windowHeight);
 
 	$window.resize(function () {
 		windowHeight = $window.height();
@@ -28,6 +29,13 @@ http://www.gnu.org/licenses/gpl.html
 		//get the starting position of each element to have parallax applied to it		
 		$this.each(function(){
 		    firstTop = $this.offset().top;
+
+            //DEBUG
+            //console.log('this id:', $this.attr('id'));
+            //console.log('Px:firstTop:', firstTop);
+            //console.log("Px: $('#section-parallax').offset().top", $('#section-parallax').offset().top);
+            //console.log("$('#section-parallax').height()", $('#section-parallax').height());
+            //console.log("$('#section-slideshow').height()", $('#section-slideshow').height());
 		});
 
 		if (outerHeight) {
@@ -58,6 +66,14 @@ http://www.gnu.org/licenses/gpl.html
 				if (top + height < pos || top > pos + windowHeight) {
 					return;
 				}
+
+                //DEBUG
+                //console.log('window.scrollTop scrollbar pos:', pos);
+                //console.log('element top is:', top);
+                //console.log('element height is:', height);
+                //console.log('elment firstTop is:', firstTop);
+                //console.log('set bg ypos to: Math.round((firstTop - pos) * speedFactor):', Math.round((firstTop - pos) * speedFactor));
+                //console.log('************************');
 
 				$this.css('backgroundPosition', xpos + " " + Math.round((firstTop - pos) * speedFactor) + "px");
 			});

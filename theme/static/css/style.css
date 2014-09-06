@@ -804,20 +804,6 @@ span.text-content span span a:hover i{
 	text-shadow: 0px 1px 0px #000;
 }
 
-#section-parallax-2 img{
-	width:100px;
-	position: absolute;
-	top:-50px;
-	left:50%;
-	margin-left:-50px;
-	padding:3px;
-	background: white;
-	border-radius: 50%;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -khtml-border-radius: 50%;
-	transition:0.4s;
-}
 
 /* #section-parallax-2 img:hover{
 	background:#C3512F;
@@ -832,6 +818,38 @@ span.text-content span span a:hover i{
 
 }
 
+#section-parallax-2 .circ-img-wrap{
+
+    /* this wrap is needed to create the effect otherwise
+     * cropping occurs on ie and safari, as it curves the border
+     * of the padded area not image itself*/
+
+	transition:0.4s;
+	position: absolute;
+	top:-50px;
+	left:50%;
+	margin-left:-50px;
+	padding:3px;
+	background: white;
+	width:100px;
+    display:inline-block;
+	border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -khtml-border-radius: 50%;
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+
+}
+
+#section-parallax-2 .circ-img-wrap img{
+	width:100%;
+	border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -khtml-border-radius: 50%;
+    vertical-align: middle;
+}
 
 #section-parallax-2 .column-one-third{
 	padding-left:25px;
@@ -1133,9 +1151,12 @@ border-bottom: 1px solid #ccc;
 	width:24%;
 }
 
-
-#page-about-us .column-one-quarter img {
+#page-about-us .circ-img-wrap{
+    /* this wrap is needed to create the effect otherwise
+     * cropping occurs on ie and safari, as it curves the border
+     * of the padded area not image itself*/
 	width:70%;
+    display:inline-block;
 	border-radius: 50%;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
@@ -1144,9 +1165,19 @@ border-bottom: 1px solid #ccc;
     border: 4px solid transparent;
 	box-shadow:0px 0px 5px #888;
 	-moz-box-shadow:0px 0px 5px #888;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
     -webkit-box-shadow:0px 0px 5px #888;
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+
+}
+
+#page-about-us .column-one-quarter img {
+	border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -khtml-border-radius: 50%;
+	width:100%;
+    vertical-align:middle;
 
 }
 

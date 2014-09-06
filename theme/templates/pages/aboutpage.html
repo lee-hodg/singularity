@@ -22,7 +22,9 @@
             <h3> {{ prof.name }} </h3>
             {% endeditable %}
 
-            <img src="{{ MEDIA_URL }}{% thumbnail prof.icon 300 300 %}">
+            <div class="circ-img-wrap">
+                <img src="{{ MEDIA_URL }}{% thumbnail prof.icon 300 300 %}">
+            </div>
 
             {% editable prof.role %}
             <h4> {{ prof.role }} </h4>

@@ -62,7 +62,7 @@ should be good.
         {% else %}
         {# Without URLs #}
         <div class="avatar">
-            <img src="{% gravatar_url comment.email %}">
+            <img src="{% gravatar_url comment.email 64 %}">
         </div>
         <div class="comment-right">
             <span class="left-arrow-container-outer">
