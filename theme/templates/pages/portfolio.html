@@ -25,7 +25,10 @@
 
 {% block main_wrapper %}
 
-<h2>{{ page.portfolio.columns }}-Column Portfolio</h2>
+<!--h2>{{ page.portfolio.columns }}-Column Portfolio</h2-->
+{% editable page.portfolio.title %}
+<h2>{{ page.portfolio.title }}</h2>
+{% endeditable %}
 
 <div class="row">
     <div class="span12">
@@ -67,7 +70,7 @@
 
         <div class="portfolio-description">
             <h3><a href="{% url "page" item.slug %}">{{ item.title }}</a></h3>
-            <p>{{ item.short_description|richtext_filters|safe }}</p>
+            {{ item.short_description|richtext_filters|safe }}
         </div> <!-- END portfolio-description-->
  
     </div><!-- END mix-col-->
