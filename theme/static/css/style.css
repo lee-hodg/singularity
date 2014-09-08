@@ -629,7 +629,7 @@ button + label{
 .container .mix{
 	text-align: left;
 	margin-bottom: 3%;
-    margin-right: 2.5%;
+    margin-right: 2.4%;
 	display: none;
 	vertical-align: top;
 }
@@ -1741,8 +1741,9 @@ ul[data-level="0"]>li > div[id^="comment-"]> .comment-right .comment-border .rat
 }
 
 .rating {
-    float:left;
-    margin:0 10px 0 0!important;
+    margin: 0px 10px 0px 0px !important;
+    display:inline-block;
+    float:none;
 }
 
 .reply, .link {
@@ -1834,6 +1835,16 @@ ul[data-level="0"]>li > div[id^="comment-"]> .comment-right .comment-border .rat
 		top:13px;
     }
 
+    #page-about-us .column-one-quarter {
+        width:49%
+    }
+
+    .input_id_email, .input_id_name {
+        display:block;
+        width:100%;
+        margin-right:0;
+    }
+
 }
 
 /**************** MOBILE ***************/
@@ -1876,6 +1887,27 @@ ul[data-level="0"]>li > div[id^="comment-"]> .comment-right .comment-border .rat
 		display: none;
 	}
 
+    #section-parallax, #section-parallax-2 {
+        background-size: auto 100%;
+    }
+
+    #page-about-us .column-one-quarter {
+        width:100%;
+        padding: 2%;
+    }
+
+    .comment-date {
+        display:none;
+    }
+
+    .show-replies {
+        display:block;
+        float:none;
+    }
+
+    .name-container, .email-container {
+        width:100%;
+    }
 }
 
 /*******************PORTFOLIO ITEM CAROUSEL*********************/

@@ -93,4 +93,9 @@ See [here](http://mezzanine.jupo.org/docs/configuration.html) for more settings 
 
 # admin.py
 
+For editing child models of the parent (i.e.) inlines, it's best to see the Django docs, or just
+try them out. Mezzanine usually just adds `Dynamic`, which just adds some js to  add another easily.
+
+# models.py
+
 

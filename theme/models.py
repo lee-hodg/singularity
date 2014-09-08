@@ -5,17 +5,15 @@ from django.utils.translation import ugettext_lazy as _
 from mezzanine.core.fields import FileField, RichTextField
 from mezzanine.core.models import RichText, Orderable, Slugged
 from mezzanine.pages.models import Page
-# from mezzanine.forms.models import Form
 from mezzanine.utils.models import upload_to
 
 
 class AboutPage(Page, RichText):
     '''
-    An about us type page, which with the
-    associated About Profiles gives a space
-    to put employer profiles and some text
+    An about-us type page, which with the
+    associated AboutProfiles, gives a space
+    to put employee profiles and some text
     about the company, e.g. values or history.
-    These can be put in the Page model's content field.
     '''
 
     history = models.TextField(help_text="Enter your company's history.")
@@ -28,8 +26,8 @@ class AboutPage(Page, RichText):
 
 class AboutProfile(Orderable):
     '''
-    A profile of personnel on a About page.
-    Consisting of image, name of staff, their role and their
+    A profile of an employee on an About page.
+    Consisting of image, employee name, their role and their
     blurb text.
     '''
     aboutpage = models.ForeignKey(AboutPage, related_name='profiles')
@@ -45,33 +43,16 @@ class AboutProfile(Orderable):
 
 class HomePage(Page, RichText):
     '''
-    A page representing the format of the home page
+    A page representing the format of the home page.
     '''
-    heading = models.CharField(max_length=200,
-                               help_text='The heading under the icon'
-                                         ' blurbs')
-    subheading = models.CharField(max_length=200,
-                                  help_text='The subheading just below'
-                                            ' the heading')
-    featured_works_heading = models.CharField(max_length=200,
-                                              default='Featured Works')
+    # heading = models.CharField(max_length=200,
+    #                            help_text='The heading under the icon'
+    #                                      ' blurbs')
+    # subheading = models.CharField(max_length=200,
+    #                               help_text='The subheading just below'
+    #                                         ' the heading')
 
-    parallax_image = FileField(verbose_name=_('Image'),
-                               upload_to=upload_to('theme.Parallax.image',
-                                                   'parallaxIMG'),
-                               format='Image',
-                               max_length=255, null=True, blank=True)
-    parallax_heading = models.CharField(max_length=200,
-                                        help_text='The parallax section'
-                                                  ' heading.',
-                                        default='Parallax scrolling at'
-                                                ' its finest.')
-    parallax_subheading = models.CharField(max_length=200,
-                                           help_text='The parallax section'
-                                                     ' subheading',
-                                           default='Display your photos'
-                                                   ' in a new way.')
-
+    # Features section.
     features_heading = models.CharField(max_length=200,
                                         help_text='The features'
                                                   ' heading.',
@@ -84,16 +65,47 @@ class HomePage(Page, RichText):
                                           ' a tonne of features'
                                           ' out of the box')
 
+    # Parallax section.
+    parallax_image = FileField(verbose_name=_('Parallax Image'),
+                               upload_to=upload_to('theme.Parallax.image',
+                                                   'parallaxIMG'),
+                               format='Image',
+                               help_text='The parallax section image.',
+                               max_length=255, null=True, blank=True)
+    parallax_heading = models.CharField(max_length=200,
+                                        help_text='The parallax section'
+                                                  ' heading.',
+                                        default='Parallax scrolling at'
+                                                ' its finest.')
+    parallax_subheading = models.CharField(max_length=200,
+                                           help_text='The parallax section'
+                                                     ' subheading',
+                                           default='Display your photos'
+                                                   ' in a new way.')
+    # Portfolio section.
+    portfolio_sec_heading = models.CharField(max_length=200,
+                                             default='Portfolio')
     featured_portfolio = models.ForeignKey('Portfolio',
                                            blank=True, null=True,
-                                           help_text='If selected items'
+                                           help_text='If selected, items'
                                                      ' from this portfolio will'
                                                      ' be featured '
                                                      ' on the home page.')
-    content_heading = models.CharField(max_length=200,
-                                       default='About us!')
-    latest_posts_heading = models.CharField(max_length=200,
-                                            default='Latest Posts')
+
+    # Testimonials section.
+    testimonials_heading = models.CharField(max_length=200,
+                                            default='About us!')
+
+    testimonials_subheading = models.CharField(max_length=200,
+                                               default='What other people'
+                                                       ' say about us...')
+
+    testimonials_image = FileField(verbose_name=_('Testimonials Image'),
+                                   upload_to=upload_to('theme.Testimonials.image',
+                                                       'testimonialsIMG'),
+                                   format='Image',
+                                   help_text='The parallax testimonals section image.',
+                                   max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = _('Home page')
@@ -102,7 +114,7 @@ class HomePage(Page, RichText):
 
 class Slide(Orderable):
     '''
-    A slide in a slider connected to a HomePage
+    A slide in a slider connected to a HomePage.
     '''
     homepage = models.ForeignKey(HomePage, related_name='slides')
     image = FileField(verbose_name=_('Image'),
@@ -128,7 +140,7 @@ class Slide(Orderable):
 
 class IconBlurb(Orderable):
     '''
-    An icon box on a HomePage
+    An icon box on a HomePage (usually in the Features section).
     '''
     homepage = models.ForeignKey(HomePage, related_name='blurbs')
     icon = FileField(verbose_name=_('Image'),
@@ -157,9 +169,9 @@ class Testimonial(Orderable):
 
 
 COLUMNS_CHOICES = (
-    ('2', 'Two columns'),  # two columns use span6
-    ('3', 'Three columns'),  # three columns use span4
-    ('4', 'Four Columns'),  # four columns use span3
+    ('2', 'Two columns'),
+    ('3', 'Three columns'),
+    ('4', 'Four Columns'),
 )
 
 
@@ -182,13 +194,8 @@ class PortfolioItem(Page, RichText):
     '''
     An individual portfolio item, should be nested under a Portfolio
     '''
-    # This is the featured image, but also we use PortfolioItemImage
-    # to add more images that can be scrolled through (c.f. choices
-    # associated with a Poll obj in django tut via Foreign key)
-
-    # NB the related names are what you will need when grabbing these
-    # objects in either view or template after dotting.
-    featured = models.BooleanField()  # to be featured on homepage or not.
+    featured = models.BooleanField(help_text='Show image of home page'
+                                             ' when this portfolio is selected.')
 
     featured_image = FileField(verbose_name=_('Featured Image'),
                                upload_to=upload_to('theme.PortfolioItem.featured_image',
@@ -233,9 +240,6 @@ class PortfolioItemCategory(Slugged):
         ordering = ('title',)
 
 
-# # Resume page? Maybe it doesn't change often enough to bother?
-# # But could follow the portfolio example above creating a resume model,
-# # this would consist of things like PublicationItems, SkillItems and so on...
 class ResumePage(Page, RichText):
     '''
     A page representing the format of the resume page

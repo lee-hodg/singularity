@@ -222,7 +222,9 @@ $(window).load(function(){
                 {% for blog_post in blog_posts.all %}
                 <div class="post clearfix">
 
+                    {% editable blog_post.title %}
                     <h2><a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a></h2>
+                    {% endeditable %}
 
                     <div class="post_meta">
                         {% with blog_post.user as author %}
@@ -320,7 +322,9 @@ $(window).load(function(){
         <section id="section-portfolio"><a class="anchor" id="link-portfolio"></a>
             <div class="site-container clearfix">
 
-                <h2>Portfolio</h2>
+                {% editable page.homepage.portfolio_sec_heading %}
+                <h2>{{ page.homepage.portfolio_sec_heading }}</h2>
+                {% endeditable %}
 
                 <div class="controls">
                     <button class="filter" data-filter="all">All</button>
@@ -364,13 +368,20 @@ $(window).load(function(){
         <!--//featured works-->
 
         <!-- BEGIN Testimonials -->
-        <section id="section-parallax-2" class="clearfix" style="background:url('{{STATIC_URL}}img/parallax-2.jpg') no-repeat fixed 0 0 / cover;">
+        <section id="section-parallax-2" class="clearfix" style="background:url('{{page.homepage.testimonials_image.url}}') no-repeat fixed 0 0 / cover;">
             <a id="link-testimonials" class="anchor"></a>
             <div class="site-container clearfix">
 
-                <h2>Testimonials</h2>
+                <div style="position:relative;">
+                    {# This container pos relative div just keeps the EDIT tag in the right place. Since #}
+                    {# the mixitup panel above has a delay in animation, so if the abs pos EDIT tag is positioned #}
+                    {# to the window top, it will be miscalc by the time mixitup animation done, so out of whack #}
+                    {% editable page.homepage.testimonials_heading page.homepage.testimonials_subheading %}
+                    <h2>{{ page.homepage.testimonials_heading }} </h2>
+                    <h4>{{ page.homepage.testimonials_subheading }}</h4>
+                    {% endeditable %}
+                </div>
 
-                <h4>What other people say about us...</h4>
 
                 {% for testimonial in  page.homepage.testimonials.all %}
                 <div class="column-one-third">

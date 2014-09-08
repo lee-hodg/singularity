@@ -110,6 +110,8 @@ register_setting(
 
 # Misc settings
 
+# ( the COMMENTS_ prefix puts this setting
+# into existing comments grouping)
 register_setting(
     name="COMMENTS_ORDERBYSCORE",
     label=_("Score order comments"),
