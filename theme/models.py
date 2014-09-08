@@ -262,9 +262,73 @@ class ResumePage(Page, RichText):
                                                  'resumepage'),
                              format='Image', max_length=255, null=True, blank=True)
 
+    experience_sec_heading = models.CharField(max_length=200,
+                                              default='Experience',
+                                              help_text='The heading of the '
+                                                        'experience sec.')
+    education_sec_heading = models.CharField(max_length=200,
+                                             default='Education',
+                                             help_text='The heading of the '
+                                                       'education sec.')
+
+    skills_sec_heading = models.CharField(max_length=200,
+                                          default='Skills',
+                                          help_text='The heading of the '
+                                                    'skills sec.')
+
+    skills_subsec_heading = models.CharField(max_length=200,
+                                             default='Things I can do.',
+                                             help_text='The subheading of the '
+                                                       'skills sec.')
+    publications_sec_heading = models.CharField(max_length=200,
+                                                default='Publications',
+                                                help_text='The heading of the '
+                                                          'publications sec.')
+
+    publications_subsec_heading = models.CharField(max_length=200,
+                                                   default='My work',
+                                                   help_text='The subheading of the '
+                                                             ' publications sec.')
+
     class Meta:
         verbose_name = _('Resume page')
         verbose_name_plural = _('Resume pages')
+
+
+class ExperienceItem(Orderable):
+    '''
+    An experience entry for the resume page.
+    '''
+    resumepage = models.ForeignKey(ResumePage, related_name='experiences')
+    institute = models.CharField(max_length=500, help_text='Name of institute.')
+    position_title = models.CharField(max_length=500, help_text='Title you held.')
+    startdate = models.DateField(help_text='Your start date.', verbose_name='Start date')
+    enddate = models.DateField(help_text='Your end date.', verbose_name='End date')
+    statements_text = RichTextField(max_length=200,
+                                    help_text='Your responsibilities, duties'
+                                              ' and skills you developed.',)
+
+    class Meta:
+        verbose_name = _('Experience')
+        verbose_name_plural = _('Experiences')
+
+
+class Qualification(Orderable):
+    '''
+    A qualification entry for the resume page.
+    '''
+    resumepage = models.ForeignKey(ResumePage, related_name='qualifications')
+    institute = models.CharField(max_length=500, help_text='Name of institute.')
+    qualification_title = models.CharField(max_length=500, help_text='Title of qualification.')
+    startdate = models.DateField(help_text='Your start date.', verbose_name='Start date')
+    enddate = models.DateField(help_text='Your end date.', verbose_name='End date')
+    statements_text = RichTextField(max_length=200,
+                                    help_text=' The skills you learnt, grade, thesis'
+                                              ' title and advisor etc.',)
+
+    class Meta:
+        verbose_name = _('Qualification')
+        verbose_name_plural = _('Qualifications')
 
 
 class PublicationItem(Orderable):

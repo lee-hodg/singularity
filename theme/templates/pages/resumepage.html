@@ -43,48 +43,48 @@
 <div class="column-two-thirds-right">
     <div class="cv-container">
 
-        <h3><i class="fa fa-university"></i> Postdoctoral Experience</h3>
-        <div class="sub-title clearfix">
-            <h4>Super Prestigious Doctoral Prize</h4>
-            <span>Researcher, Jun-Dec 2013</span>
-        </div>
-        <ul>
-            <li>Funding for postdoctoral study at MIT and &pound;999,835 support grant.</li>
-            <li>Awarded to top 1% of boffins to increase impact of PhD in terms of knowledge transfer, publications and outreach.</li>
-        </ul>
+        {% editable page.resumepage.experience_sec_heading %}
+        <h3><i class="fa fa-university"></i> {{ page.resumepage.experience_sec_heading }}</h3>
+        {% endeditable %}
+        
+        {% for experience in page.resumepage.experiences.all %}
+            <div class="sub-title clearfix">
+                {% editable experience.institute %}
+                <h4>{{ experience.institute }}</h4>
+                {% endeditable %}
+                {% editable experience.position_title experience.startdate experience.enddate %}
+                <span>{{experience.position_title}}, {{experience.startdate|date:"M Y"}} &#8211 {{experience.enddate|date:"M Y" }}</span>
+                {% endeditable %}
+            </div>
+            {% editable experience.statements_text %}
+                 {{ experience.statements_text|safe }}
+            {% endeditable %}
+        {% endfor %}
 
+        {% editable page.resumepage.education_sec_heading %}
+        <h3><i class="fa fa-graduation-cap"></i> {{ page.resumepage.education_sec_heading }}</h3>
+        {% endeditable %}
+        {% for qual in page.resumepage.qualifications.all %}
+            <div class="sub-title clearfix">
+                {% editable qual.institute qual.qualification_title qual.startdate qual.enddate %}
+                <h4> {{  qual.institute }}</h4>
+                <span>{{ qual.qualification_title }}, {{qual.startdate|date:"M Y"}} &#8211 {{qual.enddate|date:"M Y" }}</span>
+                {% endeditable %}
+            </div>
+            {% editable qual.statements_text %}{{ qual.statements_text|safe }} {% endeditable %}
+        {% endfor %}
 
-        <h3><i class="fa fa-graduation-cap"></i> Education</h3>
-        <div class="sub-title clearfix">
-            <h4> Caltech - California, USA</h4>
-            <span>Student, 2003-2007</span>
-        </div>
-        <ul>
-            <li>M.Phys.: Theoretical Physics</li>
-            <li>Advisor: Paul Dirac</li>
-            <li>Thesis: Reinstating the `no-lose' theorem for NMSSM Higgs discovery at the LHC.</li>
-        </ul>
-
-        <h3><i class="fa fa-wrench"></i>Skills</h3>
+        {% editable page.resumepage.skills_sec_heading page.resumepage.skills_subsec_heading %}
+        <h3><i class="fa fa-wrench"></i>{{ page.resumepage.skills_sec_heading }}</h3>
         <h4>Things I can do</h4>
-        <ul>
-            <li>
-            Programming languages and frameworks - C++, Python, Django, Scrapy.
-            </li>
-            <li>
-            Markup and scripting - LaTeX, HTML, bash, CSS, Javascript, jQuery, ajax.
-            </li>
-            <li>
-            Specialised software - Maple, Mathematica.
-            </li>
-            <li>
-            Other - Experiencend Linux (Ubuntu) user, and experience using PBS grid engine for distributed computing on a High performance super cluster.
-            </li>
-        </ul>
+        {% endeditable %}
 
+        {% editable page.resumepage.content %} {{ page.resumepage.content|safe }} {% endeditable %}
 
-        <h3><i class="fa fa-pencil"></i>Publications</h3>
-        <h4>My work</h4>
+        {% editable page.resumepage.publications_sec_heading page.resumepage.publications_subsec_heading %}
+        <h3><i class="fa fa-pencil"></i>{{ page.resumepage.publications_sec_heading }}</h3>
+        <h4>{{  page.resumepage.publications_subsec_heading }}</h4>
+        {% endeditable %}
         <ul>   
             {% for pub in page.resumepage.publications.all %}
             {% editable pub.authors pub.title pub.journal pub.volume pub.pages pub.arxivident pub.primaryClass %}

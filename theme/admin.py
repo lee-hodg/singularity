@@ -4,7 +4,7 @@ from mezzanine.core.admin import TabularDynamicInlineAdmin, StackedDynamicInline
 from mezzanine.pages.admin import PageAdmin
 from .models import AboutPage, AboutProfile, HomePage, Slide, IconBlurb, Testimonial
 from .models import Portfolio, PortfolioItem, PortfolioItemImage, PortfolioItemCategory
-from .models import ResumePage, PublicationItem
+from .models import ResumePage, ExperienceItem, Qualification, PublicationItem
 
 # ******** HOME PAGE**********************
 
@@ -74,9 +74,15 @@ class PublicationItemInline(StackedDynamicInlineAdmin):
     model = PublicationItem
 
 
+class ExperienceItemInline(TabularDynamicInlineAdmin):
+    model = ExperienceItem
+
+class QualificationInline(TabularDynamicInlineAdmin):
+    model = Qualification
+
 # ResumePage admin custom class.
 class ResumePageAdmin(PageAdmin):
-    inlines = [PublicationItemInline]
+    inlines = [ExperienceItemInline, QualificationInline, PublicationItemInline]
 
 # Register ResumePage with its custom admin model.
 admin.site.register(ResumePage, ResumePageAdmin)
