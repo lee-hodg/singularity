@@ -1,28 +1,6 @@
 {# NB page extends base, and index extends page #}
 {% extends "pages/page.html" %}
 
-{# Could there be a better way to put a form on the homepage. #}
-{# Surely starting out with a Form type page model, or an extension of one #}
-{# is the way to go? This way you can do all the nice things in the admin you can #}
-{# usually do for Form page. For example managing the Fields in the form and managing #}
-{# the email settings (cf the leehodgkinson Contact page). #}
-{# Whilst we can of course extend the form.html template as much as we like #}
-{# , the standard Form model is not enough, we want to add things like custom #}
-{# headings, slides, icons, blurbs and so on. So model itself needs to be extended #}
-{# to give a new custom form type of page as an option when adding a page in admin #}
-{# Simply subclass of Form instead of Page doesn't seem to play well #}
-{# We'd also be able to specify the response on submission, button text, and so on #}
-{# with a subclass of form #}
-{# It seems you can't overwrite the Form, you can only inherit from Page. Field injection #}
-{# on the Form model is an option. Simply copy and pasting the Form model, customising, and #}
-{# then using that, would be another #}
-
-{# NB for the thumbnail templatetag to work with jpegs, you will need #}
-{# to install the necessary lib for pillow to do conv: sudo apt-get install libjpeg-dev #}
-{# and reinstall pillow: pip install -I pillow, otherwise you will just get the original #}
-{# image url returned. You can use the shell to work this out with #}
-{# from mezzanine.core.templatetags.mezzanine_tags import thumbnail #}
-
 {% load i18n static pages_tags mezzanine_tags staticfiles templateutils %}
 
 {% block extra_js %}
@@ -30,23 +8,12 @@
 
 <script type="text/javascript">
 function changeLoc(){
-    // The mixitup panel has a finite delay in filling the
-    // #Container div upon page load. This means upon page load initially
-    // the div is smaller, and #link-contact redirects (either on form error, or ext page loads)
-    // cause misalignment with top div,
-    // since the offset is actually changing as mixitup fills the #Container div.
-    //  This isn't solely to do with image loading, so jquery window.load or $('#Container img').last().load(..)
-    // does not help. It is to do with the animation. Setting a min-height in the CSS
-    // does not help since if the user adds more portfolio items/makes text bigger such
-    // that the div is taller than the min-height, the div has to obviously expand beyond
-    // the min height when the animation finishes, and we are back to square one.
-    // I used the mixItEnd callback and a counter to fire this function, whenever the
-    // count is zero (fire only on page loads, not everytime user does the sort animation).
-    // I also use a recursive check to make sure the height of the last img is non-zero to test
-    // whether images are truly loaded.
-    // 1)If the contact-form has errors this func just redirects to contact form. 2) If not, but the user 
-    // loaded the index page from an external page(e.g. nav on resume), and wanted to get to a given sec using the hash
-    // it redirects the user there, now the animation is done.
+    // Callback of the mixitup panel (portfolio items sec) upon animation end
+    // (on new page load).
+    // Make sure imgs are fully loaded then do hash redirects, such
+    // contact section on event of contact form errors, or hash redirects
+    // when user coming from non-index page to e.g. #link-testimonials.
+    // See README.md for more.
     var last_height=$('#Container img').last().height();
     if(last_height==0){
         setTimeout(changeLoc, 500); // check again in 1/2 second
@@ -54,9 +21,9 @@ function changeLoc(){
     }else{
         console.log('Images correctly loaded.');
         //console.log('Top offset is:', $("#link-contact").offset().top);
-        console.log('Height of mixitup portfolio #Container is:', $("#Container").height());
-        console.log('Number of mixitup imgs is:', $('#Container img').length);
-        console.log('Height of last mixitup img is:', $('#Container img').last().height());
+        //console.log('Height of mixitup portfolio #Container is:', $("#Container").height());
+        //console.log('Number of mixitup imgs is:', $('#Container img').length);
+        //console.log('Height of last mixitup img is:', $('#Container img').last().height());
         //console.log('Src of last mixitup img is:', $('#Container img').last().attr('src'));
         //$('html, body').animate({ scrollTop: $("#link-contact").offset().top });
         {% if contact_form.errors.items|length %}
@@ -81,68 +48,60 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block extra_foot_js %}
-<!-- Portfolio Filter & Shuffle -->
-<script src="{% static "js/jquery.mixitup.min.js" %}"></script>
-<script> 
-var mc=0;
-$(function(){ 
-        $('#Container').mixItUp({
-callbacks: {
-onMixEnd: function(state){
-console.log('Operation ended. Count:', mc);
-if(mc==0){
-console.log('mc is zero. Init page load animation done. Waiting for images to load....');
-$('#Container img').last().load(changeLoc());
-}
-mc++;
-}
-}
-});
-        }); 
-</script>
+    <!-- Portfolio Filter & Shuffle -->
+    <script src="{% static "js/jquery.mixitup.min.js" %}"></script>
+    <script type="text/javascript"> 
+    var mc=0; // count mixes, mix=1 is anim after first page load.
+    $(function(){ 
+            $('#Container').mixItUp({
+                callbacks: {
+                    onMixEnd: function(state){
+                                //console.log('Operation ended. Count:', mc);
+                                if(mc==0){
+                                console.log('mc is zero. Init page load animation done. Waiting for images to load....');
+                                $('#Container img').last().load(changeLoc());
+                                }
+                                mc++;
+                              }
+                    }
+            });
+    }); 
+    </script>
 
-<!-- Slideshow (needs jquery abov 1.9.1) -->
-<script src="{% static "js/jquery.event.move.js" %}"></script>
-<script src="{% static  "js/responsive-slider.js" %}"></script>
+    <!-- Slideshow (needs jquery abov 1.9.1) -->
+    <script src="{% static "js/jquery.event.move.js" %}"></script>
+    <script src="{% static  "js/responsive-slider.js" %}"></script>
 
-<!-- Parallax & Scrolling -->
-<script type="text/javascript" src="{% static "js/jquery.localscroll-min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/jquery.scrollTo-min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/jquery.parallax-1.1.3.js" %}"></script>
-<script type="text/javascript">
-//jQuery(document).ready(function(){
-// use load instead of ready so images fully loaded too.
-$(window).load(function(){
-        $.localScroll({});
-        // xpos of image, speed of scroll
-        $('#section-parallax-2').parallax("50%", 0.1);
-        $('#section-parallax').parallax("50%", 0.5);
-        });
-</script> 
+    <!-- Parallax & Scrolling -->
+    <script type="text/javascript" src="{% static "js/jquery.localscroll-min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.scrollTo-min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.parallax-1.1.3.js" %}"></script>
+    <script type="text/javascript">
+    //jQuery(document).ready(function(){
+    // use load instead of ready so images fully loaded too.
+    $(window).load(function(){
+            $.localScroll({});
+            // xpos of image, speed of scroll
+            $('#section-parallax-2').parallax("50%", 0.1);
+            $('#section-parallax').parallax("50%", 0.5);
+            });
+    </script> 
 
 {% endblock %}
 
 
 {% block topmenu %}
-{# Menu for index with the sec links instead of absolute urls at top level #}
-{# Needs pages_tags loaded #}
-{% page_menu "pages/menus/dropdown.html" %}
+    {# Menu for index with the sec links instead of absolute urls at top level #}
+    {# Needs pages_tags loaded #}
+    {% page_menu "pages/menus/dropdown.html" %}
 {% endblock %}
 
 {% block all_content %}
-
-
-<!--page_container-->
 
 <div class="page_container">
 
     <!-- Responsive slider - START -->
     <section id="section-slideshow">
-        {# N.B. The slider cap images and their animations can only be set the same #}
-        {# at the moment. Changing this would prob involve complicating the slide model #}
-        {# to include 'animation' field (e.g. toptobottom) and a styling field. Not sure #}
-        {# if this might be too complex for a user. #}
-
         {% if page.homepage.slides.all %}
         <div class="responsive-slider" data-spy="responsive-slider" data-autoplay="true">
             <div class="slides" data-group="slides">
@@ -218,7 +177,7 @@ $(window).load(function(){
         <div class="site-container clearfix">
 
             <div class="column-two-thirds">
-                {# should filter only most recent n posts really #}
+                {# `blog_posts` has up to three most recent posts #}
                 {% for blog_post in blog_posts.all %}
                 <div class="post clearfix">
 
@@ -255,7 +214,7 @@ $(window).load(function(){
 
             </div>
 
-            {# blog filter panel on rhs #}
+            {# blog filter panel on RHS #}
             <div class="column-one-third">
                 {% include "blog/includes/filter_panel.html" %}
             </div>
@@ -274,7 +233,6 @@ $(window).load(function(){
                 {% endeditable %}
 
                 <div class="feature-container clearfix">
-                    {# It doesn't make sense to set classes really? #} 
                     {% for blurb in page.homepage.blurbs.all %}
                     <div class="column-one-third">
                         <a href="{{ blurb.link }}">
@@ -303,8 +261,6 @@ $(window).load(function(){
         <!--Features -END-->
 
         <!-- Parallex section -BEGIN -->
-        {# How shall we make this content managed? #}
-        {# Editable header and caption, and the photo too? #}
         <section id="section-parallax" style="background-image: url('{{page.homepage.parallax_image.url}}');">
             <div class="parallax-container">
                 <div class="parallax-text">
@@ -333,7 +289,6 @@ $(window).load(function(){
                 </div>
 
                 <div id="Container" class="container clearfix">
-                    {# are we going to always say col-4 on the index page, and just let mediaquery take care of resizing? #}
                     {% for item in items %}
 
                     <div class="mix col-4 {% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify}} {% endfor %}{% endspaceless %}" data-category="{% spaceless %}{% for c in item.categories.all %}{{ c.title|slugify }} {% endfor %}{% endspaceless %}" data-myorder="{{ forloop.counter }}">
@@ -357,7 +312,7 @@ $(window).load(function(){
                     </div>
 
                     {% endfor %}
-                    {# these are added just to keep orientation right when few items present? #}
+                    <!-- Keep orientation even with few items-->
                     <div class="col-4"></div>
                     <div class="col-4"></div> 
                 </div><!-- END container --> 
@@ -418,8 +373,8 @@ $(window).load(function(){
                     <h3>
                         Send a Message
 
-                        {# you can style the way the errors_for tag presents the non-field-errors#}
-                        {# by changing the templates/indlcues/form_errors.html template #}
+                        {# You can style the way the `errors_for` tag presents the non-field-errors #}
+                        {# by changing the `templates/indcludes/form_errors.html` template. #}
                         {% errors_for contact_form %}
 
                         {% for message in messages %}

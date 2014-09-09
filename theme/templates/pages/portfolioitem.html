@@ -13,6 +13,7 @@
     </script>
 {% endblock %}
 
+{# Important to sec this section id so css styles work correctly #}
 {% block section_id %}page-portfolio-detail{% endblock %}
 
 {% block main %}
@@ -32,27 +33,6 @@
 {% endeditable %}
 
 {% endblock main %}
-
-{% comment %}
-<div class="full-post">
-    {% editable page.title %}
-    <h2> {{ page.title }}</h2>
-    {% endeditable %}
-
-    {% for image in portfolioitem.images.all %}    
-    {% if forloop.first %}
-        <img src="{{ MEDIA_URL }}{% thumbnail image.file 1500 430 %}" alt="" />
-    {% endif %}    
-    {% endfor %}
-
-    {% editable page.portfolioitem.content %}
-    {{ page.portfolioitem.content|richtext_filters|safe }}
-    {% endeditable %}
-
-</div>  
-
-{% endblock main %}
-{% endcomment %}
 
 {% block right_panel %}
 

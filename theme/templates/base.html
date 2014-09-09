@@ -17,12 +17,9 @@
 
 <!--FONTS-->
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+<link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet" type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
 
-<!--rename bootstrap and bootstrap-responsive with
-version numbers to avoid conflicting with mezzanines 
-pre-shipped bootstrap css-->
 {% compress css %}
 <link href="{% static "css/prettyPhoto.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/normalize.css" %}" rel="stylesheet" type="text/css" />
@@ -30,7 +27,7 @@ pre-shipped bootstrap css-->
 <link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/slicknav.css" %}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" id="camera-css"  href="{% static "css/camera.css" %}" type="text/css" media="all">
-<!-- This is for portfolio slider -->
+<!-- This is for portfolio  item slider -->
 <link rel="stylesheet" href="{% static "css/flexslider.css" %}" type="text/css">
 {% block extra_css %}{% endblock %}
 {% endcompress %}
@@ -41,22 +38,17 @@ pre-shipped bootstrap css-->
 <![endif]-->
 
 {% compress js %}
-<!--jQuery -->
-{# compress error if this external link is in here? #}
-<!--script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script-->
-{# doing it the way immediately below means problems for admin looking in mezzanine/js for a non-existant version #}
-{# thus meaning we have to copy the version to venv each time, or override admin #}
-<!--script src="{% static "js/"|add:settings.JQUERY_FILENAME %}"></script-->
-{# simplest soln is just: #}
-<script src="{% static "js/jquery-2.1.0.min.js" %}"></script>
+{# No external links in here #}
 
-<!-- PORTFOLIO ITEM SLIDER -->
-<!--script type="text/javascript" src="{% static "js/jquery.flexslider-min.js" %}"></script-->
-<!--script type="text/javascript" charset="utf-8">
-$(window).load(function() {
-$('.flexslider').flexslider();
-});
-</script-->
+{% comment %}
+Adding jQuery. If we want to add a newer version than in the mezzanine/js dir from our theme/static/js dir, then
+doing it the way immediately below
+    <!--script src="{% static "js/"|add:settings.JQUERY_FILENAME %}"></script-->
+means problems for admin looking in mezzanine/js for a non-existant version 
+thus meaning we have to copy the version to venv each time, or override admin. The simplest solution is thus
+as below.
+{% endcomment %}
+<script src="{% static "js/jquery-2.1.0.min.js" %}"></script>
 
 <!-- BLOG TAGCLOUD-->
 <script src="{% static "js/jquery.tagcloud.js" %}" type="text/javascript" charset="utf-8"></script>
@@ -72,17 +64,8 @@ $('.flexslider').flexslider();
     });
 </script>
 
-<!-- PrettyPhoto -->
-<!--script type="text/javascript" src="{% static "js/jquery.prettyPhoto.js" %}"></script>
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
-    $("a[rel^='prettyPhoto']").prettyPhoto();
-    });
-</script-->
 
 <!-- Dropdown Menu -->
-<!-- including the jsddm.min.js seems to break things with slider or menu -->
-<!--script type="text/javascript" src="{% static "js/jquery.jsddm.min.js" %}"></script-->
 <script type="text/javascript">
     var timeout         = 500;
     var closetimer      = 0;
@@ -135,18 +118,6 @@ $('.flexslider').flexslider();
     });
 </script>
 
-<!-- Parallax & Scrolling -->
-<!--script type="text/javascript" src="{% static "js/jquery.localscroll-min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/jquery.scrollTo-min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/jquery.parallax-1.1.3.js" %}"></script>
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-    $.localScroll({});
-    $('#section-parallax-2').parallax("50%", 0.1);
-    $('#section-parallax').parallax("50%", 0.5);
-    });
-</script-->
-
 {% block extra_js %}{% endblock %}
 {# This is needed for editable toolbar at top left #}
 {# and google analytics functionality #}
@@ -168,16 +139,12 @@ $('.flexslider').flexslider();
 
 <body id="{% block body_id %}body{% endblock %}">
 
-<!--header-->
 <header>
 
     <div class="site-header">
 
         <div class="header-container">
-            {# need some tag to split this and color differently #}
             <h1><a href="/"> {% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, #444" }} {% endautoescape %}</a></h1>
-
-            <!-- <img src="img/logo.png"> -->
 
             <div class="menu-mobile-container">
 
@@ -185,7 +152,7 @@ $('.flexslider').flexslider();
 
                     <!--placeholder for slicknav to insert its menu (styling was menu) -->
 
-                </div> <!-- menu-mobile-->
+                </div> <!-- /menu-mobile-->
 
             </div> <!-- /menu-mobile-container-->
 
@@ -195,15 +162,13 @@ $('.flexslider').flexslider();
                 {% endblock %}
             </div>
 
-        </div>
+        </div><!--/header-container-->
 
-    </div>
+    </div><!--/site-header-->
 
 </header>
-<!--//header-->    
 
 {% block all_content %}
-<!--page_container-->
 <section id="{% block section_id %}page-blog {% endblock %}" class="page-container">
     <div class="site-container clearfix">
         {% block main_wrapper %}
@@ -218,28 +183,20 @@ $('.flexslider').flexslider();
         {% endblock %}
     </div>
 </section>     
-<!--//page_container-->
 {% endblock %}    
-
-<!--footer-->
 
 <section id="section-site-map" class="clearfix">
 
     <div class="site-container clearfix">
 
         <div class="logicon-info">  
-
-            {# need a tag to seperate colors #}
             <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, white" }}{% endautoescape %}</h1>
-
             <p>{% autoescape off %}{{ settings.SITE_TAGLINE|truncatewords:70 }} {% endautoescape %}<p>
-
         </div>
 
         <div class="contact-info">
 
             <h3>Contact Info</h3>
-            {# contact info should be added from settings probably #}
             <table>
 
                 <tr>
@@ -319,24 +276,9 @@ $('.flexslider').flexslider();
     </div>
 
 </section>
-<!--//footer-->    
 
-{# % include "includes/footer_scripts.html" % #}
 
 {% block extra_foot_js %}{% endblock %}
-{% comment %}
-<!-- Portfolio Filter & Shuffle -->
-<!--script src="{% static "js/jquery.mixitup.min.js" %}"></script>
-<script>
-    $(function(){
-    $('#Container').mixItUp();
-    });
-</script-->
-
-<!-- Slideshow (needs jquery abov 1.9.1) -->
-<!--script src="{% static "js/jquery.event.move.js" %}"></script-->
-<!--script src="{% static  "js/responsive-slider.js" %}"></script-->
-{% endcomment %}
 
 </body>
 </html>

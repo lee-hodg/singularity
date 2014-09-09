@@ -3,7 +3,7 @@
 {% load mezzanine_tags static %}
 
 {# This is id of section that wraps around everything in the base.html #}
-{# Important to set so css styles work correctly #}
+{# Important to set so css styles work correctly. #}
 {% block section_id %}page-about-us{% endblock %}
 
 {% block main_wrapper %}
@@ -14,7 +14,6 @@
 
 <div class="team clearfix">
 
-        {# How does this work if not 4 profiles? #}
         {% for prof in  page.aboutpage.profiles.all %}
         <div class="column-one-quarter">
 

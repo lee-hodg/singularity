@@ -104,3 +104,73 @@ Note that the `published()` filter obviously returns only pages published, and `
 the pages that are published and accessible to the current request.user, e.g. admin, staff, anonymous etc..
 
 # views.py
+
+# base.html
+
+# index.html
+
+## Thoughts on better way to add contact form to HomePage
+
+Could there be a better way to put a form on the homepage?
+Starting out with the Form type page model and extending it would seem like a good idea.
+This way we could do all the nice things in the admin that one can do usually for the Form page such
+as managing fields, making fields required or not, submit btn text recipient emails etc. We'd of course need to extend this Form model
+to make our HomePage model and all the fields that go with that model, headings, subheadings, and so on.
+Simply subclass of Form instead of Page doesn't seem to play well. 
+It seems you can't overwrite the Form, you can only inherit from Page. Field injection
+on the Form model is an option. Simply copy and pasting the Form model, customising, and then using that, would be another
+(i.e. just copy and paste these fields into the HomePage model.
+
+## Thumbnail templatetag and jpegs
+
+For the thumbnail templatetag to work with jpegs, you will need 
+to install the necessary lib for pillow to do conv: `sudo apt-get install libjpeg-dev`
+and reinstall pillow: pip install -I pillow, otherwise you will just get the original 
+image url returned. You can use the shell to work this out with 
+from mezzanine.core.templatetags.mezzanine_tags import thumbnail.
+
+## Mixitup panel
+
+The mixitup panel has a finite delay in filling the
+`#Container` div upon page load. This delay is both due to image loading
+(if images not already in browser cache) and the animation itself.
+
+This means upon page load initially
+the div is smaller, and `#link-contact` redirects (either on form error, or ext page loads)
+are messed up. The offset from top is actually changing as mixitup fills the `#Container` div.
+
+Setting min-height of the section div does not help, since the user controls content, we don't know
+what that min-height should be all the time, so if they add more and more PortfolioItems until the section
+height is beyond min-height, we will be back to square one when the animation expands the section beyond min-height..
+
+jQuery `$(window).load()` can help with img loading. 
+
+Regarding the animations: I used the `mixItEnd` callback of the mixitup script 
+and a counter to fire this function, whenever the
+count is zero (fire only on page loads, not everytime user does the sort animation).
+
+I also use a recursive check to make sure the height of the last img is non-zero to test
+whether images are truly loaded.
+1)If the contact-form has errors this func just redirects to contact form. 2) If not, but the user 
+loaded the index page from an external page(e.g. nav on resume), and wanted to get to a given sec using the hash
+it redirects the user there, now the animation is done.
+
+### blog_post.description_from_content
+
+See the source, this stops at first para or br (etc) unless user unchecked generate in admin and entered their own.
+The problem is it searches para first and if there is a para right at the end but a break before it, it will still take
+the latter para as the truncation point (I guess to avoid leaving trailing html tags?). Instead I just add truncatewords_html:100
+too to ensure this doesn't get too long no matter what.
+
+### thumbnail
+
+Note something like 0 100 means height fixed at 100, but width will scale proportionaly to aspect ratio. There
+are also options like `top=0 left=0` to choose how image is cropped (default 0.5 0.5, which will crop vertically and horizontally
+in center). Finally there is the quality option.
+
+### Contact form fields
+
+Could have used the `fields_for` tag just like for blog comment replies. With the `includes/form_fields.html` setting the styling
+universally for fields, but I thought I'd do it a different way here.
+
+# Page menus 
