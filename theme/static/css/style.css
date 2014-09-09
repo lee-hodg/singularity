@@ -1218,7 +1218,7 @@ border-bottom: 1px solid #ccc;
 	padding:20px 20px 10px;
 
 	background: white;
-	float:left;
+	/*float:left;*/
 	box-shadow: 0 0 5px #888;
 	-moz-box-shadow: 0 0 5px #888;
 	-webkit-box-shadow: 0 0 5px #888;
@@ -1229,6 +1229,10 @@ border-bottom: 1px solid #ccc;
 }
 
 .polaroid h2 {border:none !important;}
+
+.cv-personal-info {
+    display:block;
+}
 
 .cv-container {
 	float: left;

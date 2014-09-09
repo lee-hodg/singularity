@@ -15,23 +15,23 @@
         <h2>{{settings.PERSONAL_NAME|default:"Joe Bloggs"}}</h2>
     </div>
 
-    <p>
-    {% editable page.resumepage.nationality %}
-    <strong>Nationality:</strong> {{page.resumepage.nationality }}<br/>
-    {% endeditable %}
-    {% editable page.resumepage.dob %}
-    <strong>Date of Birth:</strong> {{page.resumepage.dob }}<br/>
-    {% endeditable %}
-    {% editable page.resumepage.location %}
-    <strong>Location:</strong> {{page.resumepage.location}} <br/>
-    {% endeditable %}
-    {% editable page.resumepage.telephone %}
-    <strong>Phone:</strong> {{ page.resumepage.telephone }} <br/>
-    {% endeditable %}
-    {% editable page.resumepage.email %}
-    <strong>E-mail:</strong>{{ page.resumepage.email }} 
-    {% endeditable %}
-    </p>
+    <div class="cv-personal-info">
+        {% editable page.resumepage.nationality %}
+        <strong>Nationality:</strong> {{page.resumepage.nationality }}<br/>
+        {% endeditable %}
+        {% editable page.resumepage.dob %}
+        <strong>Date of Birth:</strong> {{page.resumepage.dob }}<br/>
+        {% endeditable %}
+        {% editable page.resumepage.location %}
+        <strong>Location:</strong> {{page.resumepage.location}} <br/>
+        {% endeditable %}
+        {% editable page.resumepage.telephone %}
+        <strong>Phone:</strong> {{ page.resumepage.telephone }} <br/>
+        {% endeditable %}
+        {% editable page.resumepage.email %}
+        <strong>E-mail:</strong>{{ page.resumepage.email }} 
+        {% endeditable %}
+    </div>
 
     <h3>Personal Statement</h3>
     {% editable page.resumepage.statement %}
