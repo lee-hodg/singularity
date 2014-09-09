@@ -107,6 +107,13 @@ class HomePage(Page, RichText):
                                    help_text='The parallax testimonals section image.',
                                    max_length=255, null=True, blank=True)
 
+    # Contact section
+    contact_recipients = models.CharField(max_length=500,
+                                         help_text='Provide a comma separated'
+                                                   ' list of email addresses to'
+                                                   ' be notified upon form submission.'
+                                                   ' If blank, notifications disabled.',
+                                         )
     class Meta:
         verbose_name = _('Home page')
         verbose_name_plural = _('Home pages')

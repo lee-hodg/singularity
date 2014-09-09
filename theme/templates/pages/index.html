@@ -411,7 +411,10 @@ $(window).load(function(){
                 <div class="column-two-thirds">
 
                     <h2>Contact </h2>
-
+                    {% if submitted == "true" %}
+                    <h3> Thanks for your message </h3>
+                    We shall be in touch as soon as possible.
+                    {% else %}
                     <h3>
                         Send a Message
 
@@ -428,7 +431,6 @@ $(window).load(function(){
                         {% endif %}
                         {% endfor %}
                     </h3>
-
 
                     <form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} class="contact-form">
                         {# % fields_for contact_form % #}
@@ -488,7 +490,7 @@ $(window).load(function(){
 
                         <input type="submit" name="send" value="Send" class="send-button" />
                     </form>     
-
+                    {% endif %}
                 </div><!--end column-two-thirds-->
 
                 <div class="column-one-third">

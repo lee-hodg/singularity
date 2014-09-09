@@ -98,4 +98,9 @@ try them out. Mezzanine usually just adds `Dynamic`, which just adds some js to 
 
 # models.py
 
+# page_processors.py
 
+Note that the `published()` filter obviously returns only pages published, and `published(for_user=request.user)` returns only
+the pages that are published and accessible to the current request.user, e.g. admin, staff, anonymous etc..
+
+# views.py

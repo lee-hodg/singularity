@@ -6,7 +6,6 @@ from .models import Portfolio, PortfolioItem, PortfolioItemCategory
 from mezzanine.blog.models import BlogPost
 from .forms import ContactForm
 from smtplib import SMTPRecipientsRefused
-# from django import forms
 from django.contrib import messages
 
 
@@ -15,11 +14,11 @@ def portfolio_processor(request, page):
     '''
     Adds a portfolio's portfolio items to the context
     '''
-    # get the Portfolio's items, prefetching categories for performance
+    # Get the Portfolio's items, prefetching categories for performance.
     items = PortfolioItem.objects.published(
         for_user=request.user).prefetch_related('categories')
     items = items.filter(parent=page)
-    # filter out only cateogries that are user in the Portfolio's items
+    # Filter out only categories that are used in the Portfolio's items
     categories = PortfolioItemCategory.objects.filter(
         portfolioitems__in=items).distinct()
 
@@ -29,7 +28,7 @@ def portfolio_processor(request, page):
 @processor_for(PortfolioItem)
 def portfolioitem_processor(request, page):
     '''
-    Adds a portfolio's portfolio items to the context
+    Adds the PortfolioItem to the context.
     '''
     portfolioitem = PortfolioItem.objects.published(
         for_user=request.user).prefetch_related(
@@ -40,28 +39,39 @@ def portfolioitem_processor(request, page):
 @processor_for(HomePage)
 def home_processor(request, page):
     '''
-    Grab featured portfolio items from featured portfolio
+    Page processor for the HomePage page.
     '''
+
+    # **********PORTFOLIO*******************
+    # Remember we select a portfolio to be featured on the home page
+    # but within a portfolio we also select items to be featured too.
+    # Featured portfolio id.
     featured_portfolio_id = page.homepage.featured_portfolio_id
-    # first() returns first db obj or None
+    # `first()` returns first db obj or None.
     featured_portfolio = Portfolio.objects.filter(pk=featured_portfolio_id).first()
     items = []
     categories = []
     if featured_portfolio:
-        # prob that these are pages not models
-        items = featured_portfolio.children.published(  # PortfolioItem.objects.published(
-            for_user=request.user)  # .prefetch_related('categories')
-        # get models themselves
+        # Grab child pages (PortfolioItem pages) for the Portfolio
+        # (N.B. children are page objs not models)
+        items = featured_portfolio.children.published(
+            for_user=request.user)
+        # Get models themselves (could use .portfolioitem too).
         items = [item.get_content_model() for item in items]
+        # Keep only featured ones.
         items = [item for item in items if item.featured]
-        # items = items.filter(featured=True)  # only keep featured ones.
-        # filter out only cateogries that are user in the Portfolio's items
+        # Get categories for these featured PortfolioItems in
+        # the featured Portfolio.
         categories = PortfolioItemCategory.objects.filter(
             portfolioitems__in=items).distinct()
 
-    blog_posts = BlogPost.objects.order_by('-publish_date')[:3]  # get 3 most recent
+    # ***************BLOG***********************
+    # Up to three most recent posts to be displayed on HomePage.
+    blog_posts = BlogPost.objects.order_by('-publish_date')[:3]
 
-    # process contact form
+    # ***************CONTACT FORM***************
+    # Process contact form.
+    submitted = 'false'
     form = ContactForm()
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -70,16 +80,23 @@ def home_processor(request, page):
             message = form.cleaned_data['message']
             sender = form.cleaned_data['sender']
             name = form.cleaned_data['name']
-            recipients = ['lee@localhost']
+            recipients = []
+            for rec in page.homepage.contact_recipients.split(','):
+                recipients.append(rec.strip())
+            # Send e-mail.
+            if recipients:
+                from django.core.mail import send_mail
+                try:
+                    send_mail(subject, message+'\n\n'+name, sender, recipients)
+                except SMTPRecipientsRefused:
+                    messages.error(request, "Recipient e-mail is invalid. Please contact admin.")
 
-            from django.core.mail import send_mail
-            try:
-                send_mail(subject, name+message, sender, recipients)
-            except SMTPRecipientsRefused:
-                messages.error(request, "That email is invalid.")
-
+            # Redirect after POST
             redirect = request.path + "?submitted=true"
-            return HttpResponseRedirect(redirect)  # Redirect after POST
+            return HttpResponseRedirect(redirect)
+    elif request.method == 'GET':
+        # If submitted form, display thanks msg instead of form.
+        submitted = request.GET.get('submitted', 'false')
 
     return {'items': items, 'categories': categories, 'blog_posts': blog_posts,
-            'contact_form': form}
+            'contact_form': form, 'submitted': submitted}

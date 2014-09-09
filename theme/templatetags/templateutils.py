@@ -1,6 +1,5 @@
 from __future__ import division
 from django.template import Library
-# from math import ceil
 from collections import defaultdict
 from mezzanine.utils.views import paginate
 from mezzanine.conf import settings
@@ -8,6 +7,10 @@ from mezzanine.generic.models import ThreadedComment
 
 
 def ceildiv(a, b):
+    '''
+    Instead of floor division take ceiling, e.g.
+    ceildiv(5,2)=3, ceildiv(-5,2)=-2.
+    '''
     return -(-a // b)
 
 register = Library()
@@ -55,11 +58,11 @@ def order_by_score(queryset, date_field):
         # see django extra and select docs
         return queryset.extra(select={"score": score_sql}).order_by("-score")
     else:
-        # we're using sqlite and have to do it in memory
+        # We're using sqlite and have to do it in memory
         # but what about neg comments? For 2 comments with same neg rank
         # the older comment will get less neg score and will be pushed up.
-        # N.B. Since up+down=count and up-down=sum....so up=(count+sum)/2
-        # down=(count-sum)/2
+        # (N.B. Since up+down=count and up-down=sum....so up=(count+sum)/2
+        # down=(count-sum)/2)
         for obj in queryset:
             age = (now() - getattr(obj, date_field)).total_seconds()
             setattr(obj, "score", obj.rating_sum / pow(age, scale))
@@ -71,12 +74,12 @@ def linebreaksbr(line):
     '''
     Take a comma seperated line of text,
     for example an address, and replace
-    the commas with linebreaks
+    the commas with linebreaks.
     '''
     try:
         line = line.replace(',', ',<br />')
     except:
-        # on failure, e.g. not a str
+        # On failure, e.g. not a str
         # just return orig
         pass
 
@@ -86,8 +89,8 @@ def linebreaksbr(line):
 @register.filter(name='splitcolor')
 def splitcolor(word, args):
     '''
-    Take a word find the midpoint
-    , color first half red, second black.
+    Take a word, find the midpoint
+    , color first half one color, second half another.
     '''
     try:
         if args is None:
@@ -112,7 +115,7 @@ def defaultdict_keys(ddict):
     '''
     Normally in the template given a dictionary
     called mydict in the context, keys() can be called
-    simply with {{mydict.keys}}.  However because of the
+    simply with {{mydict.keys}}.  However, because of the
     way Django does look ups, namely first trying to
     see if a key called 'keys' exists and only trying keys()
     method if not, and because of the nature of the defaultdict(list)
@@ -148,10 +151,10 @@ def comment_level(comment):
 @register.inclusion_tag("generic/includes/comment_with_pagination.html", takes_context=True)
 def paginated_comment_thread(context, parent):
     """
-    Ovverride Mezzanine's comment_thread inclusion_tag.
+    Override Mezzanine's comment_thread inclusion_tag.
     The aim is to paginate all parent comments, but otherwise
     the behaviour is the same. N.B. context persists between the
-    recursive calls to this tag. Remember this gets call with BlogPost
+    recursive calls to this tag. Remember this gets called with BlogPost
     as parent first.
 
     Return a list of child comments for the given parent, storing all
@@ -183,7 +186,7 @@ def paginated_comment_thread(context, parent):
                                                  context["request"].GET.get("page", 1),
                                                  settings.COMMENTS_PER_PAGE,
                                                  settings.MAX_PAGING_LINKS)
-        # For ease tell the context we are at zeroth level in tree too
+        # For ease, tell the context we are at zeroth level in tree too
         # context.update({"zeroth_level": True})
         context.update({"comments_for_thread":
                         comments_for_thread_paginator.object_list})
