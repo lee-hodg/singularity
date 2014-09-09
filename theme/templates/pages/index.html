@@ -305,8 +305,7 @@ $(window).load(function(){
         <!-- Parallex section -BEGIN -->
         {# How shall we make this content managed? #}
         {# Editable header and caption, and the photo too? #}
-        <section id="section-parallax" style="background: url('{{page.homepage.parallax_image.url}}') no-repeat fixed 0 0 / cover;">
-
+        <section id="section-parallax" style="background-image: url('{{page.homepage.parallax_image.url}}');">
             <div class="parallax-container">
                 <div class="parallax-text">
                     {% editable page.homepage.parallax_heading page.homepage.parallax_subheading %}
@@ -368,7 +367,7 @@ $(window).load(function(){
         <!--//featured works-->
 
         <!-- BEGIN Testimonials -->
-        <section id="section-parallax-2" class="clearfix" style="background:url('{{page.homepage.testimonials_image.url}}') no-repeat fixed 0 0 / cover;">
+        <section id="section-parallax-2" class="clearfix" style="background-image:url('{{page.homepage.testimonials_image.url}}')">
             <a id="link-testimonials" class="anchor"></a>
             <div class="site-container clearfix">
 

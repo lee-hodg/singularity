@@ -14,10 +14,13 @@ http://www.gnu.org/licenses/gpl.html
 (function( $ ){
 	var $window = $(window);
 	var windowHeight = $window.height();
-    //console.log('Px: windowHeight:', windowHeight);
+	var windowWidth = $window.width();
+    console.log('Px: windowHeight:', windowHeight);
+    console.log('Px: windowWidth:', windowWidth);
 
 	$window.resize(function () {
 		windowHeight = $window.height();
+		windowWidth = $window.width();
 	});
 
 	$.fn.parallax = function(xpos, speedFactor, outerHeight) {
@@ -31,11 +34,11 @@ http://www.gnu.org/licenses/gpl.html
 		    firstTop = $this.offset().top;
 
             //DEBUG
-            //console.log('this id:', $this.attr('id'));
-            //console.log('Px:firstTop:', firstTop);
-            //console.log("Px: $('#section-parallax').offset().top", $('#section-parallax').offset().top);
-            //console.log("$('#section-parallax').height()", $('#section-parallax').height());
-            //console.log("$('#section-slideshow').height()", $('#section-slideshow').height());
+            console.log('this id:', $this.attr('id'));
+            console.log('Px:firstTop:', firstTop);
+            console.log("Px: $('#section-parallax').offset().top", $('#section-parallax').offset().top);
+            console.log("$('#section-parallax').height()", $('#section-parallax').height());
+            console.log("$('#section-slideshow').height()", $('#section-slideshow').height());
 		});
 
 		if (outerHeight) {
@@ -63,17 +66,19 @@ http://www.gnu.org/licenses/gpl.html
 				var height = getHeight($element);
 
 				// Check if totally above or totally below viewport
-				if (top + height < pos || top > pos + windowHeight) {
+                // I added the windowWidth to disable on tablets and mobiles too.
+				if (top + height < pos || top > pos + windowHeight || windowWidth < 768) {
 					return;
 				}
 
                 //DEBUG
-                //console.log('window.scrollTop scrollbar pos:', pos);
-                //console.log('element top is:', top);
-                //console.log('element height is:', height);
-                //console.log('elment firstTop is:', firstTop);
-                //console.log('set bg ypos to: Math.round((firstTop - pos) * speedFactor):', Math.round((firstTop - pos) * speedFactor));
-                //console.log('************************');
+                console.log('window.width() is:', windowWidth);
+                console.log('window.scrollTop scrollbar pos:', pos);
+                console.log('element top is:', top);
+                console.log('element height is:', height);
+                console.log('elment firstTop is:', firstTop);
+                console.log('set bg ypos to: Math.round((firstTop - pos) * speedFactor):', Math.round((firstTop - pos) * speedFactor));
+                console.log('************************');
 
 				$this.css('backgroundPosition', xpos + " " + Math.round((firstTop - pos) * speedFactor) + "px");
 			});
