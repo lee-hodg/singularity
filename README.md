@@ -174,3 +174,50 @@ Could have used the `fields_for` tag just like for blog comment replies. With th
 universally for fields, but I thought I'd do it a different way here.
 
 # Page menus 
+
+ ## Recursive building.
+ See the [Page Menus docs](http://mezzanine.jupo.org/docs/content-architecture.html)
+ Notice if e.g. in zeroth branch we recursively make a call to `page_menu`
+ , which is the function we called from base.html, the second time round we will
+ be in a subbranch, so the branch_level not 0, and flow jumps to `else`. Here again
+ a recursive call to `page_menu` is made if any children present, and so on.
+
+ ## dropdown.html
+
+ With our one-page design and the need for links to *sections* of the home page in this dropdown,
+ rather than simply absolute links to independent pages, adding these section # links to sections
+ initially posed a problem. 
+
+ The best solution I ultimately found was to add 'Link' type objects
+ to the page heirarchy in the admin. You can choose the link URL to be # to make it a dud,
+ or to something like #link-features to link to a section on the index page itself.
+ Now you can simply drag and drop your other pages under these links if needed.
+ (yes you can drag-and-drop under existing pages too, just pull to right).
+
+ Other options where explored, but each had problems. Slugifying the page.title|slugify
+ and using this like #link-{{page.title|slugify}} in the href for all parent pages, fails
+ since not all parent links should be section links, secondly if the user changes the page title
+ so that it no longer matches the section anchor on index the whole idea breaks down.
+ Using field injection on the Mezzanine Page model (remember we can't subclass so this is
+ how we must add new custom fields) to add a BooleanField 'sectionLink' checkbox was another idea.
+ This would give the user a checkbox in the admin for every Page, and if checked we'd use a sectionLink
+ rather than absolute URL. For example if page.portfolio and page.sectionLink: href="#link-portoilio".
+ This still relies on identifiying page as portfolio, which may not be reliable if user changes names
+ or has multiple portfolios. The remnants of field injection can be seen in settings.py anyway,
+ and may be useful for something else in future.
+
+ I used `page.html_id` to identify the blog page and specify section link for it rather the blog page itself. 
+ This seems to be robust to user changing things like blog title(Remember blog is both section on homepage and
+ independent page)
+
+ N.B. The jsddm we are currently using for the dropdown menu is limited to single level even if extra <ul> are inserted.
+ See mlddm for more(costs).
+
+ ## Filtering pages in which menus
+
+    For filtering based on `page.in_menu`, make sure you change `PAGE_MENU_TEMPLATES` of `settings.py`
+ so that the menus offered in admin for page includes correctly match your menu templates. You can also
+set the default menus a page should appear in in `settings.py` too. Now the user can easily select which menus
+a given page should appear in.
+
+

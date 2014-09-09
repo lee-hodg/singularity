@@ -1,12 +1,10 @@
-{# See the 'Page Menus' docs http://mezzanine.jupo.org/docs/content-architecture.html #}
-{# Notice if e.g. in zeroth branch we recursively make a call to page_menu #}
-{# which is the function we called from base.html, the second time round we will#}
-{# be in a subbranch, so the branch_level not 0, and jump to else. Here again #}
-{# a recursive call to page_menu is made if any children present, and so on #}
+{% comment %}
+This menu is for pages other than index.html.
+We use it on those pages by overwriting the menu block from base.html 
+It's not vastly different than dropdown.html, just we don't bother making 
+blog a section # link, we just link to /blog. Other customization could be done here though.
+{% endcomment %}
 
-{# This menu is for pages other than index.html, that want even the parent pages #}
-{# to have absolute url links and not #section links for one-page-resp design #}
-{# We use it on those pages by overwriting the menu block from base.html #}
 
 {% load i18n future pages_tags %}
 {% spaceless %}
