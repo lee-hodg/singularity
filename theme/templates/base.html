@@ -26,7 +26,6 @@
 <link href="{% static "css/responsive-slider.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/slicknav.css" %}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" id="camera-css"  href="{% static "css/camera.css" %}" type="text/css" media="all">
 <!-- This is for portfolio  item slider -->
 <link rel="stylesheet" href="{% static "css/flexslider.css" %}" type="text/css">
 {% block extra_css %}{% endblock %}
@@ -64,47 +63,9 @@ as below.
     });
 </script>
 
-
-<!-- Dropdown Menu -->
+<!-- Dropdown Menu(tagets #jsddm ul) -->
 <!-- NB this is limited to single level, see mlddm for more-->
-<script type="text/javascript">
-    var timeout         = 500;
-    var closetimer      = 0;
-    var ddmenuitem      = 0;
-
-    function jsddm_open()
-
-    {   jsddm_canceltimer();
-
-        jsddm_close();
-
-        ddmenuitem = $(this).find('ul').eq(0).css('visibility', 'visible');}
-
-    function jsddm_close()
-
-    {   if(ddmenuitem) ddmenuitem.css('visibility', 'hidden');}
-
-    function jsddm_timer()
-
-    {   closetimer = window.setTimeout(jsddm_close, timeout);}
-
-    function jsddm_canceltimer()
-
-    {   if(closetimer)
-
-        {   window.clearTimeout(closetimer);
-
-            closetimer = null;}}
-
-    $(document).ready(function()
-
-    {   $('#jsddm > li').bind('mouseover', jsddm_open);
-
-        $('#jsddm > li').bind('mouseout',  jsddm_timer);});
-
-    document.onclick = jsddm_close;
-
-</script>
+<script src="{{ STATIC_URL }}js/jsddm.js"></script>
 
 <!--slickNav (Mob nav menu) related-->
 <script src="{{ STATIC_URL }}js/modernizr.min.js"></script>

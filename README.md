@@ -157,9 +157,19 @@ it redirects the user there, now the animation is done.
 
 ### blog_post.description_from_content
 
-See the source, this stops at first para or br (etc) unless user unchecked generate in admin and entered their own.
-The problem is it searches para first and if there is a para right at the end but a break before it, it will still take
-the latter para as the truncation point (I guess to avoid leaving trailing html tags?). Instead I just add truncatewords_html:100
+NB to see the way `description_from_content()` works see 
+`mezzanine.core.models.py`. If there is a para sep by `<br/><br/>` with
+`</p>` at end of the whole block, this function can end up taking the whole block 
+. The reason is it looks for `</p>` first using the list 
+
+    ends = ("</p>", "<br />", "<br/>", "<br>", "</ul>", "\n", ". ", "! ", "? ") 
+    for end in ends: pos = description.lower().find(end)
+
+it thus finds the `</p>` exists sets it to be the end point for truncation,
+and then breaks (even though `<br/>` etc came before) 
+I suppose it guards against hanging `<p>` this way....
+
+I just add truncatewords_html:100
 too to ensure this doesn't get too long no matter what.
 
 ### thumbnail

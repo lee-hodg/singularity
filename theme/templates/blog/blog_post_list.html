@@ -138,14 +138,7 @@
 
     {% block blog_post_list_post_content %}
     {% editable blog_post.content %}
-    {# NB to see the way description_from_content() works see #}
-    {# mezzanine.core.models.py. If a para sep by <br/><br/> with #}
-    {# </p> at end of the whole block, this function can end up taking the whole block #}
-    {# the reason is it looks for </p> first using the list #}
-    {# ends = ("</p>", "<br />", "<br/>", "<br>", "</ul>", "\n", ". ", "! ", "? ") #}
-    {# for end in ends: pos = description.lower().find(end), it thus finds the </p> exists #}
-    {# sets it to be the end point for truncation and then breaks (even though <br/> etc came before) #}
-    {# I suppose it guards against hanging <p> this way....#}
+    {# See README about description_from_content and why truncatewords needed #}
     {% if blog_post.description and not blog_post.gen_description %}
     {# If there is a non-auto generated description the user has set, use that #}
         {{ blog_post.description|safe }}
@@ -158,10 +151,13 @@
 </div>
 {% endfor %}
 
-{# The actual pagination of the posts themselves is not in the #}
-{# mezzanine.blog.views.blog_post_list view #}
-{# This inclusion tag just works out the footer, i.e. #}
-{# arrows and page 2 of 4 etc, from the already paginated blog_posts obj list #}
+{% comment %}
+    The actual pagination of the posts themselves is not in the 
+    mezzanine.blog.views.blog_post_list view 
+    This inclusion tag just works out the "footer" (by which I mean, 
+    the arrows and "page 2 of 4" for e.g.), 
+    from the already paginated blog_posts list (paginator obj). 
+{% endcomment %}
 {% pagination_for blog_posts %}
 
 {% if settings.COMMENTS_DISQUS_SHORTNAME %}

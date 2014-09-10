@@ -12,8 +12,10 @@
 
     <!-- Recent posts -->
     {% block blog_recent_posts %}
-    {# see the docs I linked at top. This grabs 5 most recent #}
-    {# but can also filter on tag, username etc #}
+    {% comment %}
+        See the docs I linked at top. This grabs 5 most recent 
+        , but we can also filter on tag, username and more: 
+    {% endcomment %}
     {% blog_recent_posts 5 as recent_posts %}
     {% if recent_posts %}
     <h3>{% trans "Recent Posts" %}</h2>
@@ -48,8 +50,10 @@
 
 {% block blog_keywords %}
 {% keywords_for blog.blogpost as tags %}
-{# see also TAG_CLOUD_SIZES settings (def 4) to cntl num of diff sizes #}
-{# this will change the range that tag.weight runs through #}
+{% comment %}
+    See also `TAG_CLOUD_SIZES` settings (def 4) to conntrol number of diff sizes.
+    This will change the range that the `tag.weight` variable runs through.
+{% endcomment %}
 {% if tags %}
     <h3>{% trans "Tag Cloud" %}</h3>
     <div id="blog_tagcloud">
