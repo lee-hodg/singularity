@@ -10,7 +10,7 @@ line.
 
 ## settings.py ##
 
-Set your Django `SECRET_KEY` (it's good practice to grab this from the environment).  Add your site's domain to `ALLOWED_HOSTS`, and also remember to set `DEBUG=False` when you make the site live. You will also need to ensure that `STATIC_ROOT` and `MEDIA_ROOT` point to the correct location on your server, and finally make sure the database is setup correctly for your server.
+Set your Django `SECRET_KEY` and `NEVERCACHE_KEY` (consider setting them in `local_settings.py` file or from the environment).  Add your site's domain to `ALLOWED_HOSTS`, and also remember to set `DEBUG=False` when you make the site live. You will also need to ensure that `STATIC_ROOT` and `MEDIA_ROOT` point to the correct location on your server, and finally make sure the database is setup correctly for your server.
 
 ## Admin settings ##
 
@@ -21,6 +21,27 @@ This theme comes with the built-in threaded blog comments, which can be ranked (
 If you choose to use the theme's built-in comments(by not setting Disqus information), then you can decide whether you would like your comments ordered by the ranking algorithm or simply by datetime. You can modify the `Score order comments` setting to achieve this. You can modify the number of comments per page, and whether to make comments ratable at all, also in the comments section of the admin settings page.
 
 You can also choose the number of blog posts to be displayed per page with the `Blog posts per page` setting from the Miscellaneous section, and the gradation of colors in the blog's tag-cloud with `Tag Cloud Sizes` setting, also in the Miscellaneous section.
+
+### Personal information and social icons ###
+
+You can add in information like your name, address, email, telephone etc in the Personal section. This information is used to populate the  `CONTACT INFO` section near the contact form. If your Skype address is entered a link to begin a call to you will be added in the footer, and if you add your email a link to email you will be added in the footer. If you add the various social media available, links to these appear in the contact section and footer also.
+
+### Misc ###
+
+There are plenty of other features here that should be intuitive. You can your google analytics id to set up tracking, use the `Akismet` spam comment filtering service, change the number of search results appearing per page, and so on.
+ 
+## Page tree structure 
+
+You will notice in the demo site that `Features`, `Portfolios`, `Testimonials`, `Contact-us` and `Pages` are simply `Link` objects, which should be added to the page tree and whose URLs should be set respectively to `#link-features`, `#link-portfolio`, `#link-testimonials` `#link-contact`  and `#`. These are included in the menus `Index top nav bar` and `Non-index top nav bar` but not the `Footer` menu in the demo (the `Non-index top nav bar` is just the top navigation bar but when the user is not on the index page). These links allow navigation to various sections of the one-page index page. 
+
+One can then add Portfolio pages under the Portfolio link, and in turn Portfolio Item type pages under the Portfolio pages. One can also add Resume pages and About-us pages under the Pages link.
+
+Mezzanine allows you to drag and drop the order and hierarchy of your pages, so reorganization is easy.
+
+
+
+
+
 
 # Theme development guide #
 
