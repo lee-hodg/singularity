@@ -10,7 +10,7 @@ line.
 
 ## settings.py ##
 
-Set your Django `SECRET_KEY`. 
+Set your Django `SECRET_KEY` (it's good practice to grab this from the environment).  Add your site's domain to `ALLOWED_HOSTS`, and also remember to set `DEBUG=False` when you make the site live. You will also need to ensure that `STATIC_ROOT` and `MEDIA_ROOT` point to the correct location on your server, and finally make sure the database is setup correctly for your server.
 
 ## Admin settings ##
 
@@ -18,15 +18,9 @@ Set your Django `SECRET_KEY`.
 
 This theme comes with the built-in threaded blog comments, which can be ranked (similarly to reddit or stackexchange, comments raise to the top with rank but also decay with time) are are paginated. However, if you would like instead to use `Disqus` to manage your comments, simply fill in the `Disqus` public and private keys and your `Disqus` shortname in the comments section of the admin settings area. 
 
-If you use the theme's built-in comments, then you can decide whether you would like your comments ordered by the ranking algorithm or simply by datetime. You can modify the `Score order comments` setting to achieve this. 
+If you choose to use the theme's built-in comments(by not setting Disqus information), then you can decide whether you would like your comments ordered by the ranking algorithm or simply by datetime. You can modify the `Score order comments` setting to achieve this. You can modify the number of comments per page, and whether to make comments ratable at all, also in the comments section of the admin settings page.
 
 You can also choose the number of blog posts to be displayed per page with the `Blog posts per page` setting from the Miscellaneous section, and the gradation of colors in the blog's tag-cloud with `Tag Cloud Sizes` setting, also in the Miscellaneous section.
-
-Need to decide whether to use rating for comments with the `COMMENTS_USE_RATINGS` bool setting,
-if not they will be ordered by date. Need to add the site domains to `ALLOWED_HOSTS`, also set
-`DEBUG=False`. Need to set the database correctly plus `STATIC_ROOT` and `MEDIA_ROOT`. The urls
-file should be set in `ROOT_URLCONF` too. `SECRET_KEY` should be set, probably from env.
-
 
 # Theme development guide #
 
