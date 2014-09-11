@@ -1,14 +1,36 @@
-# Setting the homepage.
+# Theme user guide #
 
-You need to first create a new `homepage` type of page in the admin,
-and set the URL to `/` in the meta data. Now edit `urls.py` by commenting
-out the entry for static homepage, and uncommenting
+## Setting the homepage. ##
+
+One of the first tasks you will have after installing the theme is to first create a new `HomePage` type of page in the admin area. After doing so, set the URL to `/` in the meta data. Now edit the `urls.py` by commenting out the entry for static homepage, and uncommenting the
 
     url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home")
 
 line.
 
-# Editing the template used by fields_for tag (e.g. in form for blog comment)
+## settings.py ##
+
+Set your Django `SECRET_KEY`. 
+
+## Admin settings ##
+
+### Blog ###
+
+This theme comes with the built-in threaded blog comments, which can be ranked (similarly to reddit or stackexchange, comments raise to the top with rank but also decay with time) are are paginated. However, if you would like instead to use `Disqus` to manage your comments, simply fill in the `Disqus` public and private keys and your `Disqus` shortname in the comments section of the admin settings area. 
+
+If you use the theme's built-in comments, then you can decide whether you would like your comments ordered by the ranking algorithm or simply by datetime. You can modify the `Score order comments` setting to achieve this. 
+
+You can also choose the number of blog posts to be displayed per page with the `Blog posts per page` setting from the Miscellaneous section, and the gradation of colors in the blog's tag-cloud with `Tag Cloud Sizes` setting, also in the Miscellaneous section.
+
+Need to decide whether to use rating for comments with the `COMMENTS_USE_RATINGS` bool setting,
+if not they will be ordered by date. Need to add the site domains to `ALLOWED_HOSTS`, also set
+`DEBUG=False`. Need to set the database correctly plus `STATIC_ROOT` and `MEDIA_ROOT`. The urls
+file should be set in `ROOT_URLCONF` too. `SECRET_KEY` should be set, probably from env.
+
+
+# Theme development guide #
+
+## Editing the template used by fields_for tag (e.g. in form for blog comment) ##
 
 Copy the file mezzanine.core.templates.includes.form_fields.html to your
 theme.templates.includes dir.
@@ -65,12 +87,7 @@ line. For example I have my ajax view for comments here:
 
     ("^ajax_comments/(?P<pk>\d+)/$", 'theme.views.ajax_comments')
 
-# settings
 
-Need to decide whether to use rating for comments with the `COMMENTS_USE_RATINGS` bool setting,
-if not they will be ordered by date. Need to add the site domains to `ALLOWED_HOSTS`, also set
-`DEBUG=False`. Need to set the database correctly plus `STATIC_ROOT` and `MEDIA_ROOT`. The urls
-file should be set in `ROOT_URLCONF` too. `SECRET_KEY` should be set, probably from env.
 
 # defaults.py
 
@@ -316,5 +333,3 @@ Some old ajax post script
 //        return false;
 //    });
 //});
-
-
