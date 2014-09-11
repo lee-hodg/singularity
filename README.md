@@ -30,7 +30,7 @@ You can add in information like your name, address, email, telephone etc in the 
 
 There are plenty of other features here that should be intuitive. You can your google analytics id to set up tracking, use the `Akismet` spam comment filtering service, change the number of search results appearing per page, and so on.
  
-## Page tree structure ## 
+## Page tree structure 
 
 You will notice in the demo site that `Features`, `Portfolios`, `Testimonials`, `Contact-us` and `Pages` are simply `Link` objects, which should be added to the page tree and whose URLs should be set respectively to `#link-features`, `#link-portfolio`, `#link-testimonials` `#link-contact`  and `#`. These are included in the menus `Index top nav bar` and `Non-index top nav bar` but not the `Footer` menu in the demo (the `Non-index top nav bar` is just the top navigation bar but when the user is not on the index page). These links allow navigation to various sections of the one-page index page. 
 
