@@ -259,4 +259,62 @@ to what you might have been expecting, thus it's very difficult to render pagina
 The approach used with the extension of `comment.html` by comment_with_pagination.html is fairly DRY anyway, so we
 should be good.
 
+## comments.html
+
+Some old ajax post script
+
+        //NB post is just an ajax conveinience method
+        //jQuery.post( url [, data ] [, success ] [, dataType ] )
+        //it doesn't offer error handler. But this is ajax req errors
+        //not django form errors, don't confuse the two!
+//        $.post(form.attr('action'), form.serialize(), function(data) {
+//            //ajax success
+//            if (data.location) {
+//                // I think this is for the case when login needed to comment
+//                // to redirect to designated login url
+//                console.log('AJAX performing a redirect')
+//                location = data.location;
+//            }else if(data.errors){
+//                console.log('There were some form errors');
+//                if(data.errors.hasOwnProperty('name')){
+//                    //build up ul error list
+//                    var items = [];
+//                    var name_field = $(form).find('.input_id_name');
+//                    items.push('<ul class="errorlist">');
+//                    $.each(data.errors.name, function(i, item) {
+//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+//                    });
+//                    items.push('</ul>');
+//                    $(name_field).prepend(items.join(''));
+//                }
+//                if(data.errors.hasOwnProperty('email')){
+//                    //build up ul error list
+//                    var items = [];
+//                    var email_field = $(form).find('.input_id_email');
+//                    items.push('<ul class="errorlist">');
+//                    $.each(data.errors.email, function(i, item) {
+//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+//                    });
+//                    items.push('</ul>');
+//                    $(email_field).prepend(items.join(''));
+//                }
+//                if(data.errors.hasOwnProperty('comment')){
+//                    //build up ul error list
+//                    var items = [];
+//                    var comment_field = $(form).find('.input_id_comment');
+//                    items.push('<ul class="errorlist">');
+//                    $.each(data.errors.comment, function(i, item) {
+//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+//                    });
+//                    items.push('</ul>');
+//                    $(comment_field).prepend(items.join(''));
+//                }
+//            }else{console.log('What happened?');}
+//        }, 'json');
+//
+//        //event.preventDefault();
+//        return false;
+//    });
+//});
+
 

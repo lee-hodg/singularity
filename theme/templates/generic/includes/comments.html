@@ -21,6 +21,7 @@ jQuery(function($) {
 });
 
 //AJAX new comment POSTing (new blog post comment or comment reply).
+//Mezzanine comment view can handle some AJAX out-of-the-box.
 jQuery(function($) {
     $('form#blog-comment, .comment-reply-form').submit(function(event) {
 
@@ -95,7 +96,7 @@ jQuery(function($) {
             //since view will return redirect resp not JSON
             //console.log('ajax error:');
             //console.log(request.responseText);
-            console.log('DEBUG: Form probably submitted successfully, ajax reload page');
+            console.log('DEBUG: Form (probably) submitted successfully. AJAX reload page.');
             alert('THANKS FOR THE COMMENT');
             location.reload(); //needed after redirect.
             //alert('AJAX MSG AFTER RELOAD');
@@ -144,7 +145,7 @@ jQuery(function($) {
         .done(function (data) {
             //console.log('ajax success');})
             //ajax success
-            console.log('AJAX success.');
+            console.log('DEBUG: AJAX success.');
             //console.log(data);
             if(data.success){
                 //this means no server side errors
@@ -154,7 +155,7 @@ jQuery(function($) {
                 //location.href="#pagination_ul";
                 $('html,body').animate({    scrollTop: $("#pagination_ul").offset().top-300 }); 
             }else{
-                console.log("DEBUG: Server side errors occured.");
+                console.log("DEBUG: Server-side errors occured.");
             }
         })
 
@@ -168,6 +169,7 @@ jQuery(function($) {
 });
 </script>
 
+{# Mezzanine rating view can handle AJAX out-of-the-box #}
 <script type="text/javascript">
 jQuery(function($) {
     $('.rating .arrows a').click(function() {
@@ -178,7 +180,7 @@ jQuery(function($) {
         var form = container.find('form');
 
         form.find('input:radio')[index].checked = true;
-
+        // User shorthand AJAX post method.
         $.post(form.attr('action'), form.serialize(), function(data) {
             if (data.location) {
                 location = data.location;
