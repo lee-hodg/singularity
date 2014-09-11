@@ -22,6 +22,12 @@ If you choose to use the theme's built-in comments(by not setting Disqus informa
 
 You can also choose the number of blog posts to be displayed per page with the `Blog posts per page` setting from the Miscellaneous section, and the gradation of colors in the blog's tag-cloud with `Tag Cloud Sizes` setting, also in the Miscellaneous section.
 
+### Personal information and social icons ###
+
+You can add in information like your name, address, email, telephone etc in the Personal section. This information is used to populate the  `CONTACT INFO` section near the contact form. If your Skype address is entered a link to begin a call to you will be added in the footer, and if you add your email a link to email you will be added in the footer. If you add the various social media available, links to these appear in the contact section and footer also.
+
+ 
+
 # Theme development guide #
 
 ## Editing the template used by fields_for tag (e.g. in form for blog comment) ##
