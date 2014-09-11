@@ -10,7 +10,7 @@ line.
 
 ## settings.py ##
 
-Set your Django `SECRET_KEY` and `NEVERCACHE_KEY` (it's good practice to grab these from the environment).  Add your site's domain to `ALLOWED_HOSTS`, and also remember to set `DEBUG=False` when you make the site live. You will also need to ensure that `STATIC_ROOT` and `MEDIA_ROOT` point to the correct location on your server, and finally make sure the database is setup correctly for your server.
+Set your Django `SECRET_KEY` and `NEVERCACHE_KEY` (consider setting them in `local_settings.py` file or from the environment).  Add your site's domain to `ALLOWED_HOSTS`, and also remember to set `DEBUG=False` when you make the site live. You will also need to ensure that `STATIC_ROOT` and `MEDIA_ROOT` point to the correct location on your server, and finally make sure the database is setup correctly for your server.
 
 ## Admin settings ##
 
