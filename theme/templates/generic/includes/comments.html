@@ -4,60 +4,54 @@
 {% if settings.COMMENTS_DISQUS_SHORTNAME %}
 {% include "generic/includes/disqus_comments.html" %}
 {% else %}
-<script>
-{# this can break when logged in since editable forms are also present, be careful #}
-$(function() {
+<script type="text/javascript">
+{# Need to take into account editable-forms when user logged in too, and make sure this script does not #}
+{# adversely affect them when testing.. #}
+jQuery(function($) {
     $('.reply').click(function(event) {
-        //$('.comment-reply-form').hide(); //make sure all other reply forms hidden.
-        //$(this).siblings('.comment-reply-form').toggle();
-        // need to have this toggle the correct element if reply
-        // link is moved!
-        // immediate reply forms only
+        // Use `first() so that immediate reply forms only are toggled, not other children further down tree.
         $(this).closest("div[id^='comment-']").find('.comment-reply-form').first().slideToggle('slow');
-        //also hide the regular blog comment box
-        //$('#blog-comment').hide();
-
         event.preventDefault();
     });
 
-    //show-hide toggle child comments buttons
+    // Toggle all child comment uls.
     $('a[href^="#show-replies-"]').click(function() {
         $(this).closest("div[id^='comment-']").find('ul.comment_ul').toggle();
     });
 });
 
-//ajax new comment posting
-$(function() {
+//AJAX new comment POSTing (new blog post comment or comment reply).
+jQuery(function($) {
     $('form#blog-comment, .comment-reply-form').submit(function(event) {
 
         //var form = $('form#blog-comment');
         var form = $(this);
-        //initialize to all errors gone (this stops
-        // errors stacking up if user invalidates again)
+        // Initialize to all errors gone (this stops
+        // errors stacking up if user invalidates again).
         $(form).find('ul.errorlist').remove();
         //$(form).find('ul.errorlist').hide();
         //$(form).find('ul.errorlist li:nth-child(n+1)').remove();
 
-        //show a little fa spinner to indicate waiting
+        // Show a little fa spinner to indicate waiting
         $(form).find('.reply-posted-spinner').css('display', 'inline-block');
 
         $.ajax({
-            url: form.attr('action'),
+            url: form.attr('action'), // where to POST.
             type: 'POST',
             data: form.serialize(),
             dataType: 'json',
          })
 
         .done(function (data) {
-            //console.log('ajax success');})
+            //console.log(' DEBUG: AJAX success');
             //ajax success
             if (data.location) {
                 // I think this is for the case when login needed to comment
-                // to redirect to designated login url
-                console.log('AJAX is performing a redirect.')
+                // to redirect to designated login url (superfluous for this theme.)
+                console.log('DEBUG: AJAX is performing a redirect.')
                 location = data.location;
             }else if(data.errors){
-                console.log('Form did not validate.');
+                console.log('DEBUG: Form did not validate.');
                 if(data.errors.hasOwnProperty('name')){
                     //build up ul error list
                     var items = [];
@@ -97,13 +91,13 @@ $(function() {
         })
 
        .error(function (request, error) {
-            //this will happen ironically on form valid
+            //This will happen ironically on form valid
             //since view will return redirect resp not JSON
             //console.log('ajax error:');
             //console.log(request.responseText);
-            console.log('Form probably submitted successfully, ajax reload page');
+            console.log('DEBUG: Form probably submitted successfully, ajax reload page');
             alert('THANKS FOR THE COMMENT');
-            location.reload();
+            location.reload(); //needed after redirect.
             //alert('AJAX MSG AFTER RELOAD');
             //get nearest level-1 comment_ul
             //tree = $(form).closest('ul[class^="comment_ul"][data-level=1]');
@@ -120,63 +114,9 @@ $(function() {
         return false;
     });
 });
-        //NB post is just an ajax conveinience method
-        //jQuery.post( url [, data ] [, success ] [, dataType ] )
-        //it doesn't offer error handler. But this is ajax req errors
-        //not django form errors, don't confuse the two!
-//        $.post(form.attr('action'), form.serialize(), function(data) {
-//            //ajax success
-//            if (data.location) {
-//                // I think this is for the case when login needed to comment
-//                // to redirect to designated login url
-//                console.log('AJAX performing a redirect')
-//                location = data.location;
-//            }else if(data.errors){
-//                console.log('There were some form errors');
-//                if(data.errors.hasOwnProperty('name')){
-//                    //build up ul error list
-//                    var items = [];
-//                    var name_field = $(form).find('.input_id_name');
-//                    items.push('<ul class="errorlist">');
-//                    $.each(data.errors.name, function(i, item) {
-//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
-//                    });
-//                    items.push('</ul>');
-//                    $(name_field).prepend(items.join(''));
-//                }
-//                if(data.errors.hasOwnProperty('email')){
-//                    //build up ul error list
-//                    var items = [];
-//                    var email_field = $(form).find('.input_id_email');
-//                    items.push('<ul class="errorlist">');
-//                    $.each(data.errors.email, function(i, item) {
-//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
-//                    });
-//                    items.push('</ul>');
-//                    $(email_field).prepend(items.join(''));
-//                }
-//                if(data.errors.hasOwnProperty('comment')){
-//                    //build up ul error list
-//                    var items = [];
-//                    var comment_field = $(form).find('.input_id_comment');
-//                    items.push('<ul class="errorlist">');
-//                    $.each(data.errors.comment, function(i, item) {
-//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
-//                    });
-//                    items.push('</ul>');
-//                    $(comment_field).prepend(items.join(''));
-//                }
-//            }else{console.log('What happened?');}
-//        }, 'json');
-//
-//        //event.preventDefault();
-//        return false;
-//    });
-//});
 
-
-//ajax comment paging arrows
-$(function() {
+// AJAX comment paging arrows.
+jQuery(function($) {
     //$('li.next, li.prev').click(function(event) {
     $('.pagination-nav > li').click(function(event) {
 
@@ -192,7 +132,7 @@ $(function() {
             return false;
         }
 
-        console.log('Making ajax req for pageno:'+page_no);
+        console.log('DEBUG: Making ajax request for page number:'+page_no);
 
         $.ajax({
             url: '/ajax_comments/'+{{ object_for_comments.pk}},
@@ -214,12 +154,12 @@ $(function() {
                 //location.href="#pagination_ul";
                 $('html,body').animate({    scrollTop: $("#pagination_ul").offset().top-300 }); 
             }else{
-                console.log("Oops, j'ai fait une connerie!");
+                console.log("DEBUG: Server side errors occured.");
             }
         })
 
        .error(function (request, error) {
-            console.log('AJAX Error.');
+            console.log('DEBUG: AJAX error occured.');
          })
 
         event.preventDefault();
@@ -228,8 +168,8 @@ $(function() {
 });
 </script>
 
-<script>
-$(function() {
+<script type="text/javascript">
+jQuery(function($) {
     $('.rating .arrows a').click(function() {
 
         var arrow = $(this);
@@ -260,8 +200,8 @@ $(function() {
     <h3>{% trans "Leave a comment" %}</h3>
     <div class="comment-background clearfix">
         {% comment %}
-            To edit the way fields_for renders you need to copy and change the template 
-            from core includes.form_fields.
+            To edit the way `fields_for` renders you need to copy and change the template 
+            `core.includes.form_fields`.
         {% endcomment %}
 
         {% if not request.POST.replied_to %}

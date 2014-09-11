@@ -17,5 +17,6 @@ window.__tinymce_css = '{% static "mezzanine/css/tinymce.css" %}';
 <script src="{% static "mezzanine/js/jquery.tools.overlay.js" %}"></script>
 <script src="{% static "mezzanine/js/jquery.form.js" %}"></script>
 {# Use my modified editable script instead of mezzanine/js #}
+{# (waits for window load so imgs are fully loaded, not just DOM) #}
 <script src="{% static "js/editable.js" %}"></script>
 {% endif %}

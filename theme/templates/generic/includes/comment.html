@@ -1,32 +1,4 @@
-{% load i18n mezzanine_tags comment_tags rating_tags templateutils%}
-
-{% comment %}
-::PAGINATION NOTES::
-
-Use a custom `paginated_comment_thread` inclusion tag to build the parent
-(zeroth level in tree) comments. The template it calls `comment_with_pagination.html`,
-is an extension of `comment.html`, only it overrides the pagination_foot block, with
-some code that actually calls pagination_for on the comment paginator that the paginated_comment_thread
-tag provides it with (comment_for_thread_paginator). 
-
-In the tag the paginate function works by simply taking the comment_for_thread list (which
-in our case in the list of zeroth level comments for a BlogPost) and then ripping the page
-number parameter from the GETstr. It takes COMMENTS_PER_PAGE custom setting, and behaves how you'd
-expect. When .object_list is called on it, it yields up the list of comments for that page, which
-can then just be displayed as normal.
-
-By passing the actual paginator itself back, we can easily render the pagination footer
-(arrows and "Page 1 of 2" etc) by calling the pagination_for mezzanine tag (c.f. blog_post_list).
-
-You may think about doing this with only one tag and one template, which might have been possible, but
-the problem is the recursive calls modify the context as they are called one by one, and by the time you
-git the bottom of the html in the "outer comment.html" template the context is different to at the top, and
-what you might have been expecting, thus it's very difficult to render pagination footers for just the parents.
-
-The approach used with the extension of comment.html by comment_with_pagination.html is fairly DRY anyway, so we
-should be good.
-
-{% endcomment %}
+{% load i18n mezzanine_tags comment_tags rating_tags templateutils %}
 
 {% for comment in comments_for_thread %}
 <li>
@@ -35,7 +7,7 @@ should be good.
     {% editable comment.is_public comment.is_removed %}
     {% if not comment.is_removed and comment.is_public or request.user.is_staff %}
 
-        {# With URLs #}
+        {# Version with URLs #}
         {% if comment.url %}
         <div class="avatar">
             <a href="{{ comment.url }}">
@@ -60,7 +32,7 @@ should be good.
                     {% endif %}
                 </span>
         {% else %}
-        {# Without URLs #}
+        {# Version without URLs #}
         <div class="avatar">
             <img src="{% gravatar_url comment.email 64 %}">
         </div>
@@ -86,12 +58,14 @@ should be good.
             </div><!--END comment-info-->
 
             <p>{{ comment.comment|comment_filter }}</p>
+
             {% comment %}
-                {# useful for debugging #}
+            {# Uncomment for debugging only. #}
                 <p> My id: {{ comment.id }}, I replied to: {{comment.replied_to_id}}</p>
-                <p> Do I have children?: {% if comment.id in all_comments|defaultdict_keys %} yes {% else %} no {% endif %} </p>
+                <p> Do I have children? {% if comment.id in all_comments|defaultdict_keys %} yes {% else %} no {% endif %} </p>
                 <p> What is my level in the tree?: {{ comment|comment_level }}</p>
             {% endcomment %}
+
             <div class="comment-border clearfix">
 
                 {% if settings.COMMENTS_USE_RATINGS %}
@@ -102,9 +76,9 @@ should be good.
 
                 {% if not comment.is_removed and comment.is_public %}
                 {% if comment|comment_level == 0 %}
-                    {# level 0 parent #}
+                    {# level-0 parent #}
                     {% if comment.id in all_comments|defaultdict_keys %}
-                        {# parent with child #}
+                        {# Parent with child. #}
                         <a  href="#show-replies-{{ comment.id }}">
                             <span class="show-replies"></span> {% trans "Show replies" %} 
                         </a> 
@@ -121,8 +95,6 @@ should be good.
                 {% endif %}
             </div><!--END comment-border-->
         </div><!-- END comment-right-->
-
-        
    
 
         {# Comment reply form #}
@@ -130,9 +102,9 @@ should be good.
             action="{{ comment_url }}#reply-{{ comment.id }}"
             {% if replied_to != comment.id %}style="display:none;"{% endif %}>
             {% if replied_to == comment.id %}
-            {% fields_for posted_comment_form %}
+                {% fields_for posted_comment_form %}
             {% else %}
-            {% fields_for unposted_comment_form %}
+                {% fields_for unposted_comment_form %}
             {% endif %}
             <input type="hidden" name="replied_to" value="{{ comment.id }}">
             <i class="fa fa-spin fa-refresh reply-posted-spinner"></i>
@@ -140,7 +112,7 @@ should be good.
         </form>
 
 
-    {# Case where comment has been moved or deleted #}
+    {# Case when comment has been moved or deleted. #}
     {% else %}
     <div class="comment-deleted">
         <p>
@@ -155,18 +127,18 @@ should be good.
     {% endif %}
     
     {% comment %}
-    This is a recursive call. comments.html is the top-level template here, it contains the comment_thread tag which is set
-    (see mezz source-generic.templatetags.comment_tags) to send its context to this template comment.html. 
-    Now we use the comment_thread tag on this comment itself and the dance continues
+    This is a recursive call. `comments.html` is the top-level template here, it contains the `comment_thread` tag, which is set
+    (see mezz source, `generic.templatetags.comment_tags`) to send its context to this template, `comment.html`. 
+    Now we use the `comment_thread` tag on this comment itself, and so the dance continues.
     {% endcomment %}
 
     {% if comment.id in all_comments|defaultdict_keys %}
         {% comment %}
-        The custom defaultdict_keys tag is needed for defaultdict unlike just .keys for reg dict.
-        The comment has children(this is how all_comments works, kids are indexed under parent id).
-        This whole if-else is not strictly necessary
-        , but it prevents empty <ul></ul> at bottom level.
-        N.B. you can jQ select on the data-level attrbs with $("ul[data-level!='0']>li").hide() etc
+        The custom `defaultdict_keys` tag is needed for defaultdict unlike just `.keys` for reg dict.
+        The comment must have children (this is how `all_comments` works, kids are indexed under parent id), thus
+        comments without children do not appear as keys in `all_comments`.
+        This whole `if-else` is not strictly necessary, but it prevents empty `<ul></ul>` at the bottom level.
+        N.B. you can jQ select on the data-level attrbs with `$("ul[data-level!='0']>li").hide()` etc.
         {% endcomment %}
         <ul class="comment_ul" data-level="{{ comment|comment_level|add:1 }}">
                 {% comment_thread comment %}
@@ -177,7 +149,7 @@ should be good.
 </li>
 {% endfor %}
 
-{# Pagination numbers arrows at foot of zeroth level comments #}
+{# Pagination numbers and arrows at foot of zeroth-level comments #}
 {% block pagination_foot %}{% endblock %}
 
 {% if no_comments %}

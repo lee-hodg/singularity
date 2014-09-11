@@ -117,14 +117,16 @@
     {% endblock %}
 </div> <!-- END full-post-->
 
-    {# NB you can copy into proj and overide the generic.templates.generic.includes.comment(s) #}
-    {# template to change the form of the comment and new comment form #}
+    {# N.B. you can copy into project and overide the `generic.templates.generic.includes.comment(s)` #}
+    {# template to change the style of the comment and new comment form #}
     {% block blog_post_detail_comments %}
     {% if blog_post.allow_comments %}
         {% if settings.COMMENTS_ORDERBYSCORE %}
-            {# Loads the context by all_comments var #}
-            {# where comments ordered by score func which #}
-            {# causes higher rank to float to top, but decay with time #}
+            {# Loads the context with `all_comments` var #}
+            {# as usual but with comments ordered by score func that #}
+            {# causes higher rank to float to top, but decay with time. #}
+            {# when `comments_for` acts below it sees `all_comments` already in context #}
+            {# and does not recreate. #}
             {% order_comments_by_score_for blog_post %}
         {% endif %}
         {% comments_for blog_post %}

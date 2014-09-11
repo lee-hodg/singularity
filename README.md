@@ -230,4 +230,33 @@ universally for fields, but I thought I'd do it a different way here.
 set the default menus a page should appear in in `settings.py` too. Now the user can easily select which menus
 a given page should appear in.
 
+# comments
+
+## comment.html
+
+### Pagination notes (see my blog for more)
+
+Use a custom `paginated_comment_thread` inclusion tag to build the parent
+(zeroth level in tree) comments. The template it calls `comment_with_pagination.html`,
+is an extension of `comment.html`, only it overrides the pagination_foot block, with
+some code that actually calls `pagination_for` on the comment paginator that the `paginated_comment_thread`
+tag provides it with (`comment_for_thread_paginator`).
+
+In the tag the paginate function works by simply taking the `comment_for_thread` list (which
+in our case in the list of zeroth level comments for a BlogPost) and then ripping the page
+number parameter from the GETstr. It takes `COMMENTS_PER_PAGE` custom setting, and behaves how you'd
+expect. When `.object_list` is called on it, it yields up the list of comments for that page, which
+can then just be displayed as normal.
+
+By passing the actual paginator itself back, we can easily render the pagination footer
+(arrows and "Page 1 of 2" etc) by calling the pagination_for mezzanine tag (c.f. blog_post_list).
+
+You may think about doing this with only one tag and one template, which might have been possible, but
+the problem is the recursive calls modify the context as they are called one by one, and by the time you
+get to the bottom of the html in the outer `comment.html` template the context is different to at the top, and
+to what you might have been expecting, thus it's very difficult to render pagination footers for just the parents.
+
+The approach used with the extension of `comment.html` by comment_with_pagination.html is fairly DRY anyway, so we
+should be good.
+
 
