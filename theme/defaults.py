@@ -121,6 +121,22 @@ register_setting(
     default=True,
 )
 
+register_setting(
+    name="COMMENTS_PER_PAGE",
+    label=_("Comments per page"),
+    description=_("Number of comments per page"),
+    editable=True,
+    default=10,
+)
+
+register_setting(
+    name="COMMENTS_USE_RATINGS",
+    label=_("Comments ratable"),
+    description=_("Allow rating for comments"),
+    editable=True,
+    choices=((True, 'True'), (False, 'False')),
+    default=True,
+)
 
 # Make settings available from within templates by appending
 # to existing `TEMPLATE ACCESSIBLE SETTINGS` setting.
@@ -141,5 +157,7 @@ register_setting(
              "PERSONAL_ADDRESS",
              "PERSONAL_SKYPE",
              "COMMENTS_ORDERBYSCORE",
+             "COMMENTS_PER_PAGE",
+             "COMMENTS_USE_RATINGS",
              ),
 )

@@ -80,16 +80,16 @@ PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 BLOG_USE_FEATURED_IMAGE = True
-# Ratings for comments
-COMMENTS_USE_RATINGS = True
+# Ratings for comments(moved to default so can edit in admin)
+# COMMENTS_USE_RATINGS = True
 # Score is a function of rating/(time created)^scale, i.e. higher
 # rated float to the top, but age causes decay. This is a custom
 # setting so rem to register in theme.defaults for availability in templates
 # COMMENTS_ORDERBYSCORE = True
 # Range for ratings (note this is per vote, not the sum!)
 RATINGS_RANGE  = ((-1, 1))
-# Custom setting
-COMMENTS_PER_PAGE = 10
+# Custom setting(move to defaults so can edit in admin)
+# COMMENTS_PER_PAGE = 10
 # For comments ordered by rating and decaying by date,
 # this controls how quickly they decay (lager equals faster)
 SCORE_SCALE_FACTOR = 2
