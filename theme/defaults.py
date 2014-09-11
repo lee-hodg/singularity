@@ -9,7 +9,7 @@ register_setting(
     name="SOCIAL_LINK_FACEBOOK",
     label=_("Facebook link"),
     description=_("If present a Facebook icon linking here will be in the "
-                  "header."),
+                  "footer and contact sections."),
     editable=True,
     default="https://facebook.com/mezzatheme",
 )
@@ -18,7 +18,7 @@ register_setting(
     name="SOCIAL_LINK_TWITTER",
     label=_("Twitter link"),
     description=_("If present a Twitter icon linking here will be in the "
-                  "header."),
+                  "footer and contact sections."),
     editable=True,
     default="https://twitter.com/MEZZaTHEME",
 )
@@ -27,7 +27,7 @@ register_setting(
     name="SOCIAL_LINK_VIMEO",
     label=_("Vimeo link"),
     description=_("If present a vimeo icon linking here will be in the "
-                  "header."),  # the _(...) is the ugettext function imported as _
+                  "footer and contact sections."),  # the _(...) is the ugettext function imported as _
     editable=True,
     default="https://vimeo.com/test",
 )
@@ -36,7 +36,7 @@ register_setting(
     name="SOCIAL_LINK_DELICIOUS",
     label=_("Delicious link"),
     description=_("If present a delicious icon linking here will be in the "
-                  "header."),  # the _(...) is the ugettext function imported as _
+                  "footer and contact sections."),  # the _(...) is the ugettext function imported as _
     editable=True,
     default="https://delicious.com/test",
 )
@@ -45,7 +45,7 @@ register_setting(
     name="SOCIAL_LINK_TUMBLR",
     label=_("Tumblr link"),
     description=_("If present a tumblr icon linking here will be in the "
-                  "header."),  # the _(...) is the ugettext function imported as _
+                  "footer and contact sections."),  # the _(...) is the ugettext function imported as _
     editable=True,
     default="https://tumblr.com/test",
 )
