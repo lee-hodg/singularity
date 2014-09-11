@@ -373,8 +373,9 @@ OPTIONAL_APPS = (
 #################
 # DJANGO        #
 #################
-SECRET_KEY = "u*f9ivah7$4t@!mws8u4atx$95e11uo@=f65ub6xqqel*t6%m%"
-NEVERCACHE_KEY = "hg^4)35=fn2p)4st!702-_czw&2!gkr+8-+d7*pd-4v35+&9h1"
+# I set these in local_settings.py, or e.g. by env
+# SECRET_KEY = os.environ.get("LOGICON_SECRETKEY")
+# NEVERCACHE_KEY = os.environ.get("LOGICON_NEVERCACHEKEY")
 
 ##################
 # LOCAL SETTINGS #
@@ -384,8 +385,10 @@ NEVERCACHE_KEY = "hg^4)35=fn2p)4st!702-_czw&2!gkr+8-+d7*pd-4v35+&9h1"
 # ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
+    LOC_APPS = None
     from local_settings import *
-    INSTALLED_APPS += LOC_APPS
+    if LOC_APPS:
+        INSTALLED_APPS += LOC_APPS
 except ImportError:
     pass
 
