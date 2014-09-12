@@ -57,4 +57,35 @@ Add the e-mail address you wish contact form messages to be sent to in the conta
 
 Other things are pretty standard, you can change section heading and subheading, add slides with captions and subimages for the responsive slider, change the parallax section images, and add testimonials from your clients.
 
+###Resume page###
+
+Most of the fields are self-explanatory, such as the title of your resume, your personal information, your photo, and personal statement. There are various sections such as "Experience", "Education", "Publications", whose headings and subheading can be set. 
+
+**Experiences**
+
+Work experiences, include the name of the place in which you worked ("Institution"), your title whilst there, the date range you worked there and some statements about working there (e.g. a bullet list of your responsibilities and achievements). You can easily add more experiences by clicking `Add another`.
+
+**Qualifications**
+
+These go under the section titled "Education" in the demo. Each has fields for the institute at which you studied, qualification title, date range, and some statements about your qualification (e.g. grade, advisor, courses taken...). Again you can easily add another by clicking the button.
+
+**Publications**
+
+Here you can add any publicationsmay have. Including the journal and arXiv preprints.
+
+**Skills**
+
+The `content` field is used to provide the rich text field for the skills section.
+
+###About us###
+
+Add your company values and history and employee profiles (picture, title, blurb).
+
+###Portfolio page (don't confuse with the Portfolio link to section on index)###
+
+Use `content` to set the text appearing above the portfolio (e.g. "selection of my freelance work"), and use `Columns` to select if this Portfolio is to be 2-column, 3-column or 4-column.
+
+### Portfolio item ###
+
+If `Featured` is checked, then if this items parent porfolio is selected as the featured portfolio on the homepage (see above) then this item will be amongst those items featured on the homepage from the portfolio. PortfolioItems also have categories that will appear in the right-hand side of the page, a featured image (the image displayed when the item is viewed in the parent portfolio) and a selection of extra images to appear in the item's slider. Short description appears in the right-hand panel and as the sub-text when viewing item in parent portfolio.
 
