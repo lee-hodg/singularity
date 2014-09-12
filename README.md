@@ -239,12 +239,11 @@ However, I still used `page.html_id` to identify the blog page, and to specify a
 
 N.B. The jsddm we are currently using for the dropdown menu is limited to single level(even if extra `<ul>` are inserted in the HTML). See mlddm for more(not free!).
 
- ## Filtering pages in which menus
+**Filtering pages in which menus**
 
-    For filtering based on `page.in_menu`, make sure you change `PAGE_MENU_TEMPLATES` of `settings.py`
- so that the menus offered in admin for page includes correctly match your menu templates. You can also
-set the default menus a page should appear in in `settings.py` too. Now the user can easily select which menus
-a given page should appear in.
+For filtering based on `page.in_menu`, make sure you change `PAGE_MENU_TEMPLATES` of `settings.py`
+, so that the menus offered in admin for page includes correctly match your menu templates. You can also
+set the default menus a page should appear in in `settings.py` too with `PAGE_MENU_TEMPLATES_DEFAULT`. Now the user can easily select which menus a given page should appear in from the admin.
 
 # comments
 
@@ -279,56 +278,56 @@ should be good.
 
 Some old ajax post script
 
-        //NB post is just an ajax conveinience method
-        //jQuery.post( url [, data ] [, success ] [, dataType ] )
-        //it doesn't offer error handler. But this is ajax req errors
-        //not django form errors, don't confuse the two!
-//        $.post(form.attr('action'), form.serialize(), function(data) {
-//            //ajax success
-//            if (data.location) {
-//                // I think this is for the case when login needed to comment
-//                // to redirect to designated login url
-//                console.log('AJAX performing a redirect')
-//                location = data.location;
-//            }else if(data.errors){
-//                console.log('There were some form errors');
-//                if(data.errors.hasOwnProperty('name')){
-//                    //build up ul error list
-//                    var items = [];
-//                    var name_field = $(form).find('.input_id_name');
-//                    items.push('<ul class="errorlist">');
-//                    $.each(data.errors.name, function(i, item) {
-//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
-//                    });
-//                    items.push('</ul>');
-//                    $(name_field).prepend(items.join(''));
-//                }
-//                if(data.errors.hasOwnProperty('email')){
-//                    //build up ul error list
-//                    var items = [];
-//                    var email_field = $(form).find('.input_id_email');
-//                    items.push('<ul class="errorlist">');
-//                    $.each(data.errors.email, function(i, item) {
-//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
-//                    });
-//                    items.push('</ul>');
-//                    $(email_field).prepend(items.join(''));
-//                }
-//                if(data.errors.hasOwnProperty('comment')){
-//                    //build up ul error list
-//                    var items = [];
-//                    var comment_field = $(form).find('.input_id_comment');
-//                    items.push('<ul class="errorlist">');
-//                    $.each(data.errors.comment, function(i, item) {
-//                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
-//                    });
-//                    items.push('</ul>');
-//                    $(comment_field).prepend(items.join(''));
-//                }
-//            }else{console.log('What happened?');}
-//        }, 'json');
-//
-//        //event.preventDefault();
-//        return false;
-//    });
-//});
+    //NB post is just an ajax conveinience method
+    //jQuery.post( url [, data ] [, success ] [, dataType ] )
+    //it doesn't offer error handler. But this is ajax req errors
+    //not django form errors, don't confuse the two!
+    //$.post(form.attr('action'), form.serialize(), function(data) {
+    //ajax success
+    //            if (data.location) {
+    //                // I think this is for the case when login needed to comment
+    //                // to redirect to designated login url
+    //                console.log('AJAX performing a redirect')
+    //                location = data.location;
+    //            }else if(data.errors){
+    //                console.log('There were some form errors');
+    //                if(data.errors.hasOwnProperty('name')){
+    //                    //build up ul error list
+    //                    var items = [];
+    //                    var name_field = $(form).find('.input_id_name');
+    //                    items.push('<ul class="errorlist">');
+    //                    $.each(data.errors.name, function(i, item) {
+    //                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+    //                    });
+    //                    items.push('</ul>');
+    //                    $(name_field).prepend(items.join(''));
+    //                }
+    //                if(data.errors.hasOwnProperty('email')){
+    //                    //build up ul error list
+    //                    var items = [];
+    //                    var email_field = $(form).find('.input_id_email');
+    //                    items.push('<ul class="errorlist">');
+    //                    $.each(data.errors.email, function(i, item) {
+    //                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+    //                    });
+    //                    items.push('</ul>');
+    //                    $(email_field).prepend(items.join(''));  
+    //                }
+    //                if(data.errors.hasOwnProperty('comment')){
+    //                    //build up ul error list
+    //                    var items = [];
+    //                    var comment_field = $(form).find('.input_id_comment');
+    //                    items.push('<ul class="errorlist">');
+    //                    $.each(data.errors.comment, function(i, item) {
+    //                        items.push('<li>' + item + '</li><i class="tag-tip"><i></i></i>');
+    //                    });
+    //                    items.push('</ul>');
+    //                    $(comment_field).prepend(items.join(''));
+    //                }
+    //            }else{console.log('What happened?');}
+    //        }, 'json');  
+    //
+    //        //event.preventDefault();
+    //        return false;
+    //    });
+    //});
