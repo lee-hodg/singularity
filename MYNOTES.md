@@ -1,5 +1,17 @@
 # Theme development guide #
 
+## Tools ##
+
+Make a static copy of the entire site:
+
+    httrack http://127.0.0.1:8000 -O /home/lee/Desktop/Singularity_static/ +*127.0.0.1/* -v -s0
+
+(needs local django dev server to be running).
+
+Make a zip of relevant parts of theme:
+    
+    zip -r /home/lee/Desktop/Singularity.zip . -x static/\* \*.git\* local_settings.py \*.pyc MYNOTES.md logiconENV/\*
+
 ## Form templates ##
 
 The `fields_for` templatag is a nice way to standardize the layout of various forms appearing on your site (and associated field errors), for example contact forms (although in this theme I don't actually use it on contact form), blog post comments and replies to comments. You can edit the template that this tag renders to by copying the file `mezzanine.core.templates.includes.form_fields.html` to your `theme.templates.includes` dir, and editing the HTML as you like.
