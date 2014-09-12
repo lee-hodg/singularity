@@ -110,49 +110,58 @@ for example.
 
 Note that if multiple settings are prepended with the same name before the underscore,
 they will be displayed within the same section in the admin, e.g. we have the SOCIAL and
-PERSONAL sections. NB you DON'T also set the setting in `settings.py`. 
+PERSONAL sections. NB you **DON'T** also set the setting in `settings.py`.
+
+The `COMMENTS_...` block already exists for example, so comments related settings should be added to it by the appropriate prepend. See [here](http://mezzanine.jupo.org/docs/configuration.html) for more settings available by default.
 
 To make these settings accessible in templates they need to be appended to the existing setting
 `TEMPLATE_ACCESSIBLE_SETTINGS`.
-See [here](http://mezzanine.jupo.org/docs/configuration.html) for more settings available by default.
 
 # admin.py
 
-For editing child models of the parent (i.e.) inlines, it's best to see the Django docs, or just
-try them out. Mezzanine usually just adds `Dynamic`, which just adds some js to  add another easily.
-
-# models.py
+For editing child models of the parent (i.e.) inlines (for example slides on homepage), it's best to see the Django docs, or just try them out. Mezzanine difference it that it usually just adds `Dynamic`, which just adds some js to  add another one easily, e.g. instead of `DynamicInlineAdmin` we have `TabularDynamicInlineAdmin`. 
 
 # page_processors.py
 
+Page processors are a little like views, but whereas a URL points to a given view as specified in `urls.py`, page processors will always operate for a given page type.
+
 Note that the `published()` filter obviously returns only pages published, and `published(for_user=request.user)` returns only
-the pages that are published and accessible to the current request.user, e.g. admin, staff, anonymous etc..
+the pages that are published and *accessible* to the current `request.user`, e.g. admin, staff, anonymous etc..
 
 # views.py
 
-# base.html
+My only custom view was an AJAX view to handle AJAX paginating comments.
 
 # index.html
 
-## Thoughts on better way to add contact form to HomePage
+## Musings on better way to add contact form to HomePage
 
 Could there be a better way to put a form on the homepage?
 Starting out with the Form type page model and extending it would seem like a good idea.
 This way we could do all the nice things in the admin that one can do usually for the Form page such
-as managing fields, making fields required or not, submit btn text recipient emails etc. We'd of course need to extend this Form model
-to make our HomePage model and all the fields that go with that model, headings, subheadings, and so on.
-Simply subclass of Form instead of Page doesn't seem to play well. 
-It seems you can't overwrite the Form, you can only inherit from Page. Field injection
+as managing fields, making fields required or not, submit button text recipient emails etc. We'd of course need to extend this Form model to make our HomePage model, and the multitude of fields that go with that, model, headings, subheadings, and so on.
+
+Simply subclassing of Form instead of Page doesn't seem to play well. 
+It seems you can't overwrite the Form, you can only inherit from Page in Mezzanine. Field injection
 on the Form model is an option. Simply copy and pasting the Form model, customising, and then using that, would be another
-(i.e. just copy and paste these fields into the HomePage model.
+(i.e. just copy and paste these fields into the HomePage model.)
+
+It probably is even easier just to add any desired fields like `contact_recipients` to the HomePage model.
 
 ## Thumbnail templatetag and jpegs
 
-For the thumbnail templatetag to work with jpegs, you will need 
-to install the necessary lib for pillow to do conv: `sudo apt-get install libjpeg-dev`
-and reinstall pillow: pip install -I pillow, otherwise you will just get the original 
-image url returned. You can use the shell to work this out with 
-from mezzanine.core.templatetags.mezzanine_tags import thumbnail.
+For the `thumbnail` template tag to work with jpegs, you will need 
+to install the necessary lib for `pillow` to do conv: 
+
+    sudo apt-get install libjpeg-dev
+
+and reinstall pillow: 
+    pip install -I pillow
+
+Otherwise you will just get the original image url returned, not a scaled version. 
+You can use the shell to investigate this with 
+
+    from mezzanine.core.templatetags.mezzanine_tags import thumbnail.
 
 ## Mixitup panel
 
