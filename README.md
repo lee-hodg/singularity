@@ -45,45 +45,22 @@ Mezzanine allows you to drag and drop the order and hierarchy of your pages, so 
 
 # Theme development guide #
 
-## Editing the template used by fields_for tag (e.g. in form for blog comment) ##
+## Form templates ##
 
-Copy the file mezzanine.core.templates.includes.form_fields.html to your
-theme.templates.includes dir.
+The `fields_for` templatag is a nice way to standardize the layout of various forms appearing on your site (and associated field errors), for example contact forms (although in this theme I don't actually use it on contact form), blog post comments and replies to comments. You can edit the template that this tag renders to by copying the file `mezzanine.core.templates.includes.form_fields.html` to your `theme.templates.includes` dir, and editing the HTML as you like.
 
-Now edit it as you would like.
+## Editing comments (for blog or otherwise)
 
-# Editing blog comments themselves
+Copy the file `mezzanine.generic.templates.generic.includes.comment.html`
+and `comments.html` (similar for `rating.html` or style `disqus.html` too), then edit as you like. See my blog post series on Mezzanine comment and how they work recursively for more.
 
-Copy the file mezzanine.generic.templates.generic.includes.comment.html
-or comments.html (similar for rating or style disqus.html too)
-
-Proceed to edit.
-
-# South migrations for theme
-
-Weirdly theme ended up with two initial migrations  `0001_initial` and `0007_initial`, we need to fake the latter. This can be achieved by manual migrations upto and including six, e.g.
-
-    python manage.py migrate theme 0001
-    python manage.py migrate theme 0002
-    .
-    .
-    .
-
-then faking seven:
-    
-    python manage.py migrate theme 0007 --fake
-
-followed by the rest:
-
-    python manage.py migrate theme
-# Easiest way to get content from the server to local
+## Easiest way to get content from the server to local
 
 Just copy the `/srv/databases/` logicon db to the local folder on laptop as `dev.db`, also
 grab the media uploads from `/srv/www/logicon/media/uploads` as a tar ball, and put them in the local media dir.
 
-Remember `DEBUG=True` needed for the local runserver to serve static content too.
+Remember that `DEBUG=True` is needed for the local runserver to serve static content too.
 The static content itself should be in the git repo, and we just need a `collectstatic` to be ran.
-
 
 # urls 
 
