@@ -62,12 +62,10 @@ grab the media uploads from `/srv/www/logicon/media/uploads` as a tar ball, and 
 Remember that `DEBUG=True` is needed for the local runserver to serve static content too.
 The static content itself should be in the git repo, and we just need a `collectstatic` to be ran.
 
-# urls 
+## urls 
 
-By default Mezzanine ships with the static index.html as the ^$ homepage. To make
-a homepage that is a `Page` object whose model you can customise and edit in the page tree
-you must create your model, run south and then add the page in the admin to the tree, before
-you specify its URL (in the Meta Data section) as "/". Now uncomment the line
+By default Mezzanine ships with the static `index.html` as the root (`^$`) homepage. To make
+a homepage that is a `Page` object whose model you can customise and edit in the page tree, like another other Mezzanine page, you must create your model, run south and then add the page in the admin to the tree, before you specify its URL (in the Meta Data section) as `/`. Now uncomment the line
 
     url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
 
@@ -75,7 +73,9 @@ in the urls file. Finally, add any other custom urls under "MEZZANINE'S URLS" bu
 
     ("^", include("mezzanine.urls")),
 
-line. For example I have my ajax view for comments here:
+line. 
+
+For example I have my custom AJAX view for comments here(this view enables AJAX pagination of my comments):
 
     ("^ajax_comments/(?P<pk>\d+)/$", 'theme.views.ajax_comments')
 
