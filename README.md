@@ -57,4 +57,21 @@ Add the e-mail address you wish contact form messages to be sent to in the conta
 
 Other things are pretty standard, you can change section heading and subheading, add slides with captions and subimages for the responsive slider, change the parallax section images, and add testimonials from your clients.
 
+###Resume page###
 
+Most of the fields are self-explanatory, such as the title of your resume, your personal information, your photo, and personal statement. There are various sections such as "Experience", "Education", "Publications", whose headings and subheading can be set. 
+
+**Experiences**
+
+Work experiences, include the name of the place in which you worked ("Institution"), your title whilst there, the date range you worked there and some statements about working there (e.g. a bullet list of your responsibilities and achievements). You can easily add more experiences by clicking `Add another`.
+
+**Qualifications**
+
+These go under the section titled "Education" in the demo. Each has fields for the institute at which you studied, qualification title, date range, and some statements about your qualification (e.g. grade, advisor, courses taken...). Again you can easily add another by clicking the button.
+
+**Publications**
+
+Here you can add any publications you have may have. Including the journal and arXiv preprints.
+
+
+The `content` field is used to provide the rich text field for the skills section.
