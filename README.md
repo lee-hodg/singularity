@@ -163,6 +163,8 @@ You can use the shell to investigate this with
 
     from mezzanine.core.templatetags.mezzanine_tags import thumbnail.
 
+Note when using `thumbnail` something like `0 100` means height fixed at `100`, but that width will scale proportionally to aspect ratio. There are also options like `top=0 left=0` to choose how image is cropped (default `0.5 0.5`, which will crop vertically and horizontally in center). Finally there is the quality option. See Mezzanine docs for more.
+
 ## Mixitup panel
 
 The mixitup panel has a finite delay in filling the
@@ -170,92 +172,72 @@ The mixitup panel has a finite delay in filling the
 (if images not already in browser cache) and the animation itself.
 
 This means upon page load initially
-the div is smaller, and `#link-contact` redirects (either on form error, or ext page loads)
-are messed up. The offset from top is actually changing as mixitup fills the `#Container` div.
+the div is smaller, and `#link-contact` redirects (either on form error, or external (non-index) page loads) are messed up. The offset from top is actually changing as Mixitup fills the `#Container` div.
 
-Setting min-height of the section div does not help, since the user controls content, we don't know
-what that min-height should be all the time, so if they add more and more PortfolioItems until the section
-height is beyond min-height, we will be back to square one when the animation expands the section beyond min-height..
+Setting `min-height` of the section div does not help, since the user controls content, we don't know
+what that `min-height` should be all the time, so if they add more and more PortfolioItems until the section height is beyond `min-height`, we will be back to square one when the animation expands the section beyond `min-height`..
 
-jQuery `$(window).load()` can help with img loading. 
-
-Regarding the animations: I used the `mixItEnd` callback of the mixitup script 
-and a counter to fire this function, whenever the
-count is zero (fire only on page loads, not everytime user does the sort animation).
-
-I also use a recursive check to make sure the height of the last img is non-zero to test
+The jQuery `$(window).load()` can help with image loading. Regarding the animations: I used the `mixItEnd` callback of the mixitup script and a counter to fire this function whenever the
+count is zero (fire only on page loads, not every time that the user does the sort animation).
+I also use a recursive check to make sure the height of the last image is non-zero to test
 whether images are truly loaded.
-1)If the contact-form has errors this func just redirects to contact form. 2) If not, but the user 
-loaded the index page from an external page(e.g. nav on resume), and wanted to get to a given sec using the hash
-it redirects the user there, now the animation is done.
 
-### blog_post.description_from_content
+1)If the contact-form has errors this function just redirects to contact form. 2) If not, but the user 
+loaded the index page from an external page(e.g. nav on resume page), and wanted to get to a given sec using the hash it redirects the user there, now the animation is done and offsets from top can be correctly calculated.
 
-NB to see the way `description_from_content()` works see 
-`mezzanine.core.models.py`. If there is a para sep by `<br/><br/>` with
+## The method `blog_post.description_from_content()`
+
+N.B. to see the way `description_from_content()` works see 
+`mezzanine.core.models.py`. If there is a paragraph sep by `<br/><br/>` with
 `</p>` at end of the whole block, this function can end up taking the whole block 
 . The reason is it looks for `</p>` first using the list 
 
     ends = ("</p>", "<br />", "<br/>", "<br>", "</ul>", "\n", ". ", "! ", "? ") 
     for end in ends: pos = description.lower().find(end)
 
-it thus finds the `</p>` exists sets it to be the end point for truncation,
-and then breaks (even though `<br/>` etc came before) 
-I suppose it guards against hanging `<p>` this way....
+It thus finds the `</p>` exists, sets it to be the end point for truncation,
+and then stops (even though `<br/>`  came before). I suppose it guards against hanging `<p>` this way....
 
-I just add truncatewords_html:100
-too to ensure this doesn't get too long no matter what.
+This is not the behaviour I want, so I just add `truncatewords_html:100`
+too to ensure this doesn't get too long no matter what user enters.
 
-### thumbnail
+## Contact form fields
 
-Note something like 0 100 means height fixed at 100, but width will scale proportionaly to aspect ratio. There
-are also options like `top=0 left=0` to choose how image is cropped (default 0.5 0.5, which will crop vertically and horizontally
-in center). Finally there is the quality option.
+Could have used the `fields_for` tag just like for blog comment replies. With the `includes/form_fields.html` setting the styling universally for fields, but I thought I'd do it a different way here.
 
-### Contact form fields
+## Page menus 
 
-Could have used the `fields_for` tag just like for blog comment replies. With the `includes/form_fields.html` setting the styling
-universally for fields, but I thought I'd do it a different way here.
+**Recursive building.**
 
-# Page menus 
-
- ## Recursive building.
  See the [Page Menus docs](http://mezzanine.jupo.org/docs/content-architecture.html)
  Notice if e.g. in zeroth branch we recursively make a call to `page_menu`
  , which is the function we called from base.html, the second time round we will
- be in a subbranch, so the branch_level not 0, and flow jumps to `else`. Here again
+ be in a sub-branch, so the branch_level not zero, and flow jumps to `else` clause. Here again
  a recursive call to `page_menu` is made if any children present, and so on.
 
- ## dropdown.html
+**dropdown.html**
 
- With our one-page design and the need for links to *sections* of the home page in this dropdown,
- rather than simply absolute links to independent pages, adding these section # links to sections
+ With our one-page design and the need for links to **sections** of the home page in this dropdown,
+ rather than simply absolute links to independent pages, adding these section hash links to sections
  initially posed a problem. 
 
  The best solution I ultimately found was to add 'Link' type objects
- to the page heirarchy in the admin. You can choose the link URL to be # to make it a dud,
- or to something like #link-features to link to a section on the index page itself.
+ to the page hierarchy in the admin (this is the Mezzanine way).
+ You can choose the link URL to be # to make it a dud,
+ or to something like `#link-features` to link to a section on the index page itself.
  Now you can simply drag and drop your other pages under these links if needed.
- (yes you can drag-and-drop under existing pages too, just pull to right).
+ (yes you can drag-and-drop under existing pages too, just pull to the right).
 
- Other options where explored, but each had problems. Slugifying the page.title|slugify
- and using this like #link-{{page.title|slugify}} in the href for all parent pages, fails
- since not all parent links should be section links, secondly if the user changes the page title
- so that it no longer matches the section anchor on index the whole idea breaks down.
+ Other options where explored (and seem silly now), but each had problems. Slugifying the title with `page.title|slugify`, and using this like `#link-{{page.title|slugify}}` in the href for all parent pages, fails since not all parent links should be section links, and secondly if the user changes the page title so that it no longer matches the section anchor on index the whole idea breaks down.
+
  Using field injection on the Mezzanine Page model (remember we can't subclass so this is
- how we must add new custom fields) to add a BooleanField 'sectionLink' checkbox was another idea.
- This would give the user a checkbox in the admin for every Page, and if checked we'd use a sectionLink
- rather than absolute URL. For example if page.portfolio and page.sectionLink: href="#link-portoilio".
- This still relies on identifiying page as portfolio, which may not be reliable if user changes names
- or has multiple portfolios. The remnants of field injection can be seen in settings.py anyway,
- and may be useful for something else in future.
+ how we must add new custom fields) to add a `sectionLink` field was another idea.
+ This would give the user option in the admin for every Page. If filled in we'd use a section link
+ rather than absolute link. For example if `page.portfolio` then `page.sectionLink` could be set as `#link-portoilio`. This still relies on identifying the page as the portfolio, which may not be reliable if user changes names or has multiple portfolios. The remnants of field injection can be seen in `settings.py` anyway, and may be useful for something else in future.
 
- I used `page.html_id` to identify the blog page and specify section link for it rather the blog page itself. 
- This seems to be robust to user changing things like blog title(Remember blog is both section on homepage and
- independent page)
+However, I still used `page.html_id` to identify the blog page, and to specify a section link for it rather the absolute URL for the blog page itself.  This seems to be robust to user changing things like blog title(Remember blog is both section on homepage and independent page).
 
- N.B. The jsddm we are currently using for the dropdown menu is limited to single level even if extra <ul> are inserted.
- See mlddm for more(costs).
+N.B. The jsddm we are currently using for the dropdown menu is limited to single level(even if extra `<ul>` are inserted in the HTML). See mlddm for more(not free!).
 
  ## Filtering pages in which menus
 
