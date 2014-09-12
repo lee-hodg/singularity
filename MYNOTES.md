@@ -270,3 +270,302 @@ Some old and redundant ajax post script
     //        return false;
     //    });
     //});
+
+# Blog posts
+
+## Post I
+
+[Mezzanine][1] is a CMS based on the Django framework. Like any CMS such as Wordpress, it gives the user an interface for managing blog posts, form data, pages and many other types of content. It also has an active community, which takes the form of an IRC channel and a google group. In fact I created this site itself with the Mezzanine CMS. I'd recommend anyone who wants to get started with Mezzanine to check out the [tutorial][2] by Josh Cartmell and [the one][3] by Ross Laird, they really helped me when I was starting out.
+
+Whilst, I doubt I'll be able to write something as clear and useful as the above two mentioned authors (which I definitely recommend you start with if you are completely new to Mezzanine, as here I won't be discussing the basics, since those two sites already do a great job of that), lately I began creating a new Mezzanine theme, and I thought I'd share a few things that weren't immediately obvious (at least to me) when trying to accomplish some tasks in Mezzanine, as well as some general notes about Mezzanine.
+
+This first post will form part one of a series of three, and here I will prime with a background discussion/walk-through of the comment source code in Mezzanine.
+In the later posts of the series, I will show you how to paginate comments, AJAXify comments and introduce stackexchange style popularity rank/time-decay sorting by ranking of your comments.
+
+#Understanding comments in Mezzanine
+
+What CMS based site is complete without a blog? and every blog of course needs a system for comments. Mezzanine does most of the hard work for you by default, but you may want to add a few extra features such as comment pagination and AJAX calls.
+
+The way a blog post is rendered is controlled by the `blog/blog_post_detail.html` template, and in this template you will see near the bottom `{% comments_for blog_post %}`  This is a Django [inclusion tag][4] for rendering the comments of a given blog post. Take a look at the source code for this tag at `mezzanine/generic/templatetags/comment_tags.py ` (remember comments are generic items, not necessarily associated with a blog post):
+
+    #!python
+    @register.inclusion_tag("generic/includes/comments.html", takes_context=True)    
+    def comments_for(context, obj):                                                  
+        """                                                                          
+       Provides a generic context variable name for the object that                 
+       comments are being rendered for.                                             
+       """                                                                          
+       form = ThreadedCommentForm(context["request"], obj)                          
+       try:                                                                         
+            context["posted_comment_form"]                                              
+       except KeyError:                                                             
+           context["posted_comment_form"] = form                                    
+       context["unposted_comment_form"] = form                                      
+       context["comment_url"] = reverse("comment")                                  
+       context["object_for_comments"] = obj                                         
+       return context
+
+What is going on here? Well, not a lot; the `obj` in our case is the `BlogPost` associated with the detail page, a suitable form for posting a new comment is instantiated from the request, and the context is updated with some generically named variables (the url, `comment_url`,  where a comment form should be sent upon submission so that the correct view can deal with it, and the blog object itself, which the comments are to be fetched for). After the context has been suitably updated we send the context back to the template to be included, `generic/includes/comments.html`.  I suggest you open that template next and take a look at the source as I take a walk through it in what follows.
+
+In this template we find the key inclusion tag, `{% comment_thread object_for_comments %}` (remember that the `object_for_comments` variable in the context was set to be the BlogPost object in our case). The `comment_thread` tag (again you can view the code in `generic/templatetags/comment_tags.py`) first grabs the comments queryset for the given blog post (depending on whether the user is staff or not), e.g.
+
+    ::python     
+         comments_queryset = parent.comments.all()      
+
+and then does roughly
+ 
+    ::python
+    for comment in comments_queryset:               
+        comments[comment.replied_to_id].append(comment)              
+
+This means the comments dictionary ends up being built in a hierarchy. The zeroth level parent comments, replied to no other comments, and their `replied_to_id` attribute is `None`. Thus the `None` key of the dict points to a list of all the zeroth-level comments in the tree. If on the other hand, a comment with id of 3 has a number of direct replies, the key `3` of the dict will point to a list containing that comment's children. In other words, each key of the dictionary is either None (representing the BlogPost itself of which all zeroth-level comments are children) or is the id of a comment which has children, and each of these keys points to a list containing all of the relevant parent object's child comments. 
+
+*In case you are wondering why the comments dictionary doesn't trigger a KeyError when you at first try to append a comment to a given key (that doesn't yet exist in the dictionary) it is actually a `defaultdict(list) ` object.  This object is like a regular dictionary, except that if you try to get a value for a non-existent key, it doesn't throw an error but rather returns an empty list. Handy eh?*
+
+The other smart thing to notice about this tag is that it only builds up the dictionary of comments once. If the `all_comments` var already exists in the context, the line `if "all_comments" not in context:` ensures we don't bother to build it again. This is important, since as we will see this tag must be called recursively, and it would be a performance hit to regenerate the dictionary each time.
+
+All that's left to do now is grab the parent's id and return just the direct descendants to start with. 
+
+    ::python
+    parent_id = parent.id if isinstance(parent, ThreadedComment) else None
+
+(i.e. for the BlogPost itself or other non-comment object for which comments are being generated, the `parent.id` is going to read `None` otherwise it will read as the id of the comment that the tag was called on)
+
+Armed with this id we can return the direct descendants only, first of all, with
+
+    ::python
+    "comments_for_thread": context["all_comments"].get(parent_id, []),
+
+So the first time the `comment thread` inclusion tag is called (in `comments.html`), it is being fed the blog post itself as parent, the id is going to read as `None` (no ancestors) and all the direct descendant comments (level zero comments) are going to be sent back in a list `comments_for_thread`.
+
+## Let the recursion begin
+
+Now browse to `templates/generic/includes/comment.html`, this is the template that the `comment_thread` tag we just discussed is going to feed with the context that it built up for us.
+
+The `comments_for_thread` context variable (which contains the zeroth-level blog post comment list) is looped over:
+
+    ::python
+     {% for comment in comments_for_thread %}
+         .
+         .
+         # display the comment and its associated reply form...
+
+         # recursively call the comment_thread tag
+         {% comment_thread comment %}
+    {% endfor %}
+
+So in the above the comment is displayed in whatever way you like, along with an associated "reply-to-comment" form for replying directly to this comment, and finally a recursive call is made to the `comment_thread` tag, but this time with the comment itself as the object to be acted upon (recall the first time around it was the blog post object). This happens for every comment in the list of zeroth level comments, and these Django inclusion tags means html is being pushed into the template at the appropriate places as the loop marches onward. 
+
+Let's go through one more level of iteration just for absolute clarity. Note the context is persistent through each call to the tag, and this time when the `if "all_comments" not in context:` check runs, it finds that indeed `all_comments` is in the context and there is no need to go through all the work of rebuilding this dictionary. Thus, the next step is to grab the id of the level one comment that did the calling, and then reset the `comments_for_thread` variable to point to a list of all the direct descendants of this comment itself:
+
+    ::python
+    "comments_for_thread": context["all_comments"].get(parent_id, [])
+
+With the context modified, it is fed back to `generic/includes/comment.html`, the descendants are looped over, each one of which is displayed, and which then calls the tag again...ad infinitum...
+
+## Summary
+
+Hopefully, you have now seen how comments for an object are built up and displayed in Mezzanine by default. In part II of this series, I will explain how to use this understanding to do some funky things: pagination of comments, ordering of comments by popularity decay algorithms, and AJAXifying comments.
+
+  [1]: http://mezzanine.jupo.org/
+  [2]: http://bitofpixels.com/blog/mezzatheming-creating-mezzanine-themes-part-1-basehtml/
+  [3]: http://www.rosslaird.com/blog/first-steps-with-mezzanine/
+  [4]: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/#inclusion-tags
+
+## Post II
+
+In my previous post on Mezzanine comments, I tried to give a walk-through of how comments for an object work in Mezzanine. In this post, armed with that knowledge, I will show you how you can get paginated comments for your Mezzanine blog (or indeed any other object you want to generate comments for).
+
+We saw in the previous post that it was the `comment_thread` inclusion tag that was doing most of the grunt work generating comments recursively. In order to have pagination, I'm going to define a new tag based on this, called `paginated_comment_thread`, and a new template `comment_with_pagination.html`.  
+
+In the `comments.html` template we will now call `{% paginated_comment_thread object_for_comments %}` instead of plane old `{% comment_thread object_for_comments %}` (remember in `comments.html` it is the blog post itself that is the `object_for_comments`).
+
+How does this new tag look?
+
+    ::python
+    from mezzanine.utils.views import paginate 
+    @register.inclusion_tag("generic/includes/comment_with_pagination.html", takes_context=True)
+    
+
+    .
+    .
+     # same code as original building up the all_comments dict and updating the context
+    .
+    # Pagination for zeroth level comments                                       
+    comments_for_thread = context["all_comments"].get(parent_id, [])             
+    context.update({"comments_for_thread": comments_for_thread})                 
+    if parent_id is None:                                                        
+        # Zeroth-level comment                                                   
+        comments_for_thread_paginator = paginate(comments_for_thread,            
+                                                 context["request"].GET.get("page", 1), 
+                                                 settings.COMMENTS_PER_PAGE,        
+                                                 settings.MAX_PAGING_LINKS)     
+                             
+        context.update({"comments_for_thread":                                   
+                        comments_for_thread_paginator.object_list})              
+        context.update({"comments_for_thread_paginator":                         
+                        comments_for_thread_paginator}) 
+                         
+    context.update({                                                             
+        "no_comments": parent_id is None and not context["all_comments"],        
+        "replied_to": replied_to,                                                
+    })                                                                           
+    return context 
+
+This is largely the same tag as the default, except that instead of just adding the `comments_for_thread` to the context straight away, if the parent is `None` i.e. as we learnt in the last tutorial, if the comment is a zeroth-level (direct descendent of a BlogPost object) comment, it paginates the list first. In other words it uses the setting `COMMENTS_PER_PAGE` to divide up the list up into pages each containing a fixed number of comments, and sets the active page to that which it grabs the page variable from the GET string of the request (by default page 1). Note that this setting must be added to your `settings.py` file, and also if you want to use it in a template,  you must register it in your `defaults.py` file.
+
+To get the actual list of objects for this active page we can call the `.object_list` method of the paginator, and update the `comments_for_thread` context variable with just the parent comments on the active page. This is returned in the context along with the paginator object itself as `comments_for_thread_paginator` to my new template `generic/includes/comment_with_pagination.html`.
+
+As for this new template, it is very simple:
+
+    #!python
+    {% extends "generic/includes/comment.html" %}
+
+    {% load i18n mezzanine_tags %}
+
+    {% block pagination_foot %}
+        {% pagination_for comments_for_thread_paginator %}
+    {% endblock %}
+
+All we do to extend the regular `comment.html` template is to add the pagination footer (the thing with "previous" and "next" links and "page 1 of 2" for example) to the bottom of the template. The `pagination_for` tag is a built in Mezzanine tag that takes a paginator object, and generates the required html from it to form this "footer". Remember the paginator knows what page is active, it knows how many pages in total, and thus it has all the info needed to build up the usual paging "footer".
+
+
+We just need to change `comment.html` itself a little bit to add the new block:
+`{% block pagination_foot %}{% endblock %}` (you can place this wherever you want the pagination footer HTML to appear, I usually place it near the bottom, just before `{% if no_comments %}`). 
+
+
+Otherwise the original `comment.html` template is unchanged. When the iteration over `comments_for_thread` occurs for all the zeroth-level comments(**FOR COMMENTS ON THAT PAGE OF PAGINATION ONLY THIS TIME**), it will be the regular `{% comment_thread comment %}` line that gets called, and thus the child comments will not be paginated and will render their context to the regular `comment.html` template. From that stage onward, it is the same old story as we met in the first part of the tutorial.
+
+## Summary
+
+Here I tried to show one method of paginating your comments in Mezzanine. I'm sure there are others. Next I will consider AJAXification.     
+
+## Post III
+
+In the previous two posts of this series, I tried to give a base understanding of the Mezzanine comments system and to show you how to paginate your Mezzanine comments (e.g. for a blog post). In this part of the series, I will show you how to use AJAX in your Mezzanine blog.
+
+# How to AJAXify your shiny new paginated comments
+
+The easiest way I found to do this was to create a new view function specifically for handling ajax requests for comment pages. First, in `urls.py`  add
+
+    ::python
+    #make sure this is above the mezzanine catchall!
+    ("^ajax_comments/(?P<pk>\d+)/$", 'theme.views.ajax_comments'),
+
+which takes the `pk` parameter of the object we want to get comments for. Then define the view function itself by
+
+    ::python
+    def ajax_comments(request, pk):                                                  
+        '''                                                                          
+        Render to string the comments for a given BlogPost or                        
+        whatever.                                                                    
+        '''                                                                          
+        # Either object matching or None                                             
+        obj = BlogPost.objects.filter(pk=pk).first()                                 
+        response_data = {}                                                           
+        if not obj:                                                                  
+            response_data['success'] = 'false'                                       
+        else:                                                                        
+            context = {}                                                             
+            context["request"] = request                 
+                                                                      
+            # replicate context building of comments_for  tag                           
+            context["object_for_comments"] = obj                                     
+            context["comment_url"] = reverse("comment")                              
+            form = ThreadedCommentForm(context["request"], obj)                      
+            try:                                                                     
+                context["posted_comment_form"]                                       
+            except KeyError:                                                         
+                context["posted_comment_form"] = form
+            context["unposted_comment_form"] = form                                                                                         
+            # Now pretend we are comments_for tag, 
+            # and get the string resp it would. 
+            comments_str = render_to_string("generic/includes/comments.html", RequestContext(request, context))           
+            response_data = {}                                                          
+            response_data['comments'] = comments_str                                    
+            response_data['success'] = 'true'                                           
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+What this view is doing is essentially just replicating what the `comments_for` tag would normally do when encountered on the `blog_page_detail.html` page.  It builds a context from the blog post object and the request in exactly the same way. 
+
+The tricky part comes in what to do with this context; normally an inclusion tag would pass it to a given template to be included, and the whole recursion chain would load. Luckily with the `render_to_string` function, we can simulate exactly that and get the HTML that would be built by the cascade that follows the call of the `comments_for` tag. Now with this string we can easily return a JSON dump of the data.
+
+Finally for the frotend AJAX:
+
+    ::javascript
+    //ajax comment paging arrows
+    $(function() {
+        $('pagination-nav>li').click(function(event) {
+
+        var link = $(this).find('a');
+        // what page do does the link go to
+        if ($(link).attr('href')){
+            page_no = link.attr('href').match(/\?page=(\d+)/)[1]; 
+        } else {
+            // must be a disabled nav
+            event.preventDefault();
+            return false;
+        }
+        // with the pageno, make the ajax req
+        $.ajax({
+            url: '/ajax_comments/'+{{ object_for_comments.pk}},
+            type: 'GET',
+            data: {'page': page_no},
+            dataType: 'json',
+         })
+        .done(function (data) {
+            //ajax success
+            if(data.success){
+                //this means no server side errors
+                //push data.comments into appropriate place
+            }else{
+                console.log("Oops, server side problem.");
+            }
+        })
+       .error(function (request, error) {
+            console.log('AJAX request error.');
+         })
+
+        //stop default behavior of links and numbers in paginated footer
+        event.preventDefault();
+        return false;
+        });
+    });
+
+# Some other notes on Mezzanine comments and AJAX while we're here
+
+The view for the submission of the comment forms handles some AJAX already in the out-of-the-box Mezzanine install, so if you want to use AJAX to process your comment form errors, you should be more or less good to go. You for example use
+
+    ::javascript
+    $(function() {
+        $('form#blog-comment, .comment-reply-form').submit(function(event) {
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'json',
+         })
+        .done(function (data) {
+            //ajax success
+            if (data.location) {
+                // This is for redirection when login needed to post comment
+                location = data.location;
+            }else if(data.errors){
+                // deal with form validation errors
+            }
+       .error(function (request, error) {
+            alert('THANKS FOR THE COMMENT');
+            location.reload();
+         })
+         return false
+        });
+    });
+
+One thing I couldn't see in the out-of-the-box Mezzanine view to handle this form 
+(`generic/views.py` comment) was how the view is supposed to handle case when *there are no validation errors*. It doesn't pass a JSON dump of the new data like I initially might have expected, it simply reloads the entire page/template, so as far as AJAX is concerned it looks like an error since it need no receive back the required JSON response. It's necessary thus, to simply thank the user for the comment before hand and then reload the page. Maybe I'm missing something?
+
+Similarly the view for ratings also handles AJAX without any extra work sending you back the JSON of various useful variables, such as the updated rating's count(number of votes), average and sum (net score). So it's pretty easy to ajaxify the ratings forms in a similar manner to comment replies.
+
+Finally if you are looking to order your comments by rating (perhaps with highest rating comments floating to the top, but their popularity decaying also with their age to stop all time greats lingering at the top forever), I suggest checking out [this](http://blog.jupo.org/2013/04/30/building-social-apps-with-mezzanine-drum/) post to see how easy it is in Mezzanine to implement a Reddit style popularity algorithm with a custom `order_comments_by_score_for` tag that gets called just before `comments_for` to update the `all_comments` context variable in exactly the same way as we have discussed only now with comments scored by your algorithm (with this in the context `comments_for` just skips building `all_comments` as it sees it is already there, and everything else runs just as normal for therein).
+
