@@ -71,7 +71,8 @@ These go under the section titled "Education" in the demo. Each has fields for t
 
 **Publications**
 
-Here you can add any publications you have may have. Including the journal and arXiv preprints.
+Here you can add any publicationsmay have. Including the journal and arXiv preprints.
 
+**Skills**
 
 The `content` field is used to provide the rich text field for the skills section.
