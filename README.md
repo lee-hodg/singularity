@@ -36,10 +36,26 @@ You will notice in the demo site that `Features`, `Portfolios`, `Testimonials`, 
 
 One can then add Portfolio pages under the Portfolio link, and in turn Portfolio Item type pages under the Portfolio pages. One can also add Resume pages and About-us pages under the Pages link.
 
-Mezzanine allows you to drag and drop the order and hierarchy of your pages, so reorganization is easy.
+Mezzanine allows you to drag and drop the order and hierarchy of your pages, so reorganization is easy, and with Mezzanine you can choose which pages appear in which navigation menus by selecting/deselecting the check-boxes for the corresponding menus.
 
+## Pages ##
 
+### Home Page ####
 
+**Features**
+Most of the admin for the home page should be intuitive after seeing the demo, but some notable features: You can use either font-awesome icon classes or regular images to set the icon in the features section. So for example not adding an image but changing the "Fa icon" field to `fa-cog` will give you a cog icon in the features section. Alternatively keeping the "Fa icon" field as `none` but adding an image will use your image as the feature icon. Otherwise these feature icons should be self-explanatory; you add the title, a paragraph of text describing the feature and an optional link.
+
+**Portfolio**
+
+The home page includes a drop down of your available portfolios, if you select one of these to be "featured", then any items from it that are marked as featured will be included in the panel on the home page.
+
+**Contact**
+
+Add the e-mail address you wish contact form messages to be sent to in the contact recipients field (if multiple provide a comma separated list).
+
+**Misc**
+
+Other things are pretty standard, you can change section heading and subheading, add slides with captions and subimages for the responsive slider, change the parallax section images, and add testimonials from your clients.
 
 
 
