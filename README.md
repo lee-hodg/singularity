@@ -276,7 +276,7 @@ should be good.
 
 ## comments.html
 
-Some old ajax post script
+Some old and redundant ajax post script
 
     //NB post is just an ajax conveinience method
     //jQuery.post( url [, data ] [, success ] [, dataType ] )
