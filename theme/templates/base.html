@@ -27,6 +27,7 @@
 <link href="{% static "css/responsive-slider.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/slicknav.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "css/color_changer.css" %}" rel="stylesheet" type="text/css" />
 <!-- This is for portfolio  item slider -->
 <link rel="stylesheet" href="{% static "css/flexslider.css" %}" type="text/css">
 {% block extra_css %}{% endblock %}
@@ -49,6 +50,7 @@ thus meaning we have to copy the version to venv each time, or override admin. T
 as below.
 {% endcomment %}
 <script src="{% static "js/jquery-2.1.0.min.js" %}"></script>
+
 
 <!-- BLOG TAGCLOUD-->
 <script src="{% static "js/jquery.tagcloud.js" %}" type="text/javascript" charset="utf-8"></script>
@@ -80,6 +82,9 @@ as below.
       });
     });
 </script>
+
+{# User pick theme colors switch style sheet#}
+<script src="{% static "js/switch_style.js" %}" type="text/javascript" charset="utf-8"></script>
 
 {% block extra_js %}{% endblock %}
 {# This is needed for editable toolbar at top left #}
@@ -130,6 +135,36 @@ as below.
     </div><!--/site-header-->
 
 </header>
+
+{# For production (except static preview) this should only appear when user logged in #}
+{# {% if user.is_authenticated %} wrap #}
+<div class="theme-changer-wrap">
+    <div class="theme-changer">
+        <div class="changer-inner">
+            <span>Color Scheme</span>
+            <ul id="colors">
+                <li><a title="Default Theme" checked="checked" href="javascript:chooseStyle('none', 60)" class="scheme-blue">Default Scheme</a></li>
+                <li><a title="Dark Orange" href="javascript:chooseStyle('scheme-dark-orange', 60)" class="scheme-dark-orange">Dark Orange</a></li>
+                <li><a title="Gradients Grey" href="javascript:chooseStyle('scheme-gradients-grey', 60)" class="scheme-gradients-grey">Gradients Grey</a></li>
+                <li><a title="Green" href="javascript:chooseStyle('scheme-green', 60)" class="scheme-green">Green</a></li>
+                <li><a title="Navy" href="javascript:chooseStyle('scheme-navy', 60)" class="scheme-navy">Navy</a></li>
+                <li><a title="Red" href="javascript:chooseStyle('scheme-red', 60)" class="scheme-red">Red</a></li>
+                <li><a title="Purple" href="javascript:chooseStyle('scheme-purple', 60)" class="scheme-purple">Purple</a></li>
+                <li><a title="Yellow" href="javascript:chooseStyle('scheme-yellow', 60)" class="scheme-yellow">Yellow</a></li>
+                <li><a title="Cyan" href="javascript:chooseStyle('scheme-cyan', 60)" class="scheme-cyan">Cyan</a></li>
+                <li><a title="Black" href="javascript:chooseStyle('scheme-black', 60)" class="scheme-black">Black</a></li>
+                <li><a title="Pink" href="javascript:chooseStyle('scheme-pink', 60)" class="scheme-pink">Pink</a></li>
+                <li><a title="Wood" href="javascript:chooseStyle('scheme-wood', 60)" class="scheme-wood">Wood</a></li>
+                <li><a title="Dark" href="javascript:chooseStyle('scheme-dark', 60)" class="scheme-dark">Dark</a></li>
+                <li><a title="Noisy Blue" href="javascript:chooseStyle('scheme-noisy-blue', 60)" class="scheme-noisy-blue">Noisy Blue</a></li>
+                <li><a title="Orange" href="javascript:chooseStyle('scheme-orange', 60)" class="scheme-orange">Orange</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="open-close">
+        <i class="fa fa-refresh"></i>
+    </div>
+</div>
 
 {% block all_content %}
 <section id="{% block section_id %}page-blog {% endblock %}" class="page-container">
@@ -242,6 +277,21 @@ as below.
 
 
 {% block extra_foot_js %}{% endblock %}
+
+{# Open/close the color picker box #}
+<script type="text/javascript">
+$('.open-close').click(function () {
+    if ($(this).parent().css('left') == '-158px') {
+        $(this).parent().animate({
+            'left': '0'
+        }, 300);
+    } else {
+        $(this).parent().animate({
+            'left': '-158px'
+        }, 300);
+    }
+});
+</script>
 
 </body>
 </html>
