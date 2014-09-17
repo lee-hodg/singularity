@@ -162,7 +162,7 @@ as below.
         </div>
     </div>
     <div class="open-close">
-        <i class="fa fa-refresh"></i>
+        <i class="fa fa-toggle-right"></i>
     </div>
 </div>
 
@@ -285,10 +285,12 @@ $('.open-close').click(function () {
         $(this).parent().animate({
             'left': '0'
         }, 300);
+        $(this).find('i').attr('class','fa fa-toggle-left');
     } else {
         $(this).parent().animate({
             'left': '-158px'
         }, 300);
+        $(this).find('i').attr('class','fa fa-toggle-right');
     }
 });
 </script>
