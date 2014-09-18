@@ -1,0 +1,31 @@
+#section-site-map a:hover, h1, .post h2 a:hover, h3, a, .asterisk_input:after, #menu li a:hover, .recent-posts a:hover, .archive a:hover, .categories a:hover {
+    color:#347C17;
+}
+
+.more-posts:hover, #footer .fa:hover, span.text-content, .btn, .tag:hover .tag-body , .search .fa, .active, #section-contact .send-button,  #jsddm li ul li a:hover, .slicknav_nav a:hover {
+    background: #347C17!important;
+}
+
+.recent-posts li:nth-child(odd), .archive li:nth-child(odd), .categories li:nth-child(odd) {
+    border-left: 10px solid #347C17;
+}
+
+#menu li a:hover {
+    border-bottom: 4px solid #347C17;
+}
+
+#jsddm li ul {
+    border-top: 4px solid #347C17;
+}
+
+.tag:hover .tag-tip > i {
+    border-left: 20px solid #347C17;
+}
+
+#section-features a .fa:hover, .advert:hover {
+    border: 3px solid #347C17;
+}
+
+.errorlist li {background: #347C17;}
+
+.errorlist .tag-tip > i {border-color:transparent transparent transparent #347C17;}

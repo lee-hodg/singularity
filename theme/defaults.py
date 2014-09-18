@@ -111,8 +111,15 @@ register_setting(
 # Misc settings
 
 COLORS = (('scheme-orange', 'Orange'),
-         ('scheme-blue', 'Blue')
-         )
+          ('scheme-blue', 'Blue'),
+          ('scheme-blue-2', 'Blue-2'),
+          ('scheme-green', 'Green'),
+          ('scheme-green-2', 'Green-2'),
+          ('scheme-lilac', 'Lilac'),
+          ('scheme-pink', 'Pink'),
+          ('scheme-red', 'Red'),
+          ('scheme-yellow', 'Yellow'),
+          )
 register_setting(
     name="COLORSCHEME",
     label=_("Color scheme"),
