@@ -87,20 +87,21 @@ def linebreaksbr(line):
 
 
 @register.filter(name='splitcolor')
-def splitcolor(word, args):
+def splitcolor(word):
     '''
     Take a word, find the midpoint
     , color first half one color, second half another.
     '''
     try:
-        if args is None:
-            return word
-        colors = [arg.strip() for arg in args.split(',')]
-        if len(colors) != 2:
-            return word
+        # if args is None:
+        #     return word
+        # colors = [arg.strip() for arg in args.split(',')]
+        # if len(colors) != 2:
+        #     return word
         mid = ceildiv(len(word), 2)  # Rem python div takes floor
-        newword = '<span style="color:'+colors[0]+'">'+word[:mid]+'</span>'
-        newword += '<span style="color:'+colors[1]+'">'+word[mid:]+'</span>'
+        newword = '<span class="split1">'+word[:mid]+'</span>'
+        if word[mid:]:
+            newword += '<span class="split2">'+word[mid:]+'</span>'
         word = newword
     except:
         # on failure, e.g. not a str

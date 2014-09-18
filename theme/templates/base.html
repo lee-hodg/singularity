@@ -28,6 +28,10 @@
 <link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/slicknav.css" %}" rel="stylesheet" type="text/css" />
 <link href="{% static "css/color_changer.css" %}" rel="stylesheet" type="text/css" />
+<!-- COLOR SCHEMES-->
+{# all init disabled #}
+<link href="{% static "css/scheme-blue.css" %}" rel="alternate stylesheet" title="scheme-blue" disabled>
+<link href="{% static "css/scheme-orange.css" %}" rel="alternate stylesheet" title="scheme-orange" disabled>
 <!-- This is for portfolio  item slider -->
 <link rel="stylesheet" href="{% static "css/flexslider.css" %}" type="text/css">
 {% block extra_css %}{% endblock %}
@@ -83,6 +87,11 @@ as below.
     });
 </script>
 
+<!--enable initial css color style by setting the default-->
+{# switch_style script knows the default by title='' #}
+<script type="text/javascript" charset="utf-8">
+var defaultTitle = '{{ settings.COLORSCHEME }}';
+</script>
 {# User pick theme colors switch style sheet#}
 <script src="{% static "js/switch_style.js" %}" type="text/javascript" charset="utf-8"></script>
 
@@ -112,7 +121,7 @@ as below.
     <div class="site-header">
 
         <div class="header-container">
-            <h1><a href="/"> {% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, #444" }} {% endautoescape %}</a></h1>
+            <h1><a href="/"> {% autoescape off %}{{ settings.SITE_TITLE|splitcolor }} {% endautoescape %}</a></h1>
 
             <div class="menu-mobile-container">
 
@@ -137,14 +146,14 @@ as below.
 </header>
 
 {# For production (except static preview) this should only appear when user logged in #}
-{# {% if user.is_authenticated %} wrap #}
+{% if user.is_authenticated %}
 <div class="theme-changer-wrap">
     <div class="theme-changer">
         <div class="changer-inner">
             <span>Color Scheme</span>
             <ul id="colors">
-                <li><a title="Default Theme" checked="checked" href="javascript:chooseStyle('none', 60)" class="scheme-blue">Default Scheme</a></li>
-                <li><a title="Dark Orange" href="javascript:chooseStyle('scheme-dark-orange', 60)" class="scheme-dark-orange">Dark Orange</a></li>
+                <li><a title="Orange" href="javascript:chooseStyle('scheme-orange', 60)" class="scheme-orange">Orange</a></li>
+                <li><a title="Blue" href="javascript:chooseStyle('scheme-blue', 60)" class="scheme-blue">Blue</a></li>
                 <li><a title="Gradients Grey" href="javascript:chooseStyle('scheme-gradients-grey', 60)" class="scheme-gradients-grey">Gradients Grey</a></li>
                 <li><a title="Green" href="javascript:chooseStyle('scheme-green', 60)" class="scheme-green">Green</a></li>
                 <li><a title="Navy" href="javascript:chooseStyle('scheme-navy', 60)" class="scheme-navy">Navy</a></li>
@@ -155,9 +164,6 @@ as below.
                 <li><a title="Black" href="javascript:chooseStyle('scheme-black', 60)" class="scheme-black">Black</a></li>
                 <li><a title="Pink" href="javascript:chooseStyle('scheme-pink', 60)" class="scheme-pink">Pink</a></li>
                 <li><a title="Wood" href="javascript:chooseStyle('scheme-wood', 60)" class="scheme-wood">Wood</a></li>
-                <li><a title="Dark" href="javascript:chooseStyle('scheme-dark', 60)" class="scheme-dark">Dark</a></li>
-                <li><a title="Noisy Blue" href="javascript:chooseStyle('scheme-noisy-blue', 60)" class="scheme-noisy-blue">Noisy Blue</a></li>
-                <li><a title="Orange" href="javascript:chooseStyle('scheme-orange', 60)" class="scheme-orange">Orange</a></li>
             </ul>
         </div>
     </div>
@@ -165,6 +171,7 @@ as below.
         <i class="fa fa-paint-brush"></i>
     </div>
 </div>
+{% endif %}
 
 {% block all_content %}
 <section id="{% block section_id %}page-blog {% endblock %}" class="page-container">
@@ -188,7 +195,7 @@ as below.
     <div class="site-container clearfix">
 
         <div class="logicon-info">  
-            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor:"#c3512f, white" }}{% endautoescape %}</h1>
+            <h1>{% autoescape off %}{{ settings.SITE_TITLE|splitcolor}}{% endautoescape %}</h1>
             <p>{% autoescape off %}{{ settings.SITE_TAGLINE|truncatewords:70 }} {% endautoescape %}<p>
         </div>
 

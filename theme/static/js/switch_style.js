@@ -14,6 +14,7 @@ function setCookie(name, value, days) {
 function deleteCookie(name) {
     setCookie(name, 'moot')
 }
+
 function setStylesheet(title, randomize) {
     var i,
     cacheobj,
@@ -54,10 +55,18 @@ function indicateSelected(element) {
         }
     }
 }
+
+//page load
 if (manual_or_random == 'manual') {
     var selectedtitle = getCookie('mysheet')
-    if (document.getElementById && selectedtitle != null)
-    setStylesheet(selectedtitle)
+    if (document.getElementById && selectedtitle != null){
+        setStylesheet(selectedtitle);
+    }
+    else{
+        //default
+        setStylesheet(defaultTitle);
+    }
+
 } 
 else if (manual_or_random == 'random') {
     if (randomsetting == 'eachtime')

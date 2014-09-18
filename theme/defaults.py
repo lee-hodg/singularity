@@ -110,6 +110,18 @@ register_setting(
 
 # Misc settings
 
+COLORS = (('scheme-orange', 'Orange'),
+         ('scheme-blue', 'Blue')
+         )
+register_setting(
+    name="COLORSCHEME",
+    label=_("Color scheme"),
+    description=_("Color scheme of the theme."),
+    editable=True,
+    choices=COLORS,
+    default='scheme-orange',
+)
+
 # ( the COMMENTS_ prefix puts this setting
 # into existing comments grouping)
 register_setting(
@@ -159,5 +171,6 @@ register_setting(
              "COMMENTS_ORDERBYSCORE",
              "COMMENTS_PER_PAGE",
              "COMMENTS_USE_RATINGS",
+             "COLORSCHEME",
              ),
 )

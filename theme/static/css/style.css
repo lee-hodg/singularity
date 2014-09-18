@@ -1,5 +1,14 @@
 /**************** GENERAL ******************/
 
+
+.split2 {
+       color: #444
+   }
+
+#section-site-map .split2 {
+       color: #fff
+   }
+
 .editable-form{
     /*position: absolute !important;*/
     top: 100px;
@@ -672,7 +681,7 @@ button + label{
 }
 
 span.text-content {
-	background: rgba(195,81,47,0.9);
+	background: #C3512F;
 	color: white;
 	height: 100%;
 	left: 0;
@@ -721,7 +730,7 @@ span.text-content span span a {
 
 .container .mix:hover span.text-content{
 	z-index:1;
-	opacity: 1;
+	opacity: 0.93;
 }
 
 span.text-content span span a:hover i{
