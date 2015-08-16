@@ -10,7 +10,7 @@ Make a static copy of the entire site:
 
 Make a zip of relevant parts of theme:
     
-    zip -r /home/lee/Desktop/Singularity.zip . -x static/\* \*.git\* local_settings.py \*.pyc MYNOTES.md logiconENV/\*
+    zip -r /home/lee/Desktop/Singularity.zip . -x static/\* \*.git\* logicon/local_settings.py \*.pyc logicon/MYNOTES.md venv/\*
 
 ## Form templates ##
 
