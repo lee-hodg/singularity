@@ -7,6 +7,7 @@ from mezzanine.blog.models import BlogPost
 from .forms import ContactForm
 from smtplib import SMTPRecipientsRefused
 from django.contrib import messages
+from django.contrib.sites.models import Site
 
 
 @processor_for(Portfolio)
@@ -73,10 +74,16 @@ def home_processor(request, page):
     # Process contact form.
     submitted = 'false'
     form = ContactForm()
+    # get current site domain
+    current_site = Site.objects.get_current()
+    if current_site.domain:
+        SITE_DOM = current_site.domain
+    else:
+        SITE_DOM = ''
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():  # All validation rules pass
-            subject = form.cleaned_data['subject']
+            subject = SITE_DOM + ' :' + form.cleaned_data['subject']
             message = form.cleaned_data['message']
             sender = form.cleaned_data['sender']
             name = form.cleaned_data['name']
