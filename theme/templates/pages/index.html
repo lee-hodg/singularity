@@ -274,6 +274,7 @@ $(document).ready(function(){
         <!-- Parallax section -END-->
 
         <!--Portfolio section -BEGIN-->
+        {% if items %}
         <section id="section-portfolio"><a class="anchor" id="link-portfolio"></a>
             <div class="site-container clearfix">
 
@@ -319,6 +320,7 @@ $(document).ready(function(){
 
             </div> <!-- END site-container -->
         </section>
+        {% endif %}
         <!--//featured works-->
 
         <!-- BEGIN Testimonials -->
@@ -338,7 +340,7 @@ $(document).ready(function(){
 
 
                 {% for testimonial in  page.homepage.testimonials.all %}
-                <div class="column-one-third">
+                <div {% if page.homepage.testimonials.all|length > 2 %} class="column-one-third" {% else %} class="column-one-half" {% endif %}>
                     <div class="testimonial-container">
 
                         <div class="circ-img-wrap">
