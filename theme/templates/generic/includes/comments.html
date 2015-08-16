@@ -1,9 +1,9 @@
 {% load i18n mezzanine_tags comment_tags templateutils %}
 <div id="comments">
-    <h3><i class="fa fa-2x fa-wechat"></i> {% trans "Comments" %} ({{ object_for_comments.comments_count }})</h3>
 {% if settings.COMMENTS_DISQUS_SHORTNAME %}
 {% include "generic/includes/disqus_comments.html" %}
 {% else %}
+    <h3><i class="fa fa-2x fa-wechat"></i> {% trans "Comments" %} ({{ object_for_comments.comments_count }})</h3>
 <script type="text/javascript">
 {# Need to take into account editable-forms when user logged in too, and make sure this script does not #}
 {# adversely affect them when testing.. #}
