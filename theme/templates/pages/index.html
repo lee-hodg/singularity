@@ -111,7 +111,9 @@ $(document).ready(function(){
 
                     <div class="slide-body" data-group="slide">
 
-                        <img src="{{ MEDIA_URL }}{% thumbnail slide.image 1600 459 %}">
+                       <div style="background: url('{% static "img/ajax-loader.gif" %}') no-repeat; background-position: center; background-color: #444;" class="img_wrapper">
+                            <img src="{{ MEDIA_URL }}{% thumbnail slide.image 1600 459 %}" onload="imgLoaded(this)" />
+                       </div> 
 
 
                         <div class="caption header" data-animate="slideAppearRightToLeft" data-delay="500" data-length="300">

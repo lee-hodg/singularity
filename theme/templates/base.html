@@ -65,6 +65,7 @@ as below.
 
 <!-- BLOG TAGCLOUD-->
 <script src="{% static "js/jquery.tagcloud.js" %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static "js/readmore.min.js" %}" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
     $.fn.tagcloud.defaults = {
@@ -74,6 +75,11 @@ as below.
 
     $(function () {
       $('#blog_tagcloud a').tagcloud();
+      // After making the cloud apply readmore
+      $('#blog_tagcloud').readmore({lessLink: '<a href="#" class="tagtoggle">Fewer tags...</a>',
+                                     moreLink: '<a href="#" class="tagtoggle">More tags...</a>',
+                                     collapsedHeight: 190,
+                                   });
     });
 </script>
 
@@ -100,7 +106,13 @@ var defaultTitle = '{{ settings.COLORSCHEME }}';
 </script>
 {# User pick theme colors switch style sheet#}
 <script src="{% static "js/switch_style.js" %}" type="text/javascript" charset="utf-8"></script>
-
+<script type="text/javascript">
+function imgLoaded(img){
+    var $img = $(img);
+    //$img.parent().addClass('loaded');
+    $img.closest('.img_wrapper').addClass('loaded');
+};
+</script>
 {% block extra_js %}{% endblock %}
 {# This is needed for editable toolbar at top left #}
 {# and google analytics functionality #}

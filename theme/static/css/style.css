@@ -277,8 +277,27 @@ a.anchor{
 	top:10% !important;
 }
 
+.img_wrapper{
+    /*position: relative;
+    padding-top: 75%;
+    overflow: hidden;*/
+}
+ 
+.img_wrapper.loaded img{
+    opacity: 1;
+}
 
-
+.img_wrapper img{
+    /*position: absolute;
+    top: 0;
+    width: 100%;*/
+    opacity: 0;
+ 
+    -webkit-transition: opacity 150ms;
+    -moz-transition: opacity 150ms;
+    -ms-transition: opacity 150ms;
+    transition: opacity 150ms;
+}
 
 /**************** BLOG SECTION ******************/
 
@@ -1626,6 +1645,8 @@ ul[data-level="0"]>li > div[id^="comment-"]> .comment-right .comment-border .rat
      background-color: #efefef;
 }
 .tags {margin-top: 30px}
+
+.tagtoggle {font-weight:bold;}
 
 .timespan {
 	font-size:100%;

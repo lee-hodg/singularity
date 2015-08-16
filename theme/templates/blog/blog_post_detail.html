@@ -1,5 +1,5 @@
 {% extends "blog/blog_post_list.html" %}
-{% load mezzanine_tags comment_tags keyword_tags rating_tags templateutils i18n future disqus_tags %}
+{% load static mezzanine_tags comment_tags keyword_tags rating_tags templateutils i18n future disqus_tags %}
 
 {% block meta_title %}{{ blog_post.meta_title }}{% endblock %}
 
@@ -24,9 +24,11 @@
 
     {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
     {% block blog_post_list_post_featured_image %}
-    <a href="{{ blog_post.get_absolute_url }}">
-        <img src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 700 0 quality=100 top=0 %}">
-    </a>
+    <div style="background: url('{% static "img/ajax-loader.gif" %}') no-repeat; background-position: center; background-color: #444;" class="img_wrapper">
+        <a href="{{ blog_post.get_absolute_url }}">
+            <img class="feat_img" src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 700 0 quality=100 top=0 %}" onload="imgLoaded(this)"/>
+        </a>
+    </div>
     {% endblock %}
     {% endif %}
 
