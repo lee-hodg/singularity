@@ -1,4 +1,4 @@
-{% load mezzanine_tags rating_tags i18n future %}
+{% load mezzanine_tags rating_tags i18n  %}
    {# % if not rated or request.user.is_authenticated % #}
     <form method="post" action="{% url "rating" %}">
         {{ rating_form }}
