@@ -1,5 +1,5 @@
 """
-WSGI config for logicon project.
+WSGI config for singularity project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -13,6 +13,6 @@ from django.core.wsgi import get_wsgi_application
 from mezzanine.utils.conf import real_project_name
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE",
-                      "%s.settings" % real_project_name("logicon"))
+                      "%s.settings" % real_project_name("singularity"))
 
 application = get_wsgi_application()

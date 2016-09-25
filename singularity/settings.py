@@ -179,7 +179,7 @@ DATABASES = {
     "default": {
         # Add "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join('/srv/databases', 'db.logicon.sqlite3'),
+        "NAME": os.path.join('/srv/databases', 'db.singularity.sqlite3'),
     }
 }
 
@@ -209,7 +209,7 @@ STATIC_URL = "/static/"
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
 # STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
-STATIC_ROOT = '/srv/www/logicon/static/'
+STATIC_ROOT = '/srv/www/singularity/static/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -219,7 +219,7 @@ MEDIA_URL = "/media/"
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
-MEDIA_ROOT = '/srv/www/logicon/media/'
+MEDIA_ROOT = '/srv/www/singularity/media/'
 
 # Package/module name to import the root urlpatterns from for the project.
 ROOT_URLCONF = "%s.urls" % PROJECT_APP
@@ -281,21 +281,6 @@ INSTALLED_APPS = (
     # "mezzanine.mobile",
 )
 
-# List of processors used by RequestContext to populate the context.
-# Each one should be a callable that takes the request object as its
-# only parameter and returns a dictionary to add to the context.
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.static",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    "django.core.context_processors.tz",
-    "mezzanine.conf.context_processors.settings",
-    "mezzanine.pages.context_processors.page",
-)
 
 # List of middleware classes to use. Order is important; in the request phase,
 # these middleware classes will be applied in the order given, and in the
