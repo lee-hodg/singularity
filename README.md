@@ -1,5 +1,7 @@
 # Theme user guide #
 
+This is a Mezzanine (A Django CMS) theme.
+
 ## Setting the homepage. ##
 
 One of the first tasks you will have after installing the theme is to first create a new `HomePage` type of page in the admin area. After doing so, set the URL to `/` in the meta data. Now edit the `urls.py` by commenting out the entry for static homepage, and uncommenting the
