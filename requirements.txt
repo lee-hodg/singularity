@@ -15,7 +15,7 @@ enum34==1.1.6
 filebrowser-safe==0.4.6
 future==0.15.2
 grappelli-safe==0.4.5
-html5lib==0.9999999
+html5lib==0.99999999
 ipython==5.1.0
 ipython-genutils==0.1.0
 oauthlib==2.0.0
